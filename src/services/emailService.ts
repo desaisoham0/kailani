@@ -22,19 +22,35 @@ export interface JobFormData {
 export type EmailFormData = ContactFormData | JobFormData;
 
 export async function submitForm(formData: FormData, type: 'contact' | 'job'): Promise<Response> {
-  // Convert FormData to a plain object
-  const formDataObj: Record<string, any> = { type };
-  
-  // Extract all form data
-  formData.forEach((value, key) => {
-    formDataObj[key] = value;
-  });
+  // Add the type to the FormData if not already present
+  if (!formData.has('type')) {
+    formData.append('type', type);
+  }
   
   try {
     // Always use relative URL which will work in both development and production
     const apiUrl = '/api/send-email';
       
     console.log(`Submitting ${type} form to: ${apiUrl}`);
+    
+    // For job application with resume, use FormData directly
+    if (type === 'job' && formData.has('resume')) {
+      console.log('Submitting form with resume attachment');
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        // Don't set Content-Type header - browser will set it with correct boundary for FormData
+        body: formData,
+      });
+      return response;
+    }
+    
+    // For regular forms without file uploads, use JSON
+    const formDataObj: Record<string, any> = { type };
+    formData.forEach((value, key) => {
+      if (key !== 'type') { // already added above
+        formDataObj[key] = value;
+      }
+    });
     
     const response = await fetch(apiUrl, {
       method: 'POST',

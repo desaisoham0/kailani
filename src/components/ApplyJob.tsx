@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import jobIllustration from '../assets/illustrations/job-illustration.svg';
 import successIcon from '../assets/illustrations/success-icon.svg';
 import formDecoration from '../assets/illustrations/form-decoration.svg';
+import { submitForm } from '../services/emailService';
 
 interface JobFormData {
   fullName: string;
@@ -78,21 +79,8 @@ const Job: React.FC<JobProps> = ({
       if (onSubmit) {
         await onSubmit(submitFormData);
       } else {
-        // Default submission logic - use the email service
-        const response = await fetch('/api/send-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            type: 'job',
-            ...Object.fromEntries(
-              Object.entries(formData).filter(([key, value]) => 
-                value !== null && key !== 'resume'
-              )
-            )
-          }),
-        });
+        // Use the email service - with proper handling for file uploads
+        const response = await submitForm(submitFormData, 'job');
         
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({ message: 'Server error' }));
