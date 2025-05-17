@@ -319,9 +319,14 @@ const Job: React.FC<JobProps> = ({
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       {fileName}
+                      {formData.resume && formData.resume.size > 2 * 1024 * 1024 && (
+                        <p className="text-xs text-amber-600 mt-1">
+                          Large files may cause submission issues. Consider using a file under 2MB.
+                        </p>
+                      )}
                     </div>
                   ) : (
-                    <p className="text-sm text-gray-500 mt-2">Upload PDF, DOC, or DOCX (Max 5MB)</p>
+                    <p className="text-sm text-gray-500 mt-2">Upload PDF, DOC, or DOCX (Recommended: under 2MB)</p>
                   )}
                 </div>
               </div>

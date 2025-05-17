@@ -1,5 +1,22 @@
 // Email service for handling form submissions
 
+// Helper function to convert File to base64 string
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const base64String = reader.result as string;
+      // Remove the data URL prefix (e.g., "data:application/pdf;base64,")
+      const base64Content = base64String.split(',')[1];
+      resolve(base64Content);
+    };
+    reader.onerror = error => {
+      reject(error);
+    };
+  });
+};
+
 export interface ContactFormData {
   type: 'contact';
   name: string;
@@ -22,32 +39,44 @@ export interface JobFormData {
 export type EmailFormData = ContactFormData | JobFormData;
 
 export async function submitForm(formData: FormData, type: 'contact' | 'job'): Promise<Response> {
-  // Add the type to the FormData if not already present
-  if (!formData.has('type')) {
-    formData.append('type', type);
-  }
-  
   try {
     // Always use relative URL which will work in both development and production
     const apiUrl = '/api/send-email';
       
     console.log(`Submitting ${type} form to: ${apiUrl}`);
     
-    // For job application with resume, use FormData directly
+    // Create a JSON object from the FormData
+    const formDataObj: Record<string, any> = { type };
+    
+    // Handle file data conversion to base64 for the resume
     if (type === 'job' && formData.has('resume')) {
-      console.log('Submitting form with resume attachment');
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        // Don't set Content-Type header - browser will set it with correct boundary for FormData
-        body: formData,
-      });
-      return response;
+      console.log('Processing resume for submission');
+      const resumeFile = formData.get('resume') as File;
+      
+      if (resumeFile && resumeFile.size > 0) {
+        // Check file size - 5MB is absolute limit, but we warn at 2MB
+        const fileSizeMB = resumeFile.size / (1024 * 1024);
+        
+        if (fileSizeMB > 5) {
+          throw new Error(`Resume file is too large (${fileSizeMB.toFixed(1)}MB). Please use a file smaller than 5MB.`);
+        }
+        
+        try {
+          // Convert file to base64
+          const base64data = await fileToBase64(resumeFile);
+          formDataObj.resumeData = base64data;
+          formDataObj.resumeFilename = resumeFile.name;
+          console.log(`Resume ${resumeFile.name} (${Math.round(resumeFile.size/1024)}KB) converted to base64 successfully`);
+        } catch (err) {
+          console.error('Error converting resume to base64:', err);
+          throw new Error('Failed to process resume file. Please try with a different file or format.');
+        }
+      }
     }
     
-    // For regular forms without file uploads, use JSON
-    const formDataObj: Record<string, any> = { type };
+    // Process all other form fields
     formData.forEach((value, key) => {
-      if (key !== 'type') { // already added above
+      if (key !== 'resume' && key !== 'type') { // Skip resume and type (we handle them separately)
         formDataObj[key] = value;
       }
     });

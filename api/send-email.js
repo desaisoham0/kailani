@@ -1,8 +1,6 @@
 // ES Module version of the email sender
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-import formidable from 'formidable';
-import { promises as fs } from 'fs';
 
 // Load environment variables
 dotenv.config();
@@ -38,30 +36,9 @@ const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
-// Export configuration for Vercel - with special handling for file uploads
+// Export configuration for Vercel
 export const config = {
-  api: {
-    // Disable body parsing, we'll parse manually with formidable when needed
-    bodyParser: false
-  }
-};
-
-// Function to parse form data with formidable
-const parseForm = (req) => {
-  return new Promise((resolve, reject) => {
-    const form = formidable({
-      maxFileSize: 5 * 1024 * 1024, // 5MB limit
-      allowEmptyFiles: false,
-    });
-    
-    form.parse(req, (err, fields, files) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve({ fields, files });
-    });
-  });
+  // Use the default runtime and body parsing
 };
 
 // Export the handler function directly
@@ -82,34 +59,35 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Determine content type to check if we have multipart form data (file upload)
-    const contentType = req.headers['content-type'] || '';
-    let type, formData, files = {};
+    console.log('Request received, content-type:', req.headers['content-type']);
     
-    // Handle different types of content
-    if (contentType.includes('multipart/form-data')) {
-      // Parse multipart form data (for file uploads)
-      const formResult = await parseForm(req);
-      type = formResult.fields.type?.[0];
-      
-      // Convert fields from arrays to single values
-      formData = {};
-      Object.keys(formResult.fields).forEach(key => {
-        formData[key] = formResult.fields[key][0];
-      });
-      
-      // Store file references
-      files = formResult.files;
-    } else {
-      // Regular JSON body
-      const parsedBody = typeof req.body === 'string' 
-        ? JSON.parse(req.body) 
-        : req.body;
-      
-      // Extract form data
-      type = parsedBody.type;
-      formData = parsedBody;
-      delete formData.type;
+    // Parse the request body - Vercel automatically handles JSON parsing
+    const body = req.body;
+    
+    console.log('Body received:', Object.keys(body).join(', '));
+    
+    // For Vercel serverless environment, we can't handle file uploads directly
+    // but we can process the rest of the form data
+    const type = body.type;
+    const formData = { ...body };
+    delete formData.type;
+    
+    // We'll handle resume as a base64 string if it's included
+    let resumeData = null;
+    if (body.resumeData) {
+      try {
+        resumeData = {
+          filename: body.resumeFilename || 'resume.pdf',
+          content: Buffer.from(body.resumeData, 'base64')
+        };
+        console.log(`Resume processed: ${body.resumeFilename}, ${Math.round(body.resumeData.length/1.37/1024)}KB`);
+        // Remove these from formData to keep it clean
+        delete formData.resumeData;
+        delete formData.resumeFilename;
+      } catch (error) {
+        console.error('Error processing resume data:', error);
+        return res.status(400).json({ message: 'Invalid resume data format' });
+      }
     }
 
     // Basic validation
@@ -188,25 +166,15 @@ export default async function handler(req, res) {
       // Handle resume attachment if present
       let resumeAttachment = null;
       
-      if (files.resume) {
-        // We have a file uploaded via multipart form
-        const resumeFile = Array.isArray(files.resume) ? files.resume[0] : files.resume;
-        
-        emailText += `\nResume: ${resumeFile.originalFilename} (attached)`;
-        emailHtml += `<p><strong>Resume:</strong> ${resumeFile.originalFilename} (attached)</p>`;
-        
-        // Read file contents for attachment
-        const fileContent = await fs.readFile(resumeFile.filepath);
+      if (resumeData) {
+        // We have resume data sent as base64
+        emailText += `\nResume: ${resumeData.filename} (attached)`;
+        emailHtml += `<p><strong>Resume:</strong> ${resumeData.filename} (attached)</p>`;
         
         resumeAttachment = {
-          filename: resumeFile.originalFilename,
-          content: fileContent
+          filename: resumeData.filename,
+          content: resumeData.content
         };
-        
-        // Clean up the temporary file
-        await fs.unlink(resumeFile.filepath).catch(err => {
-          console.warn('Failed to clean up temporary file:', err);
-        });
       }
     } 
     else {
