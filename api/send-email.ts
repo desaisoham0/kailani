@@ -8,7 +8,9 @@ dotenv.config();
 // Configure email transporter
 const emailUser = process.env.EMAIL_USER || process.env.EMAILUSER;
 const emailPass = process.env.EMAIL_PASS || process.env.EMAILPASS;
-const emailRecipient = process.env.EMAIL_RECIPIENT || process.env.EMAILRECIPIENT;  // Log detailed email configuration status (but not the actual credentials)
+const emailRecipient = process.env.EMAIL_RECIPIENT || process.env.EMAILRECIPIENT;
+
+// Log detailed email configuration status (but not the actual credentials)
 console.log('Email configuration check:');
 console.log('Email user configured:', !!emailUser ? 'Yes' : 'No');
 console.log('Email password configured:', !!emailPass ? 'Yes' : 'No');
@@ -165,6 +167,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (error) {
     // Enhanced error logging
     console.error('Error sending email:', error);
+    console.error('Environment check during error:');
+    console.error('- EMAIL_USER present:', !!process.env.EMAIL_USER);
+    console.error('- EMAILUSER present:', !!process.env.EMAILUSER);
+    console.error('- EMAIL_PASS present:', !!process.env.EMAIL_PASS);
+    console.error('- EMAILPASS present:', !!process.env.EMAILPASS);
+    console.error('- Final emailUser value present:', !!emailUser);
+    console.error('- Final emailPass value present:', !!emailPass);
     
     // Extract more meaningful error message
     let errorMessage = 'Failed to send email';
@@ -177,6 +186,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       errorMessage = 'Email configuration is missing. Please check server environment variables.';
     }
     
-    return res.status(500).json({ message: errorMessage });
+    // Ensure we always send a valid JSON response
+    try {
+      return res.status(500).json({ 
+        message: errorMessage,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        time: new Date().toISOString()
+      });
+    } catch (responseError) {
+      console.error('Error sending error response:', responseError);
+      return res.status(500).send(`Error: ${errorMessage}`);
+    }
   }
 }

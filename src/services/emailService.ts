@@ -46,10 +46,21 @@ export async function submitForm(formData: FormData, type: 'contact' | 'job'): P
     
     // Parse response data
     let responseData;
+    let responseText = '';
+    
     try {
-      responseData = await response.json();
+      responseText = await response.text(); // First get as text
+      try {
+        responseData = JSON.parse(responseText); // Then try to parse as JSON
+      } catch (parseErr) {
+        console.warn('Could not parse response as JSON:', responseText);
+        responseData = { 
+          message: responseText || 'Failed to parse server response',
+          rawResponse: responseText
+        };
+      }
     } catch (err) {
-      responseData = { message: 'Failed to parse server response' };
+      responseData = { message: 'Failed to get response content' };
     }
     
     if (!response.ok) {
