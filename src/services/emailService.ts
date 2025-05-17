@@ -22,17 +22,25 @@ export interface JobFormData {
 export type EmailFormData = ContactFormData | JobFormData;
 
 export async function submitForm(formData: FormData, type: 'contact' | 'job'): Promise<Response> {
-  // Add the form type to the data
-  formData.append('type', type);
+  // Convert FormData to a plain object
+  const formDataObj: Record<string, any> = { type };
+  
+  // Extract all form data
+  formData.forEach((value, key) => {
+    formDataObj[key] = value;
+  });
   
   try {
     const response = await fetch('/api/send-email', {
       method: 'POST',
-      body: formData,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formDataObj),
     });
     
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
       throw new Error(errorData.message || 'Failed to submit form');
     }
     

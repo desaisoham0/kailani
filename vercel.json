@@ -12,6 +12,11 @@
   ],
   "routes": [
     {
+      "src": "/api/send-email",
+      "methods": ["POST", "OPTIONS"],
+      "dest": "/api/send-email.ts"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/api/$1"
     },

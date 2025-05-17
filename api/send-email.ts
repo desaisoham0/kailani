@@ -21,12 +21,23 @@ const isValidEmail = (email: string) => {
 };
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  
+  // Handle preflight OPTIONS request
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
   try {
+    // Parse the request body
     const { type, ...formData } = req.body;
 
     // Basic validation
@@ -104,10 +115,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       
       // Handle resume attachment if present
       if (req.body.resume) {
-        // Note: In a real implementation, you would need to handle file uploads
-        // This is a simplified version and would require additional code to handle file attachments
+        // For now, we just note that a resume was included
+        // In a real implementation with Vercel, you would:
+        // 1. Store the file in a storage service like AWS S3
+        // 2. Include a link to the file in the email
+        
         emailText += '\nResume was attached to the application.';
-        emailHtml += '<p><strong>Resume:</strong> Attached</p>';
+        emailHtml += '<p><strong>Resume:</strong> Included in submission</p>';
+        
+        // Note: To fully implement file upload handling, you would need:
+        // 1. A storage service (AWS S3, Google Cloud Storage, etc.)
+        // 2. Proper multipart form handling library
+        // 3. Processing of the file buffer before storage
       }
     } 
     else {

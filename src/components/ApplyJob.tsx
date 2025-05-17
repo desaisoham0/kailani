@@ -58,11 +58,18 @@ const Job: React.FC<JobProps> = ({
     try {
       // Create a FormData object to handle file upload
       const submitFormData = new FormData();
+      
+      // Handle regular form fields
       Object.entries(formData).forEach(([key, value]) => {
-        if (value !== null) {
+        if (value !== null && key !== 'resume') { // Handle resume separately
           submitFormData.append(key, value);
         }
       });
+      
+      // Handle resume file upload separately
+      if (formData.resume) {
+        submitFormData.append('resume', formData.resume);
+      }
 
       // If there's a custom submission handler, use it
       if (onSubmit) {
