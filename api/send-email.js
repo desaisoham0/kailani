@@ -74,6 +74,8 @@ export default async function handler(req, res) {
     
     // We'll handle resume as a base64 string if it's included
     let resumeData = null;
+    // Define resumeAttachment at the function scope so it's available throughout
+    let resumeAttachment = null;
     if (body.resumeData) {
       try {
         resumeData = {
@@ -164,8 +166,6 @@ export default async function handler(req, res) {
       `;
       
       // Handle resume attachment if present
-      let resumeAttachment = null;
-      
       if (resumeData) {
         // We have resume data sent as base64
         emailText += `\nResume: ${resumeData.filename} (attached)`;
