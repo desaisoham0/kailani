@@ -2,6 +2,10 @@
   "version": 2,
   "builds": [
     {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    },
+    {
       "src": "api/**/*.ts",
       "use": "@vercel/node"
     },
@@ -14,7 +18,7 @@
     {
       "src": "/api/send-email",
       "methods": ["POST", "OPTIONS"],
-      "dest": "/api/send-email.ts"
+      "dest": "/api/send-email.js"
     },
     {
       "src": "/api/(.*)",
