@@ -20,6 +20,7 @@ const ContactPage: React.FC = () => {
   const [activeField, setActiveField] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [formError, setFormError] = useState('');
   const [todaysDay, setTodaysDay] = useState<string>('');
   
   // Get today's day for highlighting in the opening hours
@@ -70,10 +71,14 @@ const ContactPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setFormError('');
     
     try {
       // Create a FormData object for the contact form
       const contactFormData = new FormData();
+      
+      // Add form type
+      contactFormData.append('type', 'contact');
       
       // Add form data to FormData object
       Object.entries(formData).forEach(([key, value]) => {
@@ -84,7 +89,6 @@ const ContactPage: React.FC = () => {
       await submitForm(contactFormData, 'contact');
       
       // Handle successful submission
-      setIsSubmitting(false);
       setSubmitSuccess(true);
       setFormData({
         name: '',
@@ -94,8 +98,11 @@ const ContactPage: React.FC = () => {
       });
     } catch (error) {
       console.error('Error submitting contact form:', error);
+      // Display error message to user
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setFormError(`Failed to send your message: ${errorMessage}. Please try again or contact us directly by phone.`);
+    } finally {
       setIsSubmitting(false);
-      // You could add error handling here if needed
     }
   };
 
@@ -226,6 +233,21 @@ const ContactPage: React.FC = () => {
                       </p>
                       
                       <form onSubmit={handleSubmit}>
+                        {formError && (
+                          <div className="bg-red-50 border-2 border-red-100 text-red-700 px-4 py-3 rounded-lg mb-6 relative">
+                            <div className="flex">
+                              <div className="flex-shrink-0">
+                                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                              <div className="ml-3">
+                                <p className="text-sm text-red-700">{formError}</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        
                         <div className="mb-4">
                           <div className={`bg-gray-50 rounded-lg p-2 transition-all ${activeField === 'name' ? 'shadow-md ring-2 ring-indigo-300' : 'hover:bg-gray-100'}`}>
                             <label htmlFor="name" className="block text-gray-700 mb-1 nunito-sans font-semibold">

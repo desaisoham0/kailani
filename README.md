@@ -8,8 +8,8 @@ A modern, responsive website for Kailani restaurant built with React, TypeScript
 - Responsive design for all device sizes
 - Restaurant menu gallery
 - About page with restaurant story
-- Contact form with email functionality
-- Job application system with email notifications
+- Contact form with email functionality (requires email configuration)
+- Job application system with email notifications (requires email configuration)
 - Location and hours information
 
 ## Tech Stack
@@ -63,12 +63,21 @@ This project is designed to be deployed on Vercel.
    npm install -g vercel
    ```
 
-2. Deploy
-   ```bash
-   vercel
-   ```
+2. Set up environment variables in the Vercel dashboard:
+   - `EMAILUSER`: Your Gmail email address
+   - `EMAILPASS`: Your Gmail App Password
+   - `EMAILRECIPIENT`: Email address to receive form submissions
 
-Make sure to add your environment variables in the Vercel dashboard for the production deployment.
+   See `VERCEL_ENV_SETUP.md` for detailed instructions.
+
+3. Use the deployment script
+   ```bash
+   ./deploy.sh
+   ```
+   Or deploy manually with:
+   ```bash
+   vercel --prod
+   ```
 
 ## Email Functionality
 

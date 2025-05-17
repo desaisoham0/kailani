@@ -3,7 +3,7 @@ import '../../styles/footerAnimations.css';
 
 const FloatingOrderButton: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [hasPrompt, setHasPrompt] = useState(true);
+  // Removing unused state variable
   const [isClicked, setIsClicked] = useState(false);
   
   // Show the floating order button when user scrolls down
@@ -23,7 +23,6 @@ const FloatingOrderButton: React.FC = () => {
   
   // Handle click celebration animation
   const handleClick = () => {
-    setHasPrompt(false);
     setIsClicked(true);
 
     // Trigger vibration on mobile devices

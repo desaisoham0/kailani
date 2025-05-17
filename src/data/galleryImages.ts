@@ -1,75 +1,89 @@
 import type { GalleryImage } from '../components/Food/FoodGallery';
 
+// Import all images
+import ramenImg from '../assets/images/ramen.jpg';
+import hotdogImg from '../assets/images/hotdog.jpg';
+import shaveIceImg from '../assets/images/shave_ice.jpg';
+import ramen1Img from '../assets/images/ramen1.jpg';
+import hot1Img from '../assets/images/hot1.jpg';
+import chocolateFudgeImg from '../assets/images/Chocolate Fudge.jpg';
+import ramen2Img from '../assets/images/ramen2.jpg';
+import hot2Img from '../assets/images/hot2.jpg';
+import strawberryDelightImg from '../assets/images/Strawberry Delight.jpg';
+import ramen3Img from '../assets/images/ramen3.jpg';
+import hot3Img from '../assets/images/hot3.jpg';
+import vanillaSwirlImg from '../assets/images/Vanilla Swirl.jpg';
+
 export const galleryImages: GalleryImage[] = [
   {
     id: 1,
-    imageUrl: '/src/assets/images/ramen.jpg',
+    imageUrl: ramenImg,
     title: 'Tonkotsu Ramen',
     category: 'ramen',
   },
   {
     id: 2,
-    imageUrl: '/src/assets/images/hotdog.jpg',
+    imageUrl: hotdogImg,
     title: 'Hawaiian Dog',
     category: 'hotdog',
   },
   {
     id: 3,
-    imageUrl: '/src/assets/images/shave_ice.jpg',
+    imageUrl: shaveIceImg,
     title: 'Rainbow Shave Ice',
     category: 'ice-cream',
   },
   {
     id: 4,
-    imageUrl: '/src/assets/images/ramen1.jpg',
+    imageUrl: ramen1Img,
     title: 'Spicy Miso Ramen',
     category: 'ramen',
   },
   {
     id: 5,
-    imageUrl: '/src/assets/images/hot1.jpg',
+    imageUrl: hot1Img,
     title: 'Teriyaki Dog',
     category: 'hotdog',
   },
   {
     id: 6,
-    imageUrl: 'src/assets/images/Chocolate Fudge.jpg',
+    imageUrl: chocolateFudgeImg,
     title: 'Chocolate Fudge',
     category: 'ice-cream',
   },
   {
     id: 7,
-    imageUrl: '/src/assets/images/ramen2.jpg',
+    imageUrl: ramen2Img,
     title: 'Vegetable Ramen',
     category: 'ramen',
   },
   {
     id: 8,
-    imageUrl: '/src/assets/images/hot2.jpg',
+    imageUrl: hot2Img,
     title: 'Kimchi Dog',
     category: 'hotdog',
   },
   {
     id: 9,
-    imageUrl: 'src/assets/images/Strawberry Delight.jpg',
+    imageUrl: strawberryDelightImg,
     title: 'Strawberry Delight',
     category: 'ice-cream',
   },
   {
     id: 10,
-    imageUrl: '/src/assets/images/ramen3.jpg',
+    imageUrl: ramen3Img,
     title: 'Shoyu Ramen',
     category: 'ramen',
   },
   {
     id: 11,
-    imageUrl: '/src/assets/images/hot3.jpg',
+    imageUrl: hot3Img,
     title: 'Avocado Dog',
     category: 'hotdog',
   },
   {
     id: 12,
-    imageUrl: 'src/assets/images/Vanilla Swirl.jpg',
+    imageUrl: vanillaSwirlImg,
     title: 'Vanilla Swirl',
     category: 'ice-cream',
   },

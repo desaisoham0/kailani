@@ -31,7 +31,12 @@ export async function submitForm(formData: FormData, type: 'contact' | 'job'): P
   });
   
   try {
-    const response = await fetch('/api/send-email', {
+    // Always use relative URL which will work in both development and production
+    const apiUrl = '/api/send-email';
+      
+    console.log(`Submitting ${type} form to: ${apiUrl}`);
+    
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -39,11 +44,20 @@ export async function submitForm(formData: FormData, type: 'contact' | 'job'): P
       body: JSON.stringify(formDataObj),
     });
     
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
-      throw new Error(errorData.message || 'Failed to submit form');
+    // Parse response data
+    let responseData;
+    try {
+      responseData = await response.json();
+    } catch (err) {
+      responseData = { message: 'Failed to parse server response' };
     }
     
+    if (!response.ok) {
+      console.error(`Server responded with status ${response.status}:`, responseData);
+      throw new Error(responseData.message || `Server error: ${response.status}`);
+    }
+    
+    console.log(`${type} form submitted successfully:`, responseData);
     return response;
   } catch (error) {
     console.error(`Error submitting ${type} form:`, error);

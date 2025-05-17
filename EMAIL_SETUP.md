@@ -22,7 +22,9 @@ Since May 30, 2022, Google no longer supports less secure apps. Instead, you'll 
 
 ## Environment Variables Configuration
 
-1. Create a `.env` file in the root of your project (it's already been created for you)
+### Local Development
+
+1. Edit the `.env` file in the root of your project
 2. Update the following environment variables:
 
 ```
@@ -33,6 +35,19 @@ EMAIL_RECIPIENT=where-emails-should-go@example.com
 ```
 
 **Note:** The `EMAIL_RECIPIENT` is optional. If not specified, emails will be sent to the `EMAIL_USER` address.
+
+### Vercel Deployment
+
+For Vercel deployment, you need to set the environment variables in the Vercel dashboard:
+
+1. Go to your Vercel dashboard and select your project
+2. Go to the "Settings" tab and then "Environment Variables"
+3. Add the following variables (note the different naming convention):
+   - `EMAILUSER`: Your Gmail address
+   - `EMAILPASS`: Your Gmail App Password
+   - `EMAILRECIPIENT`: Email address to receive form submissions (optional)
+
+See the [VERCEL_ENV_SETUP.md](./VERCEL_ENV_SETUP.md) file for detailed instructions.
 
 ## Testing the Setup
 

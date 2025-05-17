@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import jobIllustration from '../assets/illustrations/job-illustration.svg';
 import successIcon from '../assets/illustrations/success-icon.svg';
 import formDecoration from '../assets/illustrations/form-decoration.svg';
@@ -59,6 +59,9 @@ const Job: React.FC<JobProps> = ({
       // Create a FormData object to handle file upload
       const submitFormData = new FormData();
       
+      // Add form type
+      submitFormData.append('type', 'job');
+      
       // Handle regular form fields
       Object.entries(formData).forEach(([key, value]) => {
         if (value !== null && key !== 'resume') { // Handle resume separately
@@ -75,10 +78,26 @@ const Job: React.FC<JobProps> = ({
       if (onSubmit) {
         await onSubmit(submitFormData);
       } else {
-        // Default submission logic
-        // This is where you would typically make an API call
-        // For now, we'll simulate a successful submission after a delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Default submission logic - use the email service
+        const response = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            type: 'job',
+            ...Object.fromEntries(
+              Object.entries(formData).filter(([key, value]) => 
+                value !== null && key !== 'resume'
+              )
+            )
+          }),
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ message: 'Server error' }));
+          throw new Error(errorData.message || 'Failed to submit application');
+        }
       }
 
       setSubmitSuccess(true);
@@ -95,7 +114,8 @@ const Job: React.FC<JobProps> = ({
       setFileName('');
       
     } catch (err) {
-      setError('There was an error submitting your application. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(`There was an error submitting your application: ${errorMessage}. Please check your connection and try again.`);
       console.error('Error submitting form:', err);
     } finally {
       setIsSubmitting(false);
@@ -159,7 +179,22 @@ const Job: React.FC<JobProps> = ({
             
             {error && (
               <div className="bg-red-50 border-2 border-red-100 text-red-700 px-4 py-3 rounded-xl mb-6 relative">
-                <span className="block sm:inline">{error}</span>
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-red-800">Submission Error</h3>
+                    <div className="mt-2 text-sm text-red-700">
+                      <span className="block">{error}</span>
+                      <span className="block mt-2 text-xs">
+                        If this error persists, please contact us directly at <a href="mailto:contact@kailanirestaurant.com" className="underline font-medium">contact@kailanirestaurant.com</a>
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
             

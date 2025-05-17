@@ -6,11 +6,25 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Configure email transporter
+const emailUser = process.env.EMAIL_USER || process.env.EMAILUSER;
+const emailPass = process.env.EMAIL_PASS || process.env.EMAILPASS;
+const emailRecipient = process.env.EMAIL_RECIPIENT || process.env.EMAILRECIPIENT;
+
+// Log email configuration status (but not the actual credentials)
+console.log('Email configuration check:');
+console.log('Email user configured:', !!emailUser);
+console.log('Email password configured:', !!emailPass);
+console.log('Email recipient configured:', !!emailRecipient);
+
+if (!emailUser || !emailPass) {
+  console.error('Missing email credentials. Please check environment variables.');
+}
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: emailUser,
+    pass: emailPass,
   },
 });
 
@@ -134,18 +148,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Send email
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_RECIPIENT || process.env.EMAIL_USER,
+    const mailOptions = {
+      from: emailUser,
+      to: emailRecipient || emailUser, // Fall back to sender if recipient is not set
       subject: emailSubject,
       text: emailText,
       html: emailHtml,
       // If we had attachments, we would handle them here
-    });
+    };
+    
+    console.log('Attempting to send email to:', mailOptions.to);
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully. Message ID:', info.messageId);
 
     return res.status(200).json({ message: 'Email sent successfully' });
   } catch (error) {
+    // Enhanced error logging
     console.error('Error sending email:', error);
-    return res.status(500).json({ message: 'Failed to send email' });
+    
+    // Extract more meaningful error message
+    let errorMessage = 'Failed to send email';
+    if (error instanceof Error) {
+      errorMessage = `${errorMessage}: ${error.message}`;
+      console.error('Error details:', error.stack);
+    }
+    
+    if (!emailUser || !emailPass) {
+      errorMessage = 'Email configuration is missing. Please check server environment variables.';
+    }
+    
+    return res.status(500).json({ message: errorMessage });
   }
 }
