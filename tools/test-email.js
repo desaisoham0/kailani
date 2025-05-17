@@ -1,6 +1,8 @@
 // Test script for email functionality
-const nodemailer = require('nodemailer');
-require('dotenv').config();
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 async function testEmailConfig() {
   // Get environment variables
