@@ -36,9 +36,9 @@ const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
-// Export as named handler for Vercel
+// Export configuration for Vercel - removing specific runtime to use default
 export const config = {
-  runtime: 'nodejs18.x', // or whatever Node.js version you prefer
+  // Using Vercel's default Node.js runtime
 };
 
 // Export the handler function directly
