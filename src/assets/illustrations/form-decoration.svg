@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="150px" height="80px" viewBox="0 0 150 80" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="none" fill="none">
+        <!-- Wavy design for form decoration -->
+        <path d="M0,40 Q25,20 50,40 T100,40 T150,40" stroke="#FFB347" stroke-width="2" opacity="0.5">
+            <animate attributeName="d" 
+                     dur="10s" 
+                     values="M0,40 Q25,20 50,40 T100,40 T150,40;
+                             M0,35 Q25,55 50,35 T100,35 T150,35;
+                             M0,40 Q25,20 50,40 T100,40 T150,40" 
+                     repeatCount="indefinite" />
+        </path>
+        
+        <path d="M0,60 Q25,40 50,60 T100,60 T150,60" stroke="#4FACFE" stroke-width="2" opacity="0.5">
+            <animate attributeName="d" 
+                     dur="15s" 
+                     values="M0,60 Q25,40 50,60 T100,60 T150,60;
+                             M0,50 Q25,70 50,50 T100,50 T150,50;
+                             M0,60 Q25,40 50,60 T100,60 T150,60" 
+                     repeatCount="indefinite" />
+        </path>
+        
+        <!-- Dots -->
+        <circle cx="30" cy="25" r="3" fill="#FF758C" opacity="0.7">
+            <animate attributeName="cy" 
+                     dur="6s" 
+                     values="25;20;25" 
+                     repeatCount="indefinite" />
+        </circle>
+        <circle cx="70" cy="15" r="4" fill="#7367F0" opacity="0.7">
+            <animate attributeName="cy" 
+                     dur="8s" 
+                     values="15;22;15" 
+                     repeatCount="indefinite" />
+        </circle>
+        <circle cx="110" cy="20" r="2" fill="#FFCC33" opacity="0.7">
+            <animate attributeName="cy" 
+                     dur="7s" 
+                     values="20;15;20" 
+                     repeatCount="indefinite" />
+        </circle>
+    </g>
+</svg>

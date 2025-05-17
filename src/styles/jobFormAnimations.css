@@ -1,0 +1,203 @@
+/* Job Application Form Animations and Styles */
+
+/* Colorful gradient background for the form */
+.job-form-container {
+  background: linear-gradient(135deg, #f9f8fc 0%, #edf7ff 100%);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Animated decorative elements */
+.job-form-decoration {
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+  opacity: 0.4;
+}
+
+.job-form-decoration-1 {
+  top: -30px;
+  left: -30px;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(to right, #ffb347, #ffcc33);
+  animation: pulse 8s ease-in-out infinite;
+}
+
+.job-form-decoration-2 {
+  bottom: -20px;
+  right: -20px;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  animation: pulse 6s ease-in-out 1s infinite;
+}
+
+.job-form-decoration-3 {
+  top: 40%;
+  right: -15px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(to right, #ff758c, #ff7eb3);
+  animation: pulse 7s ease-in-out 0.5s infinite;
+}
+
+.job-form-decoration-4 {
+  bottom: 30%;
+  left: -15px;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(to right, #a6c1ee, #7367f0);
+  animation: pulse 9s ease-in-out 1.5s infinite;
+}
+
+/* Form field animations and styles */
+.job-form-field {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #ffffff;
+  border: 2px solid transparent;
+  border-radius: 10px;
+}
+
+.job-form-field:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  border-color: #ffb347;
+}
+
+/* Label animations */
+.job-form-label {
+  transition: color 0.3s ease;
+}
+
+.job-form-field:focus-within .job-form-label {
+  color: #ffb347;
+}
+
+/* Button styles - Duolingo-inspired green button */
+.job-form-button {
+  background: linear-gradient(90deg, #58cc02, #76c702);
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 12px 24px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 0 #58a700; /* Bottom shadow for 3D effect */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 1.1em;
+  border-bottom: 2px solid rgba(0,0,0,0.1);
+}
+
+.job-form-button:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(90deg, #65d600, #7dd000);
+  box-shadow: 0 6px 0 #58a700; /* Increased shadow on hover */
+}
+
+.job-form-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #58a700; /* Reduced shadow when pressed */
+  background: linear-gradient(90deg, #51b800, #6ab802);
+  transition: all 0.1s ease;
+}
+
+/* Add a subtle shine effect */
+.job-form-button::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 20%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(30deg);
+  transition: all 0.6s ease;
+}
+
+.job-form-button:hover::after {
+  left: 120%;
+  transition: all 0.6s ease;
+}
+
+/* Add a small bounce animation for success feedback */
+@keyframes smallBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.job-form-button:focus {
+  outline: none;
+  animation: smallBounce 0.5s ease;
+}
+
+/* Success message animation */
+.job-success-message {
+  animation: fadeInScale 0.5s ease-out;
+}
+
+/* Form section fade-in animations */
+.job-form-section {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* File upload button styling */
+.file-upload-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.file-upload-button {
+  display: inline-block;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.file-upload-button:hover {
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+}
+
+.file-name-display {
+  margin-top: 5px;
+  font-size: 0.9em;
+  color: #4facfe;
+}
+
+/* Input field animations */
+@keyframes highlightField {
+  0% { border-color: #ddd; }
+  50% { border-color: #ffb347; }
+  100% { border-color: #ddd; }
+}
+
+.highlight-field {
+  animation: highlightField 2s ease infinite;
+}

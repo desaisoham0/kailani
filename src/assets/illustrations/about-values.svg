@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="250" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="valuesGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7B61FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C29FFF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background shape -->
+  <circle cx="150" cy="125" r="100" fill="#f9f9f9" />
+  
+  <!-- Heart Value -->
+  <g transform="translate(80, 60)">
+    <circle cx="30" cy="30" r="30" fill="#FFC6FF" />
+    <path d="M30,20 Q20,10 10,20 T30,40 T50,20 T30,20" fill="#FF6392" />
+  </g>
+  
+  <!-- Quality Star -->
+  <g transform="translate(170, 60)">
+    <circle cx="30" cy="30" r="30" fill="#E0F4FF" />
+    <path d="M30,10 L35,25 L50,25 L40,35 L45,50 L30,40 L15,50 L20,35 L10,25 L25,25 Z" fill="#FFD166" />
+  </g>
+  
+  <!-- Sustainability Leaf -->
+  <g transform="translate(125, 140)">
+    <circle cx="30" cy="30" r="30" fill="#E2FFE9" />
+    <path d="M30,15 Q50,30 30,45 Q10,30 30,15" fill="#5DD39E" />
+    <path d="M30,15 L30,45" stroke="#5DD39E" stroke-width="2" />
+  </g>
+  
+  <!-- Connecting lines -->
+  <path d="M110,90 L140,140 M170,140 L200,90" stroke="#CDCDCD" stroke-width="2" stroke-dasharray="5,5" />
+  
+  <!-- Animated elements -->
+  <g>
+    <circle cx="60" cy="50" r="10" fill="#FF6392">
+      <animate attributeName="cy" values="50;45;50;55;50" dur="4s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="240" cy="70" r="8" fill="#FFD166">
+      <animate attributeName="cy" values="70;65;70;75;70" dur="3.5s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="220" cy="200" r="12" fill="#5DD39E">
+      <animate attributeName="cy" values="200;195;200;205;200" dur="4.5s" repeatCount="indefinite" />
+    </circle>
+  </g>
+</svg>
