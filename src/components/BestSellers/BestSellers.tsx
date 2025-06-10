@@ -37,17 +37,17 @@ const BestSellers: React.FC<BestSellersProps> = React.memo(({
     'hotdog': "radial-gradient(circle at 10% 20%, rgb(254, 144, 144) 0%, rgb(255, 193, 150) 90%)"
   }), []);
 
-  const handlePrevious = () => {
+  const handlePrevious = React.useCallback(() => {
     setCurrentIndex(prevIndex => 
       prevIndex === 0 ? categoryProducts.length - 1 : prevIndex - 1
     );
-  };
+  }, [categoryProducts.length]);
 
-  const handleNext = () => {
+  const handleNext = React.useCallback(() => {
     setCurrentIndex(prevIndex => 
       prevIndex === categoryProducts.length - 1 ? 0 : prevIndex + 1
     );
-  };
+  }, [categoryProducts.length]);
 
   const switchCategory = (category: 'shave-ice' | 'homemade-ice-cream' | 'ramen' | 'acai-twist-bowl' | 'soft-server-ice-cream' | 'hotdog') => {
     if (currentCategory === category) return;
@@ -62,7 +62,7 @@ const BestSellers: React.FC<BestSellersProps> = React.memo(({
     }, 6000);
     
     return () => clearInterval(interval);
-  }, [currentIndex, categoryProducts.length]);
+  }, [handleNext]);
 
   return (
     <section className="py-16 relative overflow-hidden w-full max-w-full" 
