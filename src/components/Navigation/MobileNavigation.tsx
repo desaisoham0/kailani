@@ -220,15 +220,6 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
               </a>
             </div>
           </nav>
-          {/* Fun bottom decoration */}
-          <div className="text-center mt-8">
-            <div className="flex justify-center space-x-3 mb-4">
-              <span className="text-3xl" role="img" aria-label="wave">🌊</span>
-              <span className="text-3xl" role="img" aria-label="pineapple">🍍</span>
-              <span className="text-3xl" role="img" aria-label="flower">🌺</span>
-            </div>
-            <div className="text-[#ffb6d5] font-medium jua-regular">Aloha! Let's explore together! 🏄‍♀️</div>
-          </div>
         </div>
       </div>
     </>
