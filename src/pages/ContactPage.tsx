@@ -9,7 +9,7 @@ interface OpeningHours {
   isToday: boolean;
 }
 
-const ContactPage: React.FC = () => {
+const ContactPage: React.FC = React.memo(() => {
   const [activeTab, setActiveTab] = useState<'contact' | 'location' | 'hours'>('contact');
   const [formData, setFormData] = useState({
     name: '',
@@ -40,7 +40,7 @@ const ContactPage: React.FC = () => {
     }
     
     setTodaysDay(days[today]);
-  }, [location]);
+  }, []);
 
   const openingHours: OpeningHours[] = [
     { day: 'Monday', hours: 'Closed', isToday: todaysDay === 'Monday' },
@@ -107,9 +107,9 @@ const ContactPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-blue-50 pb-16">
+    <div className="min-h-screen bg-gradient-to-b from-white to-blue-50 pb-16 w-full max-w-full overflow-x-hidden">
       {/* Hero Section */}
-      <div className="relative h-64 sm:h-80 md:h-96 overflow-hidden bg-indigo-900 text-white">
+      <div className="relative h-64 sm:h-80 md:h-96 overflow-hidden bg-indigo-900 w-full max-w-full" style={{ background: 'linear-gradient(135deg, #f3e8ff 0%, #ede9fe 100%)', color: '#3b0764' }}>
         {/* Background decorative elements */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-20 left-20 w-40 h-40 rounded-full bg-pink-500 filter blur-3xl"></div>
@@ -119,7 +119,7 @@ const ContactPage: React.FC = () => {
         
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 z-10">
           <motion.h1 
-            className="text-4xl md:text-6xl font-bold font-navigation jua-regular mb-2"
+            className="text-3xl sm:text-4xl md:text-6xl font-bold font-navigation jua-regular mb-2 max-w-full drop-shadow-lg"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -127,7 +127,7 @@ const ContactPage: React.FC = () => {
             Contact Us
           </motion.h1>
           <motion.p 
-            className="text-xl md:text-2xl max-w-xl nunito-sans"
+            className="text-lg sm:text-xl md:text-2xl max-w-xl nunito-sans px-4 drop-shadow"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -150,40 +150,42 @@ const ContactPage: React.FC = () => {
       </div>
       
       {/* Tabbed navigation */}
-      <div className="container mx-auto px-4 pt-8 -mt-8 relative z-20">
-        <div className="bg-white rounded-xl shadow-lg p-2 max-w-2xl mx-auto mb-10">
-          <div className="flex flex-wrap">
+      <div className="mx-auto px-4 pt-8 -mt-8 relative z-20 w-full max-w-full">
+        <div className="bg-white rounded-xl shadow-lg p-2 max-w-2xl mx-auto mb-10 w-full">
+          <div className="flex flex-wrap justify-center">
             <button 
               onClick={() => setActiveTab('contact')}
-              className={`flex-1 px-4 py-3 md:py-4 rounded-lg text-lg font-bold transition-all jua-regular flex items-center justify-center ${
+              className={`flex-1 min-w-0 px-3 sm:px-4 py-3 md:py-4 rounded-lg text-sm sm:text-lg font-bold transition-all jua-regular flex items-center justify-center cursor-pointer ${
                 activeTab === 'contact' 
                   ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-md' 
                   : 'hover:bg-gray-100 text-gray-600'
               }`}
             >
-              <span className="mr-2 text-xl" role="img" aria-hidden="true">📨</span>
-              Message Us
+              <span className="mr-1 sm:mr-2 text-lg sm:text-xl" role="img" aria-hidden="true">📨</span>
+              <span className="hidden sm:inline">Message Us</span>
+              <span className="sm:hidden">Message</span>
             </button>
             <button 
               onClick={() => setActiveTab('location')}
-              className={`flex-1 px-4 py-3 md:py-4 rounded-lg text-lg font-bold transition-all jua-regular flex items-center justify-center ${
+              className={`flex-1 min-w-0 px-3 sm:px-4 py-3 md:py-4 rounded-lg text-sm sm:text-lg font-bold transition-all jua-regular flex items-center justify-center cursor-pointer ${
                 activeTab === 'location' 
                   ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md' 
                   : 'hover:bg-gray-100 text-gray-600'
               }`}
             >
-              <span className="mr-2 text-xl" role="img" aria-hidden="true">📍</span>
-              Find Us
+              <span className="mr-1 sm:mr-2 text-lg sm:text-xl" role="img" aria-hidden="true">📍</span>
+              <span className="hidden sm:inline">Find Us</span>
+              <span className="sm:hidden">Find</span>
             </button>
             <button 
                 onClick={() => setActiveTab('hours')}
-                className={`flex-1 px-4 py-3 md:py-4 rounded-lg text-lg font-bold transition-all jua-regular flex items-center justify-center ${
+                className={`flex-1 min-w-0 px-3 sm:px-4 py-3 md:py-4 rounded-lg text-sm sm:text-lg font-bold transition-all jua-regular flex items-center justify-center cursor-pointer ${
                     activeTab === 'hours' 
                     ? 'bg-gradient-to-r from-cyan-500 to-teal-500 text-white shadow-md hours-tab-active' 
                     : 'hover:bg-gray-100 text-gray-600'
                 }`}
                 >
-                <span className="mr-2 text-xl" role="img" aria-hidden="true">🕒</span>
+                <span className="mr-1 sm:mr-2 text-lg sm:text-xl" role="img" aria-hidden="true">🕒</span>
                 Hours
                 </button>
           </div>
@@ -191,19 +193,19 @@ const ContactPage: React.FC = () => {
       </div>
       
       {/* Content sections */}
-      <div className="container mx-auto px-4">
+      <div className="mx-auto px-4 w-full max-w-full overflow-x-hidden">
         {/* Contact Form Section */}
         {activeTab === 'contact' && (
           <motion.div 
-            className="max-w-4xl mx-auto"
+            className="max-w-4xl mx-auto w-full max-w-full overflow-x-hidden"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div className="md:flex">
-                <div className="md:w-1/2 p-8 md:p-12 relative">
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden w-full max-w-full">
+              <div className="md:flex w-full">
+                <div className="md:w-1/2 p-6 sm:p-8 md:p-12 relative min-w-0">
                   {/* Decorative elements */}
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
                   
@@ -227,7 +229,7 @@ const ContactPage: React.FC = () => {
                     </div>
                   ) : (
                     <>
-                      <h2 className="text-2xl md:text-3xl font-bold mb-6 jua-regular text-indigo-800">Get in Touch</h2>
+                      <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 jua-regular text-indigo-800">Get in Touch</h2>
                       <p className="text-gray-600 mb-8 nunito-sans">
                         Questions, comments, or just want to say aloha? We'd love to hear from you!
                       </p>
@@ -331,7 +333,7 @@ const ContactPage: React.FC = () => {
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg flex items-center justify-center"
+                          className="w-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg flex items-center justify-center cursor-pointer"
                         >
                           {isSubmitting ? (
                             <>
@@ -354,11 +356,11 @@ const ContactPage: React.FC = () => {
                     </>
                   )}
                 </div>
-                <div className="md:w-1/2 bg-indigo-50 p-8 md:p-12 flex flex-col justify-center">
+                <div className="md:w-1/2 bg-indigo-50 p-6 sm:p-8 md:p-12 flex flex-col justify-center min-w-0">
                   <img
                     src={contactIllustration}
                     alt="Contact us illustration"
-                    className="w-64 h-64 mx-auto mb-6 logo-float"
+                    className="w-48 sm:w-64 h-48 sm:h-64 mx-auto mb-6 logo-float max-w-full"
                     style={{ animationDuration: '6s' }}
                   />
                   
@@ -408,16 +410,16 @@ const ContactPage: React.FC = () => {
         {/* Location Section */}
         {activeTab === 'location' && (
           <motion.div 
-            className="max-w-4xl mx-auto"
+            className="max-w-4xl mx-auto w-full max-w-full overflow-x-hidden"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div className="md:flex">
-                <div className="md:w-1/2 p-8 md:p-12 order-2 md:order-1">
-                  <h2 className="text-2xl md:text-3xl font-bold mb-6 jua-regular text-amber-600">Visit Us</h2>
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden w-full max-w-full">
+              <div className="md:flex w-full">
+                <div className="md:w-1/2 p-6 sm:p-8 md:p-12 order-2 md:order-1 min-w-0">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 jua-regular text-amber-600">Visit Us</h2>
                   <p className="text-gray-600 mb-8 nunito-sans">
                     We're conveniently located in the heart of Honolulu, just minutes from Waikiki Beach. 
                     Come experience the authentic taste of Hawaii in our warm and welcoming restaurant!
@@ -431,8 +433,8 @@ const ContactPage: React.FC = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                       </div>
-                      <div>
-                        <h3 className="font-bold text-gray-700 jua-regular text-xl">Our Location</h3>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-bold text-gray-700 jua-regular text-lg sm:text-xl">Our Location</h3>
                         <p className="text-gray-600 nunito-sans mb-2">840 River Rd</p>
                         <p className="text-gray-600 nunito-sans mb-2">New Milford, NJ 07646</p>
                       </div>
@@ -444,8 +446,8 @@ const ContactPage: React.FC = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </div>
-                      <div>
-                        <h3 className="font-bold text-gray-700 jua-regular text-xl">Parking Information</h3>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-bold text-gray-700 jua-regular text-lg sm:text-xl">Parking Information</h3>
                         <p className="text-gray-600 nunito-sans mb-2">
                           Free parking available in our restaurant lot. 
                           Additional street parking and public parking garage available within a block.
@@ -459,8 +461,8 @@ const ContactPage: React.FC = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </div>
-                      <div>
-                        <h3 className="font-bold text-gray-700 jua-regular text-xl">Public Transportation</h3>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-bold text-gray-700 jua-regular text-lg sm:text-xl">Public Transportation</h3>
                         <p className="text-gray-600 nunito-sans mb-2">
                           Bus routes 19, 20, and 42 stop within a block of our location.
                           The nearest bus stop is "Beach Road & Palm Avenue".
@@ -511,18 +513,18 @@ const ContactPage: React.FC = () => {
         {/* Hours Section */}
         {activeTab === 'hours' && (
           <motion.div 
-            className="max-w-4xl mx-auto"
+            className="max-w-4xl mx-auto w-full max-w-full overflow-x-hidden"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-              <div className="md:flex">
-                <div className="md:w-1/2 p-8 md:p-12">
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden w-full max-w-full">
+              <div className="md:flex w-full">
+                <div className="md:w-1/2 p-6 sm:p-8 md:p-12 relative min-w-0">
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 via-teal-500 to-green-500"></div>
                   
-                  <h2 className="text-2xl md:text-3xl font-bold mb-6 jua-regular text-teal-600">Opening Hours</h2>
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 jua-regular text-teal-600">Opening Hours</h2>
                   <p className="text-gray-600 mb-8 nunito-sans">
                     We're open 6 days a week to serve you the best Hawaiian flavors. 
                     Come visit us for lunch, dinner, or anytime in between!
@@ -552,31 +554,28 @@ const ContactPage: React.FC = () => {
                   </div>
                   
                   <div className="mt-8">
-                    <h3 className="text-xl font-bold mb-4 jua-regular text-teal-700">Special Hours</h3>
-                    <div className="space-y-4">
-                      <div className="flex items-start">
-                        <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center mr-4 mt-1">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
+                    <h3 className="text-lg sm:text-xl font-bold mb-4 jua-regular text-teal-700">Special Hours</h3>
+                    <div className="space-y-4">                        <div className="flex items-start">
+                          <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h4 className="font-bold text-gray-700">Happy Hour</h4>
+                            <p className="text-gray-600 nunito-sans">Monday - Friday: 3:00 PM - 6:00 PM</p>
+                          </div>
+                        </div>                        <div className="flex items-start">
+                          <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
+                            </svg>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h4 className="font-bold text-gray-700">Brunch</h4>
+                            <p className="text-gray-600 nunito-sans">Saturday - Sunday: 10:00 AM - 2:00 PM</p>
+                          </div>
                         </div>
-                        <div>
-                          <h4 className="font-bold text-gray-700">Happy Hour</h4>
-                          <p className="text-gray-600 nunito-sans">Monday - Friday: 3:00 PM - 6:00 PM</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start">
-                        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mr-4 mt-1">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
-                          </svg>
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-gray-700">Brunch</h4>
-                          <p className="text-gray-600 nunito-sans">Saturday - Sunday: 10:00 AM - 2:00 PM</p>
-                        </div>
-                      </div>
                       
                       {/* <div className="flex items-start">
                         <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mr-4 mt-1">
@@ -592,7 +591,7 @@ const ContactPage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className="md:w-1/2 bg-teal-50 p-8 md:p-12 flex flex-col justify-center">
+                <div className="md:w-1/2 bg-teal-50 p-6 sm:p-8 md:p-12 flex flex-col justify-center min-w-0">
                   {/* Decorative elements */}
                   <div className="relative mb-8 text-center">
                     <div className="w-32 h-32 rounded-full bg-teal-100 mx-auto flex items-center justify-center">
@@ -608,7 +607,7 @@ const ContactPage: React.FC = () => {
                   
                   {/* Reservation box */}
                   <div className="bg-white rounded-xl p-6 shadow-md">
-                    <h3 className="text-2xl font-bold mb-4 jua-regular text-center">Make a Reservation</h3>
+                    <h3 className="text-xl sm:text-2xl font-bold mb-4 jua-regular text-center">Make a Reservation</h3>
                     <p className="text-gray-600 mb-6 nunito-sans text-center">
                       Ensure your spot at Kailani by making a reservation today!
                     </p>
@@ -632,7 +631,7 @@ const ContactPage: React.FC = () => {
                       <div className="flex items-center">
                         <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mr-4">
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c-1.657 0-3-4.03-3-9s1.343-9 3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                           </svg>
                         </div>
                         <p className="text-gray-600 nunito-sans">Book online at kailani.com/reserve</p>
@@ -653,30 +652,30 @@ const ContactPage: React.FC = () => {
         
         {/* FAQ Section */}
         <motion.div 
-          className="max-w-4xl mx-auto mt-16"
+          className="max-w-4xl mx-auto mt-16 w-full max-w-full overflow-x-hidden"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold jua-regular text-gray-900 mb-4 relative inline-block">
+            <h2 className="text-2xl sm:text-3xl font-bold jua-regular text-gray-900 mb-4 relative inline-block">
               Frequently Asked Questions
               <span className="absolute -bottom-2 left-0 w-full h-2 bg-yellow-300 opacity-50 rounded-full"></span>
             </h2>
-            <p className="text-gray-600 nunito-sans max-w-2xl mx-auto">
+            <p className="text-gray-600 nunito-sans max-w-2xl mx-auto px-4">
               Find answers to our most commonly asked questions. If you don't see what you're looking for, feel free to contact us!
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+          <div className="grid md:grid-cols-2 gap-6 w-full max-w-full">
+            <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 w-full max-w-full">
               <div className="p-6">
-                <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-4 flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold mb-3 jua-regular text-gray-800">Do you take reservations?</h3>
+                <h3 className="text-lg sm:text-xl font-bold mb-3 jua-regular text-gray-800">Do you take reservations?</h3>
                 <p className="text-gray-600 nunito-sans">
                   Yes, we recommend making reservations, especially for dinner and weekend visits. 
                   You can reserve a table by phone, email, or through our website.
@@ -684,14 +683,14 @@ const ContactPage: React.FC = () => {
               </div>
             </div>
             
-            <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+            <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 w-full max-w-full">
               <div className="p-6">
-                <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-4 flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold mb-3 jua-regular text-gray-800">Do you offer takeout and delivery?</h3>
+                <h3 className="text-lg sm:text-xl font-bold mb-3 jua-regular text-gray-800">Do you offer takeout and delivery?</h3>
                 <p className="text-gray-600 nunito-sans">
                   Yes, we offer both takeout and delivery options. You can order through our website 
                   or by calling us directly. We also partner with major food delivery services.
@@ -699,14 +698,14 @@ const ContactPage: React.FC = () => {
               </div>
             </div>
             
-            <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+            <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 w-full max-w-full">
               <div className="p-6">
-                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-4 flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold mb-3 jua-regular text-gray-800">Do you accommodate dietary restrictions?</h3>
+                <h3 className="text-lg sm:text-xl font-bold mb-3 jua-regular text-gray-800">Do you accommodate dietary restrictions?</h3>
                 <p className="text-gray-600 nunito-sans">
                   Absolutely! We offer vegetarian, vegan, and gluten-free options. Please inform your 
                   server about any allergies or dietary needs, and we'll do our best to accommodate you.
@@ -714,14 +713,14 @@ const ContactPage: React.FC = () => {
               </div>
             </div>
             
-            <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+            <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 w-full max-w-full">
               <div className="p-6">
-                <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center mb-4 flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold mb-3 jua-regular text-gray-800">Can you host private events?</h3>
+                <h3 className="text-lg sm:text-xl font-bold mb-3 jua-regular text-gray-800">Can you host private events?</h3>
                 <p className="text-gray-600 nunito-sans">
                   Yes, we have a private dining area that can accommodate groups of up to 30 guests. 
                   It's perfect for birthday celebrations, corporate events, and family gatherings.
@@ -733,6 +732,6 @@ const ContactPage: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default ContactPage;

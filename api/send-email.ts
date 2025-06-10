@@ -12,11 +12,11 @@ const emailRecipient = process.env.EMAIL_RECIPIENT || process.env.EMAILRECIPIENT
 
 // Log detailed email configuration status (but not the actual credentials)
 console.log('Email configuration check:');
-console.log('Email user configured:', !!emailUser ? 'Yes' : 'No');
-console.log('Email password configured:', !!emailPass ? 'Yes' : 'No');
-console.log('Email recipient configured:', !!emailRecipient ? 'Yes' : 'No');
-console.log('Email user variable name present as EMAIL_USER:', !!process.env.EMAIL_USER ? 'Yes' : 'No');
-console.log('Email user variable name present as EMAILUSER:', !!process.env.EMAILUSER ? 'Yes' : 'No');
+console.log('Email user configured:', emailUser ? 'Yes' : 'No');
+console.log('Email password configured:', emailPass ? 'Yes' : 'No');
+console.log('Email recipient configured:', emailRecipient ? 'Yes' : 'No');
+console.log('Email user variable name present as EMAIL_USER:', process.env.EMAIL_USER ? 'Yes' : 'No');
+console.log('Email user variable name present as EMAILUSER:', process.env.EMAILUSER ? 'Yes' : 'No');
 
 if (!emailUser || !emailPass) {
   console.error('Missing email credentials. Please check environment variables.');

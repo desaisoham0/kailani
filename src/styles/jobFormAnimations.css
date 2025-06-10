@@ -1,6 +1,6 @@
 /* Job Application Form Animations and Styles */
 
-/* Colorful gradient background for the form */
+/* Simple background for the form */
 .job-form-container {
   background: linear-gradient(135deg, #f9f8fc 0%, #edf7ff 100%);
   border-radius: 16px;
@@ -8,50 +8,6 @@
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
-}
-
-/* Animated decorative elements */
-.job-form-decoration {
-  position: absolute;
-  z-index: 0;
-  border-radius: 50%;
-  opacity: 0.4;
-}
-
-.job-form-decoration-1 {
-  top: -30px;
-  left: -30px;
-  width: 100px;
-  height: 100px;
-  background: linear-gradient(to right, #ffb347, #ffcc33);
-  animation: pulse 8s ease-in-out infinite;
-}
-
-.job-form-decoration-2 {
-  bottom: -20px;
-  right: -20px;
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(to right, #4facfe, #00f2fe);
-  animation: pulse 6s ease-in-out 1s infinite;
-}
-
-.job-form-decoration-3 {
-  top: 40%;
-  right: -15px;
-  width: 50px;
-  height: 50px;
-  background: linear-gradient(to right, #ff758c, #ff7eb3);
-  animation: pulse 7s ease-in-out 0.5s infinite;
-}
-
-.job-form-decoration-4 {
-  bottom: 30%;
-  left: -15px;
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(to right, #a6c1ee, #7367f0);
-  animation: pulse 9s ease-in-out 1.5s infinite;
 }
 
 /* Form field animations and styles */

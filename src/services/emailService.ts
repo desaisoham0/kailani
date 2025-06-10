@@ -46,7 +46,7 @@ export async function submitForm(formData: FormData, type: 'contact' | 'job'): P
     console.log(`Submitting ${type} form to: ${apiUrl}`);
     
     // Create a JSON object from the FormData
-    const formDataObj: Record<string, any> = { type };
+    const formDataObj: Record<string, string | File> = { type };
     
     // Handle file data conversion to base64 for the resume
     if (type === 'job' && formData.has('resume')) {
@@ -97,14 +97,14 @@ export async function submitForm(formData: FormData, type: 'contact' | 'job'): P
       responseText = await response.text(); // First get as text
       try {
         responseData = JSON.parse(responseText); // Then try to parse as JSON
-      } catch (parseErr) {
+      } catch {
         console.warn('Could not parse response as JSON:', responseText);
         responseData = { 
           message: responseText || 'Failed to parse server response',
           rawResponse: responseText
         };
       }
-    } catch (err) {
+    } catch {
       responseData = { message: 'Failed to get response content' };
     }
     

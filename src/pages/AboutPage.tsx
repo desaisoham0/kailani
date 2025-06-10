@@ -6,7 +6,7 @@ import aboutTeam from '../assets/illustrations/about-team.svg';
 import aboutValues from '../assets/illustrations/about-values.svg';
 import '../styles/aboutAnimations.css';
 
-const AboutPage: React.FC = () => {
+const AboutPage: React.FC = React.memo(() => {
   const [activeTab, setActiveTab] = useState('story');
   const [animateValues, setAnimateValues] = useState(false);
   
@@ -18,19 +18,19 @@ const AboutPage: React.FC = () => {
   }, [activeTab]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white w-full max-w-full overflow-x-hidden">
       {/* Hero Banner */}
-      <div className="relative h-80 md:h-96 overflow-hidden rounded-b-3xl shadow-md">
+      <div className="relative h-80 md:h-96 overflow-hidden rounded-b-3xl shadow-md w-full max-w-full">
         <img 
           src={aboutBanner} 
           alt="About Kailani" 
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover max-w-full"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center p-4">
-          <h1 className="text-4xl md:text-6xl font-bold jua-regular mb-2 drop-shadow-lg">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold jua-regular mb-2 drop-shadow-lg max-w-full">
             Our Story
           </h1>
-          <p className="text-xl md:text-2xl nunito-sans max-w-xl drop-shadow-md">
+          <p className="text-lg sm:text-xl md:text-2xl nunito-sans max-w-xl drop-shadow-md px-4">
             The journey, passion, and people behind Kailani
           </p>
         </div>
@@ -50,13 +50,13 @@ const AboutPage: React.FC = () => {
       </div>
 
       {/* Duolingo-style Tab Navigation */}
-      <div className="bg-white px-4 sm:px-6 lg:px-8 pt-8 pb-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex justify-center mb-8">
-            <div className="flex space-x-2 bg-gray-100 p-2 rounded-xl">
+      <div className="bg-white px-4 sm:px-6 lg:px-8 pt-8 pb-4 w-full max-w-full overflow-x-hidden">
+        <div className="max-w-4xl mx-auto w-full">
+          <div className="flex justify-center mb-8 w-full">
+            <div className="flex flex-wrap justify-center space-x-1 sm:space-x-2 bg-gray-100 p-2 rounded-xl max-w-full">
               <button 
                 onClick={() => setActiveTab('story')}
-                className={`px-6 py-3 rounded-lg font-bold transition-all jua-regular ${
+                className={`px-3 sm:px-6 py-3 rounded-lg font-bold transition-all jua-regular text-sm sm:text-base min-w-0 cursor-pointer hover:scale-105 hover:shadow-lg duration-200 ${
                   activeTab === 'story' 
                   ? 'bg-amber-500 text-white shadow-md' 
                   : 'hover:bg-gray-200 text-gray-600'
@@ -66,7 +66,7 @@ const AboutPage: React.FC = () => {
               </button>
               <button 
                 onClick={() => setActiveTab('team')}
-                className={`px-6 py-3 rounded-lg font-bold transition-all jua-regular ${
+                className={`px-3 sm:px-6 py-3 rounded-lg font-bold transition-all jua-regular text-sm sm:text-base min-w-0 cursor-pointer hover:scale-105 hover:shadow-lg duration-200 ${
                   activeTab === 'team' 
                   ? 'bg-cyan-500 text-white shadow-md' 
                   : 'hover:bg-gray-200 text-gray-600'
@@ -76,7 +76,7 @@ const AboutPage: React.FC = () => {
               </button>
               <button 
                 onClick={() => setActiveTab('values')}
-                className={`px-6 py-3 rounded-lg font-bold transition-all jua-regular ${
+                className={`px-3 sm:px-6 py-3 rounded-lg font-bold transition-all jua-regular text-sm sm:text-base min-w-0 cursor-pointer hover:scale-105 hover:shadow-lg duration-200 ${
                   activeTab === 'values' 
                   ? 'bg-purple-500 text-white shadow-md' 
                   : 'hover:bg-gray-200 text-gray-600'
@@ -88,17 +88,17 @@ const AboutPage: React.FC = () => {
           </div>
 
           {/* Content sections */}
-          <div className="max-w-4xl mx-auto pb-16">
+          <div className="max-w-4xl mx-auto pb-16 w-full max-w-full overflow-x-hidden">
             
             {/* Our Story Section */}
             {activeTab === 'story' && (
               <div className="about-section">
-                <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
+                <div className="flex flex-col md:flex-row items-center gap-8 mb-12 w-full">
                   <div className="w-full md:w-1/2">
-                    <img src={aboutStory} alt="Our Story" className="w-full max-w-sm mx-auto" />
+                    <img src={aboutStory} alt="Our Story" className="w-full max-w-sm mx-auto max-w-full" />
                   </div>
-                  <div className="w-full md:w-1/2">
-                    <h2 className="text-3xl font-bold mb-4 jua-regular duo-heading">How It All Began</h2>
+                  <div className="w-full md:w-1/2 min-w-0">
+                    <h2 className="text-2xl sm:text-3xl font-bold mb-4 jua-regular duo-heading">How It All Began</h2>
                     <p className="text-gray-700 mb-4 nunito-sans">
                       Kailani was born from a deep love of Hawaiian and Pacific cuisine. Our founder, Chef Miriam and Chef Steven, grew up on the shores of Oahu where food was always at the center of family gatherings.
                     </p>
@@ -115,14 +115,14 @@ const AboutPage: React.FC = () => {
                 </div>
                 
                 {/* Timeline */}
-                <div className="my-16">
-                  <h2 className="text-3xl font-bold mb-8 text-center jua-regular duo-heading">Our Journey</h2>
-                  <div className="relative">
+                <div className="my-16 w-full max-w-full overflow-x-hidden">
+                  <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-center jua-regular duo-heading">Our Journey</h2>
+                  <div className="relative w-full">
                     {/* Line */}
                     <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-amber-200 z-0"></div>
 
                     {/* Timeline items */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
                       {/* 2015 */}
                       <div className="md:col-start-2 relative about-card" style={{ animationDelay: '0.2s' }}>
                         {/* Dot */}
@@ -210,10 +210,10 @@ const AboutPage: React.FC = () => {
 
             {/* Our Team Section */}
             {activeTab === 'team' && (
-              <div className="about-section">
-                <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
-                  <div className="w-full md:w-1/2">
-                    <h2 className="text-3xl font-bold mb-4 jua-regular duo-heading">Meet Our Ohana</h2>
+              <div className="about-section w-full max-w-full overflow-x-hidden">
+                <div className="flex flex-col md:flex-row items-center gap-8 mb-12 w-full">
+                  <div className="w-full md:w-1/2 min-w-0">
+                    <h2 className="text-2xl sm:text-3xl font-bold mb-4 jua-regular duo-heading">Meet Our Ohana</h2>
                     <p className="text-gray-700 mb-4 nunito-sans">
                       At Kailani, we're more than just colleagues – we're a family (ohana). Our diverse team brings together talents from various backgrounds, united by our passion for great food and aloha spirit.
                     </p>
@@ -234,14 +234,14 @@ const AboutPage: React.FC = () => {
                     </div>
                   </div>
                   <div className="w-full md:w-1/2">
-                    <img src={aboutTeam} alt="Our Team" className="w-full max-w-sm mx-auto" />
+                    <img src={aboutTeam} alt="Our Team" className="w-full max-w-sm mx-auto max-w-full" />
                   </div>
                 </div>
                 
                 {/* Team cards */}
-                <div className="my-16">
-                  <h2 className="text-3xl font-bold mb-8 text-center jua-regular duo-heading">Key Team Members</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="my-16 w-full max-w-full overflow-x-hidden">
+                  <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-center jua-regular duo-heading">Key Team Members</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
                     {/* Chef Kai */}
                     <div className="about-card bg-white rounded-xl overflow-hidden shadow-lg" style={{ animationDelay: '0.2s' }}>
                       <div className="bg-amber-500 h-3"></div>
@@ -310,10 +310,10 @@ const AboutPage: React.FC = () => {
 
             {/* Our Values Section */}
             {activeTab === 'values' && (
-              <div className="about-section">
-                <div className="flex flex-col md:flex-row items-center gap-8 mb-12">
-                  <div className="w-full md:w-1/2">
-                    <h2 className="text-3xl font-bold mb-4 jua-regular duo-heading">What We Stand For</h2>
+              <div className="about-section w-full max-w-full overflow-x-hidden">
+                <div className="flex flex-col md:flex-row items-center gap-8 mb-12 w-full">
+                  <div className="w-full md:w-1/2 min-w-0">
+                    <h2 className="text-2xl sm:text-3xl font-bold mb-4 jua-regular duo-heading">What We Stand For</h2>
                     <p className="text-gray-700 mb-4 nunito-sans">
                       At Kailani, our values are inspired by the Hawaiian concept of "Pono" – doing what is right, in the right way, at the right time, for the right reason.
                     </p>
@@ -330,14 +330,14 @@ const AboutPage: React.FC = () => {
                     </div>
                   </div>
                   <div className="w-full md:w-1/2">
-                    <img src={aboutValues} alt="Our Values" className="w-full max-w-sm mx-auto" />
+                    <img src={aboutValues} alt="Our Values" className="w-full max-w-sm mx-auto max-w-full" />
                   </div>
                 </div>
                 
                 {/* Values details */}
-                <div className="my-16">
-                  <h2 className="text-3xl font-bold mb-8 text-center jua-regular duo-heading">Our Core Values</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="my-16 w-full max-w-full overflow-x-hidden">
+                  <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-center jua-regular duo-heading">Our Core Values</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                     {/* Aloha Spirit */}
                     <div className={`about-card bg-white rounded-xl overflow-hidden shadow-lg ${animateValues ? 'animate-value' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
                       <div className="bg-gradient-to-r from-green-400 to-green-600 h-3"></div>
@@ -468,6 +468,6 @@ const AboutPage: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default AboutPage;

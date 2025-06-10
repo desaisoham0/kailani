@@ -13,6 +13,11 @@ import strawberryDelightImg from '../assets/images/Strawberry Delight.jpg';
 import ramen3Img from '../assets/images/ramen3.jpg';
 import hot3Img from '../assets/images/hot3.jpg';
 import vanillaSwirlImg from '../assets/images/Vanilla Swirl.jpg';
+import shaveIce2Img from '../assets/images/Shave_Ice1.jpg';
+import shaveIce3Img from '../assets/images/Blue_lagoon.jpg';
+import iceCreamImg from '../assets/images/Honey Lavender Swirl.jpg';
+import acaiBowlImg from '../assets/images/Mango Acai Twist Bowl.png';
+import softServeImg from '../assets/images/Vanilla Swirl.jpg';
 
 export const galleryImages: GalleryImage[] = [
   {
@@ -31,7 +36,7 @@ export const galleryImages: GalleryImage[] = [
     id: 3,
     imageUrl: shaveIceImg,
     title: 'Rainbow Shave Ice',
-    category: 'ice-cream',
+    category: 'shave-ice',
   },
   {
     id: 4,
@@ -49,7 +54,7 @@ export const galleryImages: GalleryImage[] = [
     id: 6,
     imageUrl: chocolateFudgeImg,
     title: 'Chocolate Fudge',
-    category: 'ice-cream',
+    category: 'homemade-ice-cream',
   },
   {
     id: 7,
@@ -67,7 +72,7 @@ export const galleryImages: GalleryImage[] = [
     id: 9,
     imageUrl: strawberryDelightImg,
     title: 'Strawberry Delight',
-    category: 'ice-cream',
+    category: 'homemade-ice-cream',
   },
   {
     id: 10,
@@ -85,6 +90,36 @@ export const galleryImages: GalleryImage[] = [
     id: 12,
     imageUrl: vanillaSwirlImg,
     title: 'Vanilla Swirl',
-    category: 'ice-cream',
+    category: 'homemade-ice-cream',
+  },
+  {
+    id: 13,
+    title: "Tropical Sunset Shave Ice",
+    imageUrl: shaveIce2Img,
+    category: "shave-ice"
+  },
+  {
+    id: 14,
+    title: "Blue Lagoon Chill",
+    imageUrl: shaveIce3Img,
+    category: "shave-ice"
+  },
+  {
+    id: 15,
+    title: "Honey Lavender Swirl",
+    imageUrl: iceCreamImg,
+    category: "homemade-ice-cream"
+  },
+  {
+    id: 16,
+    title: "Mango Acai Twist Bowl",
+    imageUrl: acaiBowlImg,
+    category: "acai-twist-bowl"
+  },
+  {
+    id: 17,
+    title: "Vanilla Cloud Swirl",
+    imageUrl: softServeImg,
+    category: "soft-server-ice-cream"
   },
 ];

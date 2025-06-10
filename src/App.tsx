@@ -1,10 +1,6 @@
+import { Suspense, lazy, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { RestaurantHeader } from './components/Restaurant/RestaurantHeader';
-import { useState } from 'react';
-import JobsPage from './pages/JobsPage';
-import GalleryPage from './pages/GalleryPage';
-import AboutPage from './pages/AboutPage';
-import ContactPage from './pages/ContactPage';
 import BestSellers from './components/BestSellers/BestSellers';
 import HomeFoodGallery from './components/Food/HomeFoodGallery';
 import CustomerReviews from './components/Reviews/CustomerReviews';
@@ -15,13 +11,16 @@ import { bestSellerProducts } from './data/bestSellerProducts';
 import { galleryImages } from './data/galleryImages';
 import { customerReviews } from './data/reviews';
 
+const JobsPage = lazy(() => import('./pages/JobsPage'));
+const GalleryPage = lazy(() => import('./pages/GalleryPage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+
 function App() {
-  // Using a simple name for the restaurant
   const [restaurantName] = useState('KAILANI');
-  
   return (
     <Router>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
         {/* Restaurant Header (responsive for both mobile and desktop) */}
         <RestaurantHeader restaurantName={restaurantName} />
         
@@ -30,13 +29,12 @@ function App() {
         
         <Routes>
           <Route path="/" element={
-            <main className="w-full flex-grow flex flex-col">
+            <main className="w-full max-w-full flex-grow flex flex-col overflow-x-hidden">
 
               {/* Best Sellers Showcase */}
               <BestSellers 
                 products={bestSellerProducts}
-                title="Customers Favorites"
-                subtitle="Explore our yummy food adventures!"
+                title="We proudly serve"
               />
               
               {/* Food Gallery Preview */}
@@ -55,10 +53,10 @@ function App() {
               />
             </main>
           } />
-          <Route path="/jobs" element={<JobsPage />} />
-          <Route path="/gallery" element={<GalleryPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/jobs" element={<Suspense fallback={<div>Loading...</div>}><JobsPage /></Suspense>} />
+          <Route path="/gallery" element={<Suspense fallback={<div>Loading...</div>}><GalleryPage /></Suspense>} />
+          <Route path="/about" element={<Suspense fallback={<div>Loading...</div>}><AboutPage /></Suspense>} />
+          <Route path="/contact" element={<Suspense fallback={<div>Loading...</div>}><ContactPage /></Suspense>} />
         </Routes>
         
         <KailaniFooter restaurantName={restaurantName} />

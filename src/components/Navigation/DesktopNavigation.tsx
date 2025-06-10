@@ -1,88 +1,91 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useMemo } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import logoImage from '../../assets/Kailani_logo.png';
 
 interface NavItem {
   label: string;
   href: string;
   isRouterLink?: boolean;
-  icon?: string; // Added icon property for navigation items
 }
 
-interface DesktopNavigationProps {
-  restaurantName?: string;
-}
+const icons = ['🏠','🖼️','💼','📝','📞'];
 
-export const DesktopNavigation: React.FC<DesktopNavigationProps> = ({ restaurantName }) => {
-  const navItems: NavItem[] = [
+export const DesktopNavigation = React.memo(() => {
+  const location = useLocation();
+  const navItems = useMemo<NavItem[]>(() => [
     { label: 'Home', href: '/', isRouterLink: true },
     { label: 'Gallery', href: '/gallery', isRouterLink: true},
     { label: 'Careers', href: '/jobs', isRouterLink: true},
-    { label: 'About US', href: '/about', isRouterLink: true},
+    { label: 'About Us', href: '/about', isRouterLink: true},
     { label: 'Contact', href: '/contact', isRouterLink: true},
-  ];
+  ], []);
 
   return (
     <header 
-      className="sticky top-0 z-30 w-full shadow-lg overflow-hidden header-bg-animated" 
+      className="sticky top-0 z-30 w-full shadow-xl overflow-hidden max-w-full bg-[#fdf6fb] border-b-2 border-[#ffe0f0]"
     >
-      {/* Decorative elements */}
-      <div className="absolute -top-8 -left-8 w-20 h-20 rounded-full bg-amber-300 opacity-20 circle-pulse"></div>
-      <div className="absolute -bottom-5 -right-5 w-16 h-16 rounded-full bg-teal-400 opacity-20 circle-pulse" style={{animationDelay: "1s"}}></div>
-      <div className="absolute top-6 right-32 w-8 h-8 rounded-full bg-pink-400 opacity-20 circle-pulse" style={{animationDelay: "1.5s"}}></div>
-      
-      <div className="container mx-auto py-4 px-4 flex justify-between items-center relative z-10">
-        <div className="flex items-center">
-          <Link to="/" className="group relative">
-            {/* Added playful decoration behind logo */}
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-300 to-teal-300 rounded-full opacity-20 scale-125 group-hover:scale-150 transition-transform duration-500"></div>
+      {/* Top Section - Logo and Restaurant Name centered */}
+      <div className="w-full py-8 px-4 md:px-8 flex flex-col items-center justify-center gap-2 border-b-2 border-[#ffe0f0]" style={{background: 'linear-gradient(120deg, #fdf6fb 0%, #a8e6cf 40%, #ffd6e0 70%, #fffbe9 100%)'}}>
+        <Link to="/" className="flex items-center gap-4">
+          <div className="relative">
+            {/* Hand-drawn style logo border */}
+            <span className="absolute -inset-2 rounded-full border-4 border-dashed border-[#ffe0f0]" />
             <img 
               src={logoImage} 
+              srcSet="/Kailani_logo.webp 1x, /Kailani_logo.png 2x"
+              sizes="(max-width: 600px) 100vw, 300px"
               alt="Kailani Logo" 
-              className="h-14 w-auto mr-3 drop-shadow-md transform group-hover:scale-110 transition-transform duration-300 logo-float" 
+              loading="lazy"
+              className="h-20 md:h-24 w-auto rounded-full bg-white p-2 shadow-lg border-2 border-[#ffe0f0]"
             />
-          </Link>
-          <div 
-            className="text-5xl px-5 font-bold font-navigation jua-regular text-gradient-animated"
-            style={{textShadow: '0 2px 4px rgba(0,0,0,0.15)'}}
-          >
-            {restaurantName || 'Kailani'}
           </div>
-        </div>
-        <nav className="hidden md:flex space-x-3">
-          {navItems.map((item) => (
-            item.isRouterLink ? (
-              <Link
-                key={item.label}
-                to={item.href}
-                className="nav-link flex items-center px-4 py-2.5 text-lg text-white font-medium font-navigation jua-regular relative transition-all duration-300 hover:text-amber-400 group nav-link-hover-effect rounded-full hover:bg-white/10 backdrop-blur-sm"
-              >
-                <span className="mr-1.5 text-xl" role="img" aria-hidden="true">{item.icon}</span>
-                {item.label}
-                <span className="absolute bottom-0 left-0 w-0 h-1.5 bg-gradient-to-r from-amber-400 to-teal-400 transition-all duration-300 group-hover:w-full rounded-full"></span>
-              </Link>
-            ) : (
-              <a
-                key={item.label}
-                href={item.href}
-                className="nav-link flex items-center px-4 py-2.5 text-lg text-white font-medium font-navigation jua-regular relative transition-all duration-300 hover:text-amber-400 group nav-link-hover-effect rounded-full hover:bg-white/10 backdrop-blur-sm"
-              >
-                <span className="mr-1.5 text-xl" role="img" aria-hidden="true">{item.icon}</span>
-                {item.label}
-                <span className="absolute bottom-0 left-0 w-0 h-1.5 bg-gradient-to-r from-amber-400 to-teal-400 transition-all duration-300 group-hover:w-full rounded-full"></span>
-              </a>
-            )
-          ))}
-          {/* Call to action button
-          <a 
-            href="#order-now" 
-            className="ml-2 px-5 py-2 bg-gradient-to-r from-amber-400 to-amber-500 text-gray-800 font-bold rounded-full transition-all duration-300 hover:from-amber-500 hover:to-amber-600 hover:scale-105 shadow-lg flex items-center"
-          >
-            <span className="mr-1.5 text-xl" role="img" aria-hidden="true">🍽️</span>
-            Order Now
-          </a> */}
-        </nav>
+          <div className="flex flex-col items-start">
+            <span className="text-4xl md:text-5xl font-bold drop-shadow-lg" style={{
+              letterSpacing: '1px',
+              color: '#ffe066', // pastel yellow
+              textShadow: '0 2px 16px #a47149, 0 1px 0 #fffbe9, 0 0 2px #a8e6cf', // brown shadow
+              fontFamily: 'Baloo, jua, sans-serif'
+            }}>
+              Kailani
+            </span>
+            <span className="text-lg md:text-2xl font-bold mt-1" style={{color: '#00bfae', textShadow: '0 1px 0 #fffbe9, 0 0 2px #a8e6cf', fontFamily: 'Baloo, jua, sans-serif'}}>
+              Hawaiian SHAVE ICE & RAMEN
+            </span>
+          </div>
+        </Link>
       </div>
+
+      {/* Navigation Menu */}
+      <nav className="w-full flex justify-center items-center gap-4 md:gap-8 py-4 bg-[#fffbe9] border-t-2 border-[#ffe0f0]">
+        {navItems.map((item, index) => {
+          const isActive = location.pathname === item.href;
+          return (
+            <Link
+              key={item.label}
+              to={item.href}
+              className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-lg jua-regular transition-colors border-2 shadow-sm ${
+                isActive
+                  ? 'bg-[#ffe0f0] text-[#ff6b9d] border-[#ffb6d5]'
+                  : 'bg-white text-[#4ecdc4] border-[#e0f7fa] hover:bg-[#fdf6fb] hover:text-[#ff6b9d]'
+              }`}
+              style={{boxShadow: '0 2px 8px #ffe0f033'}}
+            >
+              <span className="text-2xl" aria-hidden>{icons[index]}</span>
+              {item.label}
+            </Link>
+          );
+        })}
+        {/* Order Now CTA button - Playful, pastel style */}
+        <a 
+          href="https://order.toasttab.com/online/kailanishaveice" 
+          target="_blank"
+          className="ml-2 px-6 py-3 rounded-2xl font-bold text-lg jua-regular bg-[#a8e6cf] text-[#00796b] border-2 border-[#4ecdc4] shadow-sm hover:bg-[#d0f5ea] transition-colors"
+          style={{boxShadow: '0 2px 8px #a8e6cf33'}}
+        >
+          <span className="text-2xl mr-2" aria-hidden>🍽️</span>
+          Order Now
+        </a>
+      </nav>
     </header>
   );
-};
+});
