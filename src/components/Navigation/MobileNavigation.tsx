@@ -1,227 +1,264 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import logoImage from '../../assets/Kailani_logo.png';
+import '../../styles/fonts.css';
 
-interface NavItem {
-  label: string;
-  href: string;
-  isRouterLink?: boolean;
-  icon?: string; // Added icon property for navigation items
-}
 
-interface MobileNavigationProps {
-  restaurantName?: string;
-}
+type NavigationItem = {
+ readonly label: string;
+ readonly href: string;
+ readonly isExternalLink: boolean;
+};
+
+
+type MobileNavigationProps = {
+ readonly restaurantName?: string;
+};
+
+
+type MenuState = {
+ readonly isMenuOpen: boolean;
+};
+
+
+const RESTAURANT_CONFIG = {
+ defaultName: 'KAILANI',
+ tagline: 'Hawaiian SHAVE ICE & RAMEN',
+ description: 'Your Tropical Food Adventure!',
+ orderUrl: 'https://order.toasttab.com/online/kailanishaveice',
+} as const;
+
+
+const NAVIGATION_ITEMS: readonly NavigationItem[] = [
+ { label: 'Home', href: '/', isExternalLink: false },
+ { label: 'Menu', href: '/gallery', isExternalLink: false },
+ { label: 'Order Now', href: RESTAURANT_CONFIG.orderUrl, isExternalLink: true },
+ { label: 'Careers', href: '/jobs', isExternalLink: false },
+ { label: 'About Us', href: '/about', isExternalLink: false },
+ { label: 'Contact', href: '/contact', isExternalLink: false },
+] as const;
+
 
 export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigationProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+ const [menuState, setMenuState] = useState<MenuState>({ isMenuOpen: false });
 
-  const navItems: NavItem[] = useMemo(() => [
-    { label: 'Home', href: '/', isRouterLink: true, icon: '🏠' },
-    { label: 'Gallery', href: '/gallery', isRouterLink: true, icon: '🖼️' },
-    { label: 'Careers', href: '/jobs', isRouterLink: true, icon: '💼' },
-    { label: 'About Us', href: '/about', isRouterLink: true, icon: '📝' },
-    { label: 'Contact', href: '/contact', isRouterLink: true, icon: '📞' },
-  ], []);
 
-  const toggleMenu = useCallback(() => {
-    setIsOpen((prev) => {
-      // Prevent scrolling when menu is open
-      document.body.style.overflow = !prev ? 'hidden' : 'auto';
-      return !prev;
-    });
-  }, []);
+ const displayName = restaurantName ?? RESTAURANT_CONFIG.defaultName;
 
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (isOpen && !target.closest('.mobile-menu-content') && !target.closest('.mobile-menu-button')) {
-        toggleMenu();
-      }
-    };
 
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen, toggleMenu]);
+ const toggleMenuVisibility = useCallback(() => {
+   setMenuState(prevState => {
+     const nextMenuState = !prevState.isMenuOpen;
+     document.body.style.overflow = nextMenuState ? 'hidden' : 'auto';
+     return { isMenuOpen: nextMenuState };
+   });
+ }, []);
 
-  return (
-    <>
-      {/* Mobile Header */}
-      <header className="sticky top-0 z-30 w-full max-w-full md:hidden shadow-lg overflow-x-hidden border-b-2 border-[#ffe0f0]" style={{ background: 'linear-gradient(120deg, #e0f7fa 0%, #fffbe9 100%)', fontFamily: 'Baloo, jua, sans-serif' }}>
-        <div className="container mx-auto py-5 px-4 flex justify-between items-center max-w-full relative bg-transparent" style={{fontFamily: 'Baloo, jua, sans-serif'}}>
-          <div className="flex items-center min-w-0 flex-1" style={{fontFamily: 'Baloo, jua, sans-serif'}}>
-            <div>
-              <img 
-                src={logoImage}
-                srcSet="/Kailani_logo.webp 1x, /Kailani_logo.png 2x"
-                sizes="(max-width: 600px) 100vw, 48px"
-                alt="Kailani Logo"
-                loading="lazy"
-                className="h-12 w-auto mr-2 rounded-full bg-white p-1 shadow border-2 border-[#ffe0f0]"
-              />
-            </div>
-            <div className="flex flex-col items-start bg-[#e0f7fa] px-3 py-1 rounded-2xl" style={{boxShadow: '0 2px 8px #a8e6cf33', fontFamily: 'Baloo, jua, sans-serif'}}>
-              <span className="text-3xl font-bold" style={{
-                letterSpacing: '1px',
-                color: '#ffe066', // pastel yellow
-                textShadow: '0 2px 16px #a47149, 0 1px 0 #fffbe9, 0 0 2px #a8e6cf', // brown shadow
-                fontFamily: 'Baloo, jua, sans-serif'
-              }}>{restaurantName || 'Kailani'}</span>
-              <span className="text-base sm:text-lg font-bold jua-regular mt-0.5" style={{color: '#00bfae', textShadow: '0 1px 0 #fffbe9, 0 0 2px #a8e6cf', fontFamily: 'Baloo, jua, sans-serif'}}>Hawaiian SHAVE ICE & RAMEN</span>
-            </div>
-          </div>
-          
-          {/* Mobile Menu Button - more playful */}
-          <div className="flex space-x-2">
-            {/* Order Now CTA button */}
-            <a 
-              href="https://order.toasttab.com/online/kailanishaveice"
-              target="_blank" 
-              className="group relative flex items-center px-3 py-2 text-sm font-bold jua-regular transition-all duration-300 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 overflow-hidden"
-              style={{
-                background: 'linear-gradient(135deg, #10B981, #059669)',
-                border: '3px solid rgba(255, 255, 255, 0.4)',
-                color: '#FFFFFF',
-              }}
-            >
-              <span className="relative z-10 flex items-center">
-                <span className="mr-1 text-base transform group-hover:scale-110 transition-transform duration-300">🍽️</span>
-                Order
-              </span>
-              <div 
-                className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-300"
-                style={{
-                  background: 'linear-gradient(45deg, #FF6B9D, #4ECDC4)',
-                  backgroundSize: '200% 200%',
-                  animation: 'gradientShift 2s ease infinite'
-                }}
-              />
-            </a>
-            
-            <button 
-              onClick={toggleMenu}
-              className="mobile-menu-button group relative flex items-center justify-center p-3 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 overflow-hidden"
-              style={{
-                background: 'linear-gradient(135deg, #FF6B9D 0%, #FFD93D 50%, #4ECDC4 100%)',
-                border: '3px solid rgba(255, 255, 255, 0.4)',
-              }}
-              aria-label={isOpen ? "Close menu" : "Open menu"}
-            >
-              <svg 
-                className="w-6 h-6 text-white relative z-10 transition-transform duration-300 group-hover:rotate-180" 
-                fill="none" 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth="3" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
-              >
-                {isOpen ? (
-                  <path d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-              <div 
-                className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-300"
-                style={{
-                  background: 'linear-gradient(45deg, #A8E6CF, #FF8E9B, #FFB74D)',
-                  backgroundSize: '200% 200%',
-                  animation: 'gradientShift 2s ease infinite'
-                }}
-              />
-            </button>
-          </div>
-        </div>
+
+ const closeMenu = useCallback(() => {
+   setMenuState({ isMenuOpen: false });
+   document.body.style.overflow = 'auto';
+ }, []);
+
+
+ useEffect(() => {
+   const handleOutsideClick = (event: MouseEvent) => {
+     const clickTarget = event.target as HTMLElement;
+     const isClickInsideMenu = clickTarget.closest('[data-menu-content]');
+     const isClickOnMenuButton = clickTarget.closest('[data-menu-button]');
+    
+     if (menuState.isMenuOpen && !isClickInsideMenu && !isClickOnMenuButton) {
+       closeMenu();
+     }
+   };
+
+
+   if (menuState.isMenuOpen) {
+     document.addEventListener('mousedown', handleOutsideClick);
+     return () => document.removeEventListener('mousedown', handleOutsideClick);
+   }
+ }, [menuState.isMenuOpen, closeMenu]);
+
+
+ const BrandLogo = ({ name }: { name: string }) => (
+   <Link to="/" className="flex min-w-0 items-center gap-2">
+     <img
+       src={logoImage}
+       srcSet="/Kailani_logo.webp 1x, /Kailani_logo.png 2x"
+       sizes="(max-width: 600px) 100vw, 48px"
+       alt="Kailani Logo"
+       loading="lazy"
+       className="h-10 w-auto flex-shrink-0"
+     />
+     <span
+       className="baloo-regular text-2xl font-bold tracking-wide text-[#f7d34f]"
+       style={{
+         fontFamily: 'Baloo, sans-serif',
+         whiteSpace: 'nowrap',
+         overflow: 'hidden',
+         textOverflow: 'ellipsis',
+         textShadow: '-1px 0 0 #8b4513, -2px 0 0 #8b4513, -3px 0 0 #8b4513'
+       }}
+     >
+       {name}
+     </span>
+   </Link>
+ );
+
+
+ const QuickOrderButton = () => (
+   <a
+     href={RESTAURANT_CONFIG.orderUrl}
+     target="_blank"
+     rel="noopener noreferrer"
+     className="baloo-regular flex items-center bg-transparent px-3 py-2 text-sm font-semibold text-[#f7d34f] transition-all duration-300 ease-out hover:text-white hover:underline hover:decoration-2 hover:decoration-white hover:underline-offset-2"
+   >
+     Order
+   </a>
+ );
+
+
+ const MenuToggleButton = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => void }) => (
+   <button
+     onClick={onToggle}
+     data-menu-button
+     className="flex items-center justify-center rounded-lg bg-[#f7d34f] p-2 transition-colors duration-300 hover:bg-white"
+     aria-label={isOpen ? "Close menu" : "Open menu"}
+   >
+     <svg
+       className="h-6 w-6 text-[#e83838] transition-transform duration-300"
+       fill="none"
+       strokeLinecap="round"
+       strokeLinejoin="round"
+       strokeWidth="3"
+       viewBox="0 0 24 24"
+       stroke="currentColor"
+     >
+       {isOpen ? (
+         <path d="M6 18L18 6M6 6l12 12" />
+       ) : (
+         <path d="M4 6h16M4 12h16M4 18h16" />
+       )}
+     </svg>
+   </button>
+ );
+
+
+ const NavigationLink = ({ item, onClick }: { item: NavigationItem; onClick: () => void }) => {
+   const baseClassName = "baloo-regular flex items-center justify-center rounded-lg border-2 border-[#f7d34f] bg-transparent p-4 text-lg font-semibold text-[#f7d34f] transition-all duration-300 ease-out hover:border-white hover:text-white hover:underline hover:decoration-2 hover:underline-offset-2";
+  
+   if (item.isExternalLink) {
+     return (
+       <a
+         href={item.href}
+         target="_blank"
+         rel="noopener noreferrer"
+         className={baseClassName}
+         style={{ fontFamily: 'Baloo, sans-serif' }}
+         onClick={onClick}
+       >
+         {item.label}
+       </a>
+     );
+   }
+
+
+   return (
+     <Link
+       to={item.href}
+       className={baseClassName}
+       style={{ fontFamily: 'Baloo, sans-serif' }}
+       onClick={onClick}
+     >
+       {item.label}
+     </Link>
+   );
+ };
+
+
+ const MenuHeader = ({ name }: { name: string }) => (
+   <div className="mb-8 text-center">
+     <div className="mb-4 flex items-center justify-center gap-3">
+       <img
+         src={logoImage}
+         alt="Kailani Logo"
+         className="h-16 w-auto flex-shrink-0"
+       />
+     </div>
+     <div
+       className="baloo-regular text-3xl font-bold tracking-wide text-[#f7d34f]"
+       style={{
+         fontFamily: 'Baloo, sans-serif',
+         textShadow: '-1px 0 0 #8b4513, -2px 0 0 #8b4513, -3px 0 0 #8b4513'
+       }}
+     >
+       {name}
+     </div>
+     <div
+       className="baloo-regular mt-2 text-lg font-semibold text-white"
+       style={{ fontFamily: 'Baloo, sans-serif' }}
+     >
+       {RESTAURANT_CONFIG.tagline}
+     </div>
+     <div
+       className="baloo-regular mt-2 text-base font-medium text-[#f7d34f]"
+       style={{ fontFamily: 'Baloo, sans-serif' }}
+     >
+       {RESTAURANT_CONFIG.description}
+     </div>
+   </div>
+ );
+
+
+ const NavigationMenu = ({ items, onItemClick }: { items: readonly NavigationItem[]; onItemClick: () => void }) => (
+   <nav className="flex flex-1 flex-col gap-4 px-2 pb-20">
+     {items.map((item) => (
+       <div key={item.label} className="relative">
+         <NavigationLink item={item} onClick={onItemClick} />
+       </div>
+     ))}
+   </nav>
+ );
+
+
+ return (
+   <>
+     <header className="sticky top-0 z-30 w-full max-w-full overflow-hidden border-b-2 border-[#ffe0f0] bg-[#e83838] shadow-xl">
+       <div className="flex w-full flex-row items-center justify-between border-b-2 border-[#ffe0f0] px-4 py-3">
+         <BrandLogo name={displayName} />
         
-        {/* Mobile decorative elements - right side */}
-        <div className="absolute right-2 top-1/2 transform -translate-y-1/2 z-5">
-          <div className="absolute top-2 right-2 w-2 h-2 bg-white/20 rounded-full animate-bounce opacity-60" style={{animationDelay: '0s', animationDuration: '3s'}}></div>
-          <div className="absolute top-6 right-4 w-1.5 h-1.5 bg-yellow-300/30 rounded-full animate-bounce opacity-50" style={{animationDelay: '1s', animationDuration: '4s'}}></div>
-          <div className="absolute bottom-2 right-6 w-2 h-2 bg-teal-300/25 rounded-full animate-bounce opacity-40" style={{animationDelay: '2s', animationDuration: '3.5s'}}></div>
-        </div>
-      </header>
-      
-      {/* Mobile Menu Overlay - Playful, pastel, static design */}
-      <div 
-        className={`fixed inset-0 z-40 w-full max-w-full bg-[#fdf6fb] bg-opacity-95 backdrop-blur-md transition-none ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
-        style={{ boxShadow: '0 0 0 100vw #fdf6fbcc', borderTop: '4px solid #ffe0f0' }}
-      >
-        <div className="mobile-menu-content flex flex-col h-full pt-14 p-6 w-full max-w-full overflow-x-hidden overflow-y-auto relative z-10">
-          {/* Close button - static, hand-drawn style */}
-          <button 
-            onClick={toggleMenu} 
-            className="absolute top-4 right-6 p-3 rounded-2xl bg-[#ffe0f0] border-2 border-[#ffb6d5] text-[#ff6b9d] font-bold text-xl shadow hover:bg-[#fffbe9] transition-none"
-            aria-label="Close menu"
-          >
-            <span style={{fontFamily: 'jua, sans-serif'}}>✕</span>
-          </button>
+         <div className="flex gap-2">
+           <QuickOrderButton />
+           <MenuToggleButton
+             isOpen={menuState.isMenuOpen}
+             onToggle={toggleMenuVisibility}
+           />
+         </div>
+       </div>
+     </header>
+    
+     <div
+       className={`fixed inset-0 z-40 w-full max-w-full bg-[#e83838] bg-opacity-95 backdrop-blur-md transition-all duration-300 ${
+         menuState.isMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'
+       }`}
+     >
+       <div
+         data-menu-content
+         className="relative z-10 flex h-full w-full max-w-full flex-col overflow-x-hidden overflow-y-auto p-6 pt-20"
+       >
+         <button
+           onClick={closeMenu}
+           className="absolute right-6 top-6 rounded-lg bg-[#f7d34f] p-3 text-xl font-bold text-[#e83838] transition-colors duration-300 hover:bg-white"
+           aria-label="Close menu"
+         >
+           <span className="baloo-regular">×</span>
+         </button>
 
-          {/* Header Section */}
-          <div className="text-center mb-8">
-            <div className="flex items-center justify-center mb-3 mt-6 gap-3">
-              <span className="inline-block text-3xl" role="img" aria-label="flower">🌺</span>
-              <img 
-                src={logoImage} 
-                alt="Kailani Logo" 
-                className="h-14 w-auto rounded-full bg-white p-1 border-2 border-[#ffe0f0] shadow"
-              />
-              <span className="inline-block text-3xl" role="img" aria-label="wave">🌊</span>
-            </div>
-            <div className="text-3xl font-bold jua-regular text-[#ff6b9d] drop-shadow-sm">{restaurantName || 'Kailani'}</div>
-            <div className="text-lg font-bold text-[#4ecdc4] jua-regular mt-1">Hawaiian SHAVE ICE & RAMEN</div>
-            <div className="text-[#ffb6d5] font-medium jua-regular text-base mt-2">🏝️ Your Tropical Food Adventure! 🏝️</div>
-          </div>
 
-          {/* Menu Items */}
-          <nav className="flex flex-col gap-4 px-2 flex-1 pb-20">
-            {navItems.map((item) => (
-              <div key={item.label} className="relative">
-                {item.isRouterLink ? (
-                  <Link 
-                    to={item.href} 
-                    className="flex items-center gap-4 p-5 rounded-3xl bg-white border-2 border-[#e0f7fa] shadow-sm hover:bg-[#fdf6fb] transition-none"
-                    style={{boxShadow: '0 2px 8px #a8e6cf33', fontFamily: 'Baloo, jua, sans-serif'}}
-                    onClick={toggleMenu}
-                  >
-                    <span className="text-2xl" role="img" aria-hidden="true">{item.icon}</span>
-                    <span className="font-bold text-lg jua-regular text-[#00bfae] tracking-wide" style={{fontFamily: 'Baloo, jua, sans-serif'}}>{item.label}</span>
-                  </Link>
-                ) : (
-                  <a 
-                    href={item.href} 
-                    className="flex items-center gap-4 p-5 rounded-3xl bg-white border-2 border-[#e0f7fa] shadow-sm hover:bg-[#fdf6fb] transition-none"
-                    style={{boxShadow: '0 2px 8px #a8e6cf33', fontFamily: 'Baloo, jua, sans-serif'}}
-                    onClick={toggleMenu}
-                  >
-                    <span className="text-2xl" role="img" aria-hidden="true">{item.icon}</span>
-                    <span className="font-bold text-lg jua-regular text-[#00bfae] tracking-wide" style={{fontFamily: 'Baloo, jua, sans-serif'}}>{item.label}</span>
-                  </a>
-                )}
-              </div>
-            ))}
-            {/* Order Now CTA in mobile menu */}
-            <div className="relative mt-6">
-              <a 
-                href="https://order.toasttab.com/online/kailanishaveice" 
-                target="_blank"
-                className="flex flex-col items-center justify-center p-6 rounded-3xl bg-[#a8e6cf] border-2 border-[#4ecdc4] shadow-sm hover:bg-[#d0f5ea] transition-none"
-                style={{boxShadow: '0 2px 8px #a8e6cf33', fontFamily: 'Baloo, jua, sans-serif'}}
-                onClick={toggleMenu}
-              >
-                <span className="text-4xl mb-2" role="img" aria-label="order">🍽️</span>
-                <span className="font-bold text-2xl text-[#00796b] jua-regular tracking-wide" style={{fontFamily: 'Baloo, jua, sans-serif'}}>Order Now!</span>
-                <span className="text-[#4ecdc4] text-sm font-medium mt-1">Start your tropical feast!</span>
-              </a>
-            </div>
-          </nav>
-        </div>
-      </div>
-    </>
-  );
+         <MenuHeader name={displayName} />
+         <NavigationMenu items={NAVIGATION_ITEMS} onItemClick={closeMenu} />
+       </div>
+     </div>
+   </>
+ );
 });
