@@ -40,7 +40,7 @@ const foodDataAdapter = {
     return categoryMap[normalized] ?? 'Ramen';
   },
 
-  transformFoodItemToProduct: (item: any): ProductItem => ({
+  transformFoodItemToProduct: (item: { id?: string; name: string; description: string; imageUrl: string; category: string }): ProductItem => ({
     id: item.id || '',
     name: item.name,
     description: item.description,

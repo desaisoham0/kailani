@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../firebase/authService';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import AdminFoodList from './AdminFoodList';
 import AdminFoodForm from './AdminFoodForm';
 

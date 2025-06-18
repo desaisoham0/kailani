@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getAllFoodItems, deleteFoodItem, type FoodItem } from '../../firebase/foodService';
+import type { Timestamp } from 'firebase/firestore';
 
 interface AdminFoodListProps {
   onEditFood: (foodId: string) => void;
@@ -44,17 +45,17 @@ export default function AdminFoodList({ onEditFood }: AdminFoodListProps) {
     }
   };
 
-  const formatDate = (timestamp: any) => {
+  const formatDate = (timestamp: Timestamp | null | undefined) => {
     if (!timestamp) return 'N/A';
     
     try {
-      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+      const date = timestamp.toDate();
       return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
       });
-    } catch (err) {
+    } catch {
       return 'Invalid date';
     }
   };

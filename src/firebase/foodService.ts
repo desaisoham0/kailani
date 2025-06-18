@@ -10,7 +10,8 @@ import {
   where,
   serverTimestamp,
   orderBy,
-  getDoc
+  getDoc,
+  Timestamp
 } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 
@@ -21,8 +22,8 @@ export interface FoodItem {
   category: string;
   favorite: boolean;
   imageUrl: string;
-  createdAt?: any;
-  updatedAt?: any;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
 }
 
 // Collection reference
@@ -81,7 +82,7 @@ export const updateFoodItem = async (
       throw new Error('Food item not found');
     }
     
-    let updatedData = { ...foodItemData, updatedAt: serverTimestamp() };
+    const updatedData = { ...foodItemData, updatedAt: serverTimestamp() };
     
     // If there's a new image file, upload it and update the URL
     if (imageFile) {
