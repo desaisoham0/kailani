@@ -3,54 +3,18 @@
  * Keep all font imports in this file for better organization
  */
 
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Jua&family=Luckiest+Guy&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Rampart+One&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
-
-/* Font classes */
-/* Jua Font */
-.jua-regular {
-  font-family: "Jua", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-/* Rampart One Font */
-.rampart-one-regular {
-  font-family: "Rampart One", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-/* Nunito Sans Font */
-.nunito-sans {
-  font-family: "Nunito Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings: "wdth" 100;
-}
-
-/* For different weights */
-.nunito-sans-light {
-  font-family: "Nunito Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 300;
-  font-style: normal;
-  font-variation-settings: "wdth" 100;
-}
-
-.nunito-sans-bold {
-  font-family: "Nunito Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 700;
-  font-style: normal;
-  font-variation-settings: "wdth" 100;
-}
-
+/* Baloo Font */
 @font-face {
   font-family: 'Baloo';
   src: url('../assets/font/Baloo-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+}
+
+/* Font classes */
+.baloo-regular {
+  font-family: 'Baloo', sans-serif;
+  font-weight: normal;
+  font-style: normal;
 }

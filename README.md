@@ -41,11 +41,20 @@ A modern, responsive website for Kailani restaurant built with React, TypeScript
    npm install
    ```
 
-3. Create a `.env` file in the root directory and add your email credentials:
+3. Create a `.env` file in the root directory (you can copy from `.env.example`):
    ```
+   # Email configuration
    EMAIL_USER=your-email@gmail.com
    EMAIL_PASS=your-app-password
    EMAIL_RECIPIENT=recipient@example.com
+   
+   # Firebase configuration
+   VITE_FIREBASE_API_KEY=your-firebase-api-key
+   VITE_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+   VITE_FIREBASE_PROJECT_ID=your-project-id
+   VITE_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+   VITE_FIREBASE_APP_ID=your-app-id
    ```
    See `EMAIL_SETUP.md` for detailed instructions on setting up email functionality.
 

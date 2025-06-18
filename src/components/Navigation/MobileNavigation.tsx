@@ -93,12 +93,13 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
      <span
        className="baloo-regular text-2xl font-bold tracking-wide text-[#f7d34f]"
        style={{
-         fontFamily: 'Baloo, sans-serif',
-         whiteSpace: 'nowrap',
-         overflow: 'hidden',
-         textOverflow: 'ellipsis',
-         textShadow: '-1px 0 0 #8b4513, -2px 0 0 #8b4513, -3px 0 0 #8b4513'
-       }}
+              fontFamily: 'Baloo, sans-serif',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              letterSpacing: '0.04em',
+              textShadow: '-3px 3px 0px #7F4F00'
+            }}
      >
        {name}
      </span>
@@ -111,7 +112,7 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
      href={RESTAURANT_CONFIG.orderUrl}
      target="_blank"
      rel="noopener noreferrer"
-     className="baloo-regular flex items-center bg-transparent px-3 py-2 text-sm font-semibold text-[#f7d34f] transition-all duration-300 ease-out hover:text-white hover:underline hover:decoration-2 hover:decoration-white hover:underline-offset-2"
+     className="baloo-regular flex items-center bg-transparent px-3 py-2 text-lg font-bold text-[#f7d34f] transition-all duration-300 ease-out hover:text-white hover:underline hover:decoration-2 hover:decoration-white hover:underline-offset-2"
    >
      Order
    </a>

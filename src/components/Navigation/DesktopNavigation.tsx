@@ -48,14 +48,15 @@ export const DesktopNavigation = React.memo(() => {
        className="h-10 w-auto flex-shrink-0 md:h-12 lg:h-16 xl:h-20"
      />
      <span
-       className="baloo-regular text-2xl font-bold tracking-wide text-[#f7d34f] md:text-3xl lg:text-4xl xl:text-5xl"
+       className="baloo-regular text-2xl font-bold tracking-wide text-[#f7d34f] md:text-3xl lg:text-4xl xl:text-5xl px-0.5"
        style={{
-         fontFamily: 'Baloo, sans-serif',
-         whiteSpace: 'nowrap',
-         overflow: 'hidden',
-         textOverflow: 'ellipsis',
-         textShadow: '-1px 0 0 #8b4513, -2px 0 0 #8b4513, -3px 0 0 #8b4513, -4px 0 0 #8b4513, -5px 0 0 #8b4513'
-       }}
+              fontFamily: 'Baloo, sans-serif',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              letterSpacing: '0.04em',
+              textShadow: '-4px 4px 0px #7F4F00'
+            }}
      >
        {name}
      </span>
