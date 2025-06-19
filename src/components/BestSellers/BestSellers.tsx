@@ -265,7 +265,7 @@ const BestSellers: React.FC<BestSellersProps> = React.memo(({
   }
 
   return (
-    <section className="py-16 relative overflow-hidden w-full max-w-full bg-[#19b4bd] transition-all duration-500 border-b-4 border-[#ffe0f0]">
+    <section className="py-16 relative overflow-hidden w-full max-w-full bg-[#19b4bd] transition-all duration-500 border-b-2 border-[#ffe0f0]">
       <div className="container mx-auto px-4 relative z-10 max-w-full">
         <BrandHeader />
         

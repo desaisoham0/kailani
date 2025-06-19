@@ -7,7 +7,6 @@ import CustomerReviews from './components/Reviews/CustomerReviews';
 import KailaniFooter from './components/Footer/KailaniFooter';
 import BackToTopButton from './components/UI/BackToTopButton';
 import FloatingOrderButton from './components/UI/FloatingOrderButton';
-import { galleryImages } from './data/galleryImages';
 import { customerReviews } from './data/reviews';
 import { AuthProvider } from './contexts/AuthContext';
 
@@ -41,9 +40,8 @@ function App() {
                 title="We proudly serve"
               />
               
-              {/* Food Gallery Preview */}
+              {/* Food Gallery Preview - Now loading from Firebase */}
               <HomeFoodGallery 
-                images={galleryImages}
                 title="Our Food Gallery" 
                 subtitle="Take a peek at our mouthwatering creations"
                 maxImages={6}

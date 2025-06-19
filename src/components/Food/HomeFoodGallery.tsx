@@ -1,99 +1,233 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import type { GalleryImage } from './FoodGallery';
+import BouncyPillButton from '../UI/BouncyPillButton';
+import { getFavoriteFoodItems } from '../../firebase/foodService';
 
-interface HomeFoodGalleryProps {
-  images: GalleryImage[];
-  title?: string;
-  subtitle?: string;
+// Types
+type FoodItem = {
+  id?: string;
+  name: string;
+  imageUrl: string;
+  category: string;
+};
+
+type GalleryDisplayProps = {
+  title: string;
+  subtitle: string;
+};
+
+type HomeFoodGalleryProps = GalleryDisplayProps & {
   maxImages?: number;
-}
+};
 
+// Pure utility function for array shuffling
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+};
+
+// Data adapter that isolates Firebase interaction
+const fetchFavoriteItems = async (): Promise<FoodItem[]> => {
+  try {
+    const favorites = await getFavoriteFoodItems();
+    return favorites.filter(item => item.imageUrl && item.imageUrl.trim() !== '');
+  } catch (error) {
+    console.error('Error fetching gallery images:', error);
+    throw new Error('Failed to load gallery images');
+  }
+};
+
+// React hook that handles data fetching and state
+const useRandomFoodItems = (maxCount: number) => {
+  const [state, setState] = React.useState<{
+    items: FoodItem[];
+    status: 'idle' | 'loading' | 'success' | 'error';
+    error: string | null;
+  }>({
+    items: [],
+    status: 'idle',
+    error: null
+  });
+
+  React.useEffect(() => {
+    const loadItems = async () => {
+      setState(prev => ({ ...prev, status: 'loading' }));
+      
+      try {
+        const validItems = await fetchFavoriteItems();
+        const randomized = shuffleArray(validItems).slice(0, maxCount);
+        
+        setState({
+          items: randomized,
+          status: 'success',
+          error: null
+        });
+      } catch (error) {
+        setState({
+          items: [],
+          status: 'error',
+          error: error instanceof Error ? error.message : 'Unknown error occurred'
+        });
+      }
+    };
+
+    loadItems();
+  }, [maxCount]);
+
+  return state;
+};
+
+// UI Components
+const LoadingDisplay: React.FC<GalleryDisplayProps> = ({ title, subtitle }) => (
+  <section className="py-16 relative overflow-hidden w-full max-w-full border-b-2 border-[#ffe0f0] bg-[#f0c91f]">
+    <div className="container mx-auto px-4 relative z-10 max-w-full">
+      <div className="text-center mb-12">
+        <h2 className="text-5xl md:text-5xl font-bold mb-2 baloo-regular text-[#7d3701] tracking-tight">
+          {title}
+        </h2>
+        <p className="text-md md:text-xl text-[#b25e00] max-w-2xl mx-auto baloo-regular mb-2 font-regular">
+          {subtitle}
+        </p>
+      </div>
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-yellow-500"></div>
+        <p className="ml-4 text-lg text-indigo-800">Loading gallery...</p>
+      </div>
+    </div>
+  </section>
+);
+
+const ErrorDisplay: React.FC<GalleryDisplayProps> = ({ title, subtitle }) => (
+  <section className="py-16 relative overflow-hidden w-full max-w-full border-b-2 border-[#ffe0f0] bg-[#f0c91f]">
+    <div className="container mx-auto px-4 relative z-10 max-w-full">
+      <div className="text-center mb-12">
+        <h2 className="text-5xl md:text-5xl font-bold mb-2 baloo-regular text-[#7d3701] tracking-tight">
+          {title}
+        </h2>
+        <p className="text-md md:text-xl text-[#b25e00] max-w-2xl mx-auto baloo-regular mb-2 font-regular">
+          {subtitle}
+        </p>
+      </div>
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 max-w-xl mx-auto">
+        <p className="text-amber-800">We couldn't load our gallery right now. Please check back later!</p>
+      </div>
+    </div>
+  </section>
+);
+
+const EmptyDisplay: React.FC<GalleryDisplayProps> = ({ title, subtitle }) => (
+  <section className="py-16 relative overflow-hidden w-full max-w-full border-b-2 border-[#ffe0f0] bg-[#f0c91f]">
+    <div className="container mx-auto px-4 relative z-10 max-w-full">
+      <div className="text-center mb-12">
+        <h2 className="text-5xl md:text-5xl font-bold mb-2 baloo-regular text-[#7d3701] tracking-tight">
+          {title}
+        </h2>
+        <p className="text-md md:text-xl text-[#b25e00] max-w-2xl mx-auto baloo-regular mb-2 font-regular">
+          {subtitle}
+        </p>
+      </div>
+      <div className="bg-white rounded-lg p-6 max-w-xl mx-auto shadow-md">
+        <p className="text-gray-600">No gallery images available at the moment. Please check back soon!</p>
+      </div>
+    </div>
+  </section>
+);
+
+const GalleryItem: React.FC<{ item: FoodItem; isHighlighted: boolean }> = ({ item, isHighlighted }) => (
+  <div
+    className={`relative overflow-hidden ${isHighlighted ? 'lg:col-span-2 lg:row-span-2' : ''} group rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:scale-[1.02]`}
+    style={{ 
+      aspectRatio: '1/1'
+    }}
+  >
+    <img
+      src={item.imageUrl}
+      alt={item.name}
+      className="object-cover w-full h-full rounded-2xl border-[3px] border-[#fff8e1] shadow-inner"
+      draggable="false"
+      loading="lazy"
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-[#7d3701]/80 via-[#7d3701]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 md:p-4">
+      <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+        <h3 className="text-white font-bold font-navigation jua-regular text-sm md:text-base truncate mb-1">
+          {item.name}
+        </h3>
+        <div className="w-10 h-1 bg-[#f0c91f] rounded-full transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 delay-150"></div>
+      </div>
+    </div>
+  </div>
+);
+
+const GalleryFooter: React.FC = () => (
+  <div className="mt-12 text-center">
+    <Link to="/gallery">
+      <BouncyPillButton
+        text={
+          <span className="flex items-center justify-center">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-2">
+              <rect x="2" y="5" width="20" height="14" rx="4" fill="#ffe0f0" stroke="#6366f1" strokeWidth="1.5"/>
+              <circle cx="7.5" cy="10" r="1.5" fill="#6366f1"/>
+              <path d="M2 17l5-5c1-1 2.5-1 3.5 0l3 3 2-2c1-1 2.5-1 3.5 0l2 2" stroke="#6366f1" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+            </svg>
+            View Full Gallery
+          </span>
+        }
+        onClick={() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        className="bg-white text-indigo-900 baloo-regular border-indigo-300 shadow-[0_8px_0_rgb(165,180,252)] px-8 py-2 text-4xl"
+      />
+    </Link>
+  </div>
+);
+
+// Main component
 const HomeFoodGallery: React.FC<HomeFoodGalleryProps> = React.memo(({
-  images,
-  title = "Food Gallery",
-  subtitle = "A glimpse of our delicious creations",
+  title = "Our Food Gallery",
+  subtitle = "Take a peek at our mouthwatering creations",
   maxImages = 6
 }) => {
-  // Memoize the sliced images array
-  const displayImages = useMemo(() => images.slice(0, maxImages), [images, maxImages]);
+  const { items, status } = useRandomFoodItems(maxImages);
+
+  if (status === 'loading') {
+    return <LoadingDisplay title={title} subtitle={subtitle} />;
+  }
+
+  if (status === 'error') {
+    return <ErrorDisplay title={title} subtitle={subtitle} />;
+  }
+
+  if (items.length === 0) {
+    return <EmptyDisplay title={title} subtitle={subtitle} />;
+  }
 
   return (
-    <section
-      className="py-16 relative overflow-hidden w-full max-w-full"
-      style={{ background: "linear-gradient(120deg, #fffde4 0%, #e0f7fa 100%)" }} // lemon & sky gradient
-    >
+    <section className="py-16 relative overflow-hidden w-full max-w-full border-b-2 border-[#ffe0f0] bg-[#f0c91f]">
       <div className="container mx-auto px-4 relative z-10 max-w-full">
         <div className="text-center mb-12">
-          <span className="inline-flex items-center justify-center mb-4">
-            {/* Hand-drawn style icon (SVG) */}
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <ellipse cx="24" cy="24" rx="22" ry="18" fill="#ffe0f0" stroke="#fbbf24" strokeWidth="2.5"/>
-              <path d="M14 30 Q24 38 34 30" stroke="#fbbf24" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-              <circle cx="18" cy="22" r="2.5" fill="#fbbf24"/>
-              <circle cx="30" cy="22" r="2.5" fill="#fbbf24"/>
-            </svg>
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold mb-2 font-navigation jua-regular text-indigo-900 tracking-tight">
+          <h2 className="text-5xl md:text-5xl font-bold mb-2 baloo-regular text-[#7d3701] tracking-tight">
             {title}
           </h2>
-          <p className="text-lg md:text-xl text-indigo-700 max-w-2xl mx-auto nunito-sans mb-2 font-semibold">
+          <p className="text-md md:text-xl text-[#b25e00] max-w-2xl mx-auto baloo-regular mb-2 font-regular">
             {subtitle}
           </p>
         </div>
 
-        {/* Image gallery grid - Compact, even grid with invisible squares */}
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1 md:gap-2 auto-rows-[1fr]">
-          {displayImages.map((image, idx) => (
-            <div
-              key={image.id}
-              className="relative overflow-hidden rounded-2xl bg-transparent flex items-center justify-center aspect-square"
-            >
-              <img
-                src={image.imageUrl}
-                alt={image.title}
-                className="object-cover rounded-2xl w-full h-full"
-                draggable="false"
-                style={{ aspectRatio: '1/1', width: '100%', height: '100%' }}
-                loading="lazy"
-                srcSet={image.imageUrl + ' 1x, ' + image.imageUrl + ' 2x'}
-              />
-              {/* Overlay with title at bottom */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/40 to-transparent px-2 py-2">
-                <h3 className="text-white font-bold font-navigation jua-regular text-xs md:text-sm truncate">
-                  {image.title}
-                </h3>
-              </div>
-              {/* Show a faded overlay on the last image if there are more images */}
-              {idx === displayImages.length - 1 && images.length > maxImages && (
-                <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center rounded-2xl">
-                  <span className="text-white text-2xl md:text-3xl font-bold font-navigation jua-regular">+{images.length - maxImages}</span>
-                  <span className="text-white text-xs md:text-sm mt-1">more</span>
-                </div>
-              )}
-            </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4 auto-rows-[1fr]">
+          {items.map((item, index) => (
+            <GalleryItem 
+              key={item.id || index} 
+              item={item} 
+              isHighlighted={index % 3 === 0}
+            />
           ))}
         </div>
 
-        {/* View All Button - Playful, static */}
-        <div className="mt-12 text-center">
-          <Link to="/gallery">
-            <button
-              className="px-8 py-3 font-bold text-lg font-navigation jua-regular cursor-pointer rounded-full border-2 bg-pink-200 text-pink-700 border-pink-300 shadow-md hover:bg-pink-100 transition-none hover:animate-bounce-short active:scale-95"
-              style={{ boxShadow: '0 6px 0 #fbbf24' }}
-            >
-              <span className="inline-block mr-2 align-middle">
-                {/* Hand-drawn style gallery icon */}
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="2" y="5" width="20" height="14" rx="4" fill="#ffe0f0" stroke="#fbbf24" strokeWidth="1.5"/>
-                  <circle cx="7.5" cy="10" r="1.5" fill="#fbbf24"/>
-                  <path d="M2 17l5-5c1-1 2.5-1 3.5 0l3 3 2-2c1-1 2.5-1 3.5 0l2 2" stroke="#fbbf24" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-                </svg>
-              </span>
-              View Full Gallery
-            </button>
-          </Link>
-        </div>
+        <GalleryFooter />
       </div>
     </section>
   );
