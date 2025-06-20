@@ -112,8 +112,9 @@ export default function AdminFoodList({ onEditFood }: AdminFoodListProps) {
   }
 
   return (
-    <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-      <table className="min-w-full divide-y divide-gray-300">
+    <div className="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+      <div className="inline-block min-w-full align-middle">
+        <table className="min-w-full divide-y divide-gray-300">
         <thead className="bg-gray-50">
           <tr>
             <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Image</th>
@@ -180,7 +181,8 @@ export default function AdminFoodList({ onEditFood }: AdminFoodListProps) {
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
     </div>
   );
 }

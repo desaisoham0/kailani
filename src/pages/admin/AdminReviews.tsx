@@ -206,84 +206,86 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
           <p className="mt-1 text-sm text-gray-500">Get started by adding a new review.</p>
         </div>
       ) : (
-        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-          <table className="min-w-full divide-y divide-gray-300">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Author</th>
-                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Rating</th>
-                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Source</th>
-                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date</th>
-                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Review Text</th>
-                <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                  <span className="sr-only">Actions</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {reviews.map((review) => (
-                <tr key={review.id} className="hover:bg-gray-50">
-                  <td className="py-4 pl-4 pr-3 text-sm sm:pl-6">
-                    <div className="flex items-center">
-                      <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-500 font-medium">{review.author.charAt(0)}</span>
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-medium text-gray-900">{review.author}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-3 py-4 text-sm text-gray-500">
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <svg 
-                          key={star} 
-                          className={`h-5 w-5 ${star <= review.rating ? 'text-yellow-400' : 'text-gray-300'}`}
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-3 py-4 text-sm text-gray-500">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize bg-blue-100 text-blue-800">
-                      {review.source}
-                    </span>
-                  </td>
-                  <td className="px-3 py-4 text-sm text-gray-500">
-                    {formatDate(review.date)}
-                  </td>
-                  <td className="px-3 py-4 text-sm text-gray-500 max-w-xs truncate">
-                    {review.text}
-                  </td>
-                  <td className="px-3 py-4 text-sm text-gray-500 text-right">
-                    <div className="flex justify-end space-x-3">
-                      <button
-                        onClick={() => onEditReview(review.id!)}
-                        className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeleteReview(review.id!)}
-                        disabled={deleteInProgress === review.id}
-                        className={`${
-                          deleteInProgress === review.id
-                            ? 'text-gray-400 cursor-not-allowed'
-                            : 'text-red-600 hover:text-red-900 cursor-pointer'
-                        }`}
-                      >
-                        {deleteInProgress === review.id ? 'Deleting...' : 'Delete'}
-                      </button>
-                    </div>
-                  </td>
+        <div className="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+          <div className="inline-block min-w-full align-middle">
+            <table className="min-w-full divide-y divide-gray-300">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Author</th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Rating</th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Source</th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date</th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Review Text</th>
+                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                    <span className="sr-only">Actions</span>
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {reviews.map((review) => (
+                  <tr key={review.id} className="hover:bg-gray-50">
+                    <td className="py-4 pl-4 pr-3 text-sm sm:pl-6">
+                      <div className="flex items-center">
+                        <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                          <span className="text-gray-500 font-medium">{review.author.charAt(0)}</span>
+                        </div>
+                        <div className="ml-4">
+                          <div className="font-medium text-gray-900">{review.author}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-3 py-4 text-sm text-gray-500">
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <svg 
+                            key={star} 
+                            className={`h-5 w-5 ${star <= review.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-3 py-4 text-sm text-gray-500">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize bg-blue-100 text-blue-800">
+                        {review.source}
+                      </span>
+                    </td>
+                    <td className="px-3 py-4 text-sm text-gray-500">
+                      {formatDate(review.date)}
+                    </td>
+                    <td className="px-3 py-4 text-sm text-gray-500 max-w-xs truncate">
+                      {review.text}
+                    </td>
+                    <td className="px-3 py-4 text-sm text-gray-500 text-right">
+                      <div className="flex justify-end space-x-3">
+                        <button
+                          onClick={() => onEditReview(review.id!)}
+                          className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteReview(review.id!)}
+                          disabled={deleteInProgress === review.id}
+                          className={`${
+                            deleteInProgress === review.id
+                              ? 'text-gray-400 cursor-not-allowed'
+                              : 'text-red-600 hover:text-red-900 cursor-pointer'
+                          }`}
+                        >
+                          {deleteInProgress === review.id ? 'Deleting...' : 'Delete'}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
