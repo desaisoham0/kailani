@@ -15,7 +15,7 @@ export default function AdminReviewForm({ reviewId, onComplete }: AdminReviewFor
     rating: number;
     text: string;
     date: Timestamp;
-    source: 'google'; // Only using Google reviews
+    source: 'google'; // Only using Google reviews as per the original code
   }>({
     author: '',
     rating: 5,
@@ -121,8 +121,8 @@ export default function AdminReviewForm({ reviewId, onComplete }: AdminReviewFor
   if (fetchLoading) {
     return (
       <div className="flex justify-center items-center py-16">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-        <span className="ml-3">Loading review...</span>
+        <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-b-4 border-blue-500"></div>
+        <span className="ml-3 text-blue-600 font-medium">Loading review...</span>
       </div>
     );
   }
@@ -131,32 +131,53 @@ export default function AdminReviewForm({ reviewId, onComplete }: AdminReviewFor
     ? formData.date.toDate().toISOString().split('T')[0] 
     : new Date().toISOString().split('T')[0];
 
+  // Star rating component
+  const renderStarRating = () => {
+    return (
+      <div className="flex items-center space-x-1 mb-4">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            type="button"
+            onClick={() => setFormData(prev => ({ ...prev, rating: star }))}
+            className="focus:outline-none cursor-pointer"
+            aria-label={`Rate ${star} stars`}
+          >
+            <svg 
+              className={`w-8 h-8 ${star <= formData.rating ? 'text-yellow-400' : 'text-gray-300'} transition-colors duration-150`} 
+              fill="currentColor" 
+              viewBox="0 0 20 20"
+            >
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+          </button>
+        ))}
+      </div>
+    );
+  };
+
   return (
-    <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-      <div className="px-4 py-5 sm:p-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
-          {isEditMode ? 'Edit Review' : 'Add New Review'}
-        </h3>
-        
-        {error && (
-          <div className="mt-4 bg-red-50 border border-red-200 text-red-800 rounded-md p-4">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm">{error}</p>
-              </div>
-            </div>
+    <div className="bg-white p-6 rounded-lg">
+      <h3 className="text-xl font-bold text-gray-800 mb-6 pb-2 border-b border-gray-100">
+        {isEditMode ? 'Edit Review' : 'Add New Review'}
+      </h3>
+      
+      {error && (
+        <div className="mb-6 bg-red-50 border-l-4 border-red-500 rounded-md p-4 text-sm text-red-700 animate-pulse">
+          <div className="flex">
+            <svg className="h-5 w-5 text-red-500 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            {error}
           </div>
-        )}
-        
-        <form onSubmit={handleSubmit} className="mt-5 space-y-6">
-          <div>
+        </div>
+      )}
+      
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="space-y-2">
             <label htmlFor="author" className="block text-sm font-medium text-gray-700">
-              Author Name
+              Author Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -165,35 +186,14 @@ export default function AdminReviewForm({ reviewId, onComplete }: AdminReviewFor
               required
               value={formData.author}
               onChange={handleChange}
-              className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+              className="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md transition-colors duration-200"
+              placeholder="Customer name"
             />
           </div>
           
-
-          
-          <div>
-            <label htmlFor="rating" className="block text-sm font-medium text-gray-700">
-              Rating
-            </label>
-            <select
-              id="rating"
-              name="rating"
-              required
-              value={formData.rating}
-              onChange={handleChange}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
-            >
-              <option value={1}>1 Star</option>
-              <option value={2}>2 Stars</option>
-              <option value={3}>3 Stars</option>
-              <option value={4}>4 Stars</option>
-              <option value={5}>5 Stars</option>
-            </select>
-          </div>
-          
-          <div>
+          <div className="space-y-2">
             <label htmlFor="source" className="block text-sm font-medium text-gray-700">
-              Review Source
+              Review Source <span className="text-red-500">*</span>
             </label>
             <select
               id="source"
@@ -201,62 +201,92 @@ export default function AdminReviewForm({ reviewId, onComplete }: AdminReviewFor
               required
               value={formData.source}
               onChange={handleChange}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-colors duration-200"
             >
               <option value="google">Google</option>
-              <option value="yelp">Yelp</option>
-              <option value="tripadvisor">TripAdvisor</option>
             </select>
           </div>
-          
-          <div>
-            <label htmlFor="date" className="block text-sm font-medium text-gray-700">
-              Review Date
-            </label>
-            <input
-              type="date"
-              name="date"
-              id="date"
-              required
-              value={formattedDate}
-              onChange={handleDateChange}
-              className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="text" className="block text-sm font-medium text-gray-700">
-              Review Text
-            </label>
-            <textarea
-              id="text"
-              name="text"
-              rows={4}
-              required
-              value={formData.text}
-              onChange={handleChange}
-              className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-            />
-          </div>
-          
-          <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={() => onComplete()}
-              className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-3"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300"
-            >
-              {loading ? 'Saving...' : isEditMode ? 'Update Review' : 'Add Review'}
-            </button>
-          </div>
-        </form>
-      </div>
+        </div>
+        
+        <div className="space-y-2">
+          <label htmlFor="rating" className="block text-sm font-medium text-gray-700 mb-1">
+            Rating <span className="text-red-500">*</span>
+          </label>
+          {renderStarRating()}
+          <select
+            id="rating"
+            name="rating"
+            value={formData.rating}
+            onChange={handleChange}
+            className="sr-only"
+            aria-hidden="true"
+          >
+            <option value={1}>1 Star</option>
+            <option value={2}>2 Stars</option>
+            <option value={3}>3 Stars</option>
+            <option value={4}>4 Stars</option>
+            <option value={5}>5 Stars</option>
+          </select>
+        </div>
+        
+        <div className="space-y-2">
+          <label htmlFor="date" className="block text-sm font-medium text-gray-700">
+            Review Date <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="date"
+            name="date"
+            id="date"
+            required
+            value={formattedDate}
+            onChange={handleDateChange}
+            className="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md transition-colors duration-200"
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <label htmlFor="text" className="block text-sm font-medium text-gray-700">
+            Review Text <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            id="text"
+            name="text"
+            rows={4}
+            required
+            value={formData.text}
+            onChange={handleChange}
+            className="focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md transition-colors duration-200"
+            placeholder="What did the customer say?"
+          />
+        </div>
+        
+        <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
+          <button
+            type="button"
+            onClick={onComplete}
+            className="py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-[0_4px_0_rgb(203,213,225)] hover:shadow-[0_2px_0_rgb(203,213,225)] hover:translate-y-1 transition-all duration-200 cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="inline-flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 shadow-[0_6px_0_rgb(29,78,216)] hover:shadow-[0_3px_0_rgb(29,78,216)] hover:translate-y-1 transition-all duration-200 cursor-pointer"
+          >
+            {loading ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                {isEditMode ? 'Updating...' : 'Saving...'}
+              </>
+            ) : (
+              isEditMode ? 'Update Review' : 'Add Review'
+            )}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

@@ -185,7 +185,7 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
             <div className="mb-4">
               <button
                 onClick={handleUpdateStats}
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 shadow-[0_6px_0_rgb(29,78,216)] hover:shadow-[0_3px_0_rgb(29,78,216)] hover:translate-y-1 transition-all duration-200 cursor-pointer"
               >
                 Save Stats
               </button>
@@ -263,7 +263,7 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
                     <div className="flex justify-end space-x-3">
                       <button
                         onClick={() => onEditReview(review.id!)}
-                        className="text-indigo-600 hover:text-indigo-900"
+                        className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
                       >
                         Edit
                       </button>
@@ -273,7 +273,7 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
                         className={`${
                           deleteInProgress === review.id
                             ? 'text-gray-400 cursor-not-allowed'
-                            : 'text-red-600 hover:text-red-900'
+                            : 'text-red-600 hover:text-red-900 cursor-pointer'
                         }`}
                       >
                         {deleteInProgress === review.id ? 'Deleting...' : 'Delete'}

@@ -85,7 +85,7 @@ export default function AdminFoodList({ onEditFood }: AdminFoodListProps) {
             <div className="-mx-1.5 -my-1.5">
               <button
                 onClick={() => fetchFoodItems()}
-                className="inline-flex bg-red-50 rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                className="inline-flex bg-red-50 rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 cursor-pointer"
               >
                 <span className="sr-only">Retry</span>
                 <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -162,7 +162,7 @@ export default function AdminFoodList({ onEditFood }: AdminFoodListProps) {
                 <div className="flex space-x-3 justify-end">
                   <button
                     onClick={() => onEditFood(food.id!)}
-                    className="text-blue-600 hover:text-blue-900"
+                    className="text-blue-600 hover:text-blue-900 cursor-pointer"
                   >
                     Edit
                   </button>
@@ -170,7 +170,7 @@ export default function AdminFoodList({ onEditFood }: AdminFoodListProps) {
                     onClick={() => handleDeleteFoodItem(food.id!)}
                     disabled={deleteInProgress === food.id}
                     className={`text-red-600 hover:text-red-900 ${
-                      deleteInProgress === food.id ? 'opacity-50 cursor-not-allowed' : ''
+                      deleteInProgress === food.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                     }`}
                   >
                     {deleteInProgress === food.id ? 'Deleting...' : 'Delete'}
