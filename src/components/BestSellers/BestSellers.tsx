@@ -52,14 +52,14 @@ const foodDataAdapter = {
 // UI utility functions
 const createCategoryButtonStyles = (category: FoodCategory): string => {
   const styleMap: Record<FoodCategory, string> = {
-    'Ramen': 'bg-yellow-400 text-indigo-900 border-yellow-600 shadow-[0_8px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1',
-    'Shave Ice': 'bg-blue-300 text-indigo-900 border-indigo-500 shadow-[0_8px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
-    'Acai': 'bg-blue-300 text-indigo-900 border-indigo-500 shadow-[0_8px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
-    'Homemade Soft Serve': 'bg-blue-300 text-indigo-900 border-indigo-500 shadow-[0_8px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
-    'Hot Dogs': 'bg-yellow-400 text-indigo-900 border-yellow-600 shadow-[0_8px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1',
-    'Musubi': 'bg-yellow-400 text-indigo-900 border-yellow-600 shadow-[0_8px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1'
+    'Ramen': 'bg-yellow-400 text-indigo-900 border-yellow-600 shadow-[0_6px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1',
+    'Shave Ice': 'bg-blue-300 text-indigo-900 border-indigo-500 shadow-[0_6px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
+    'Acai': 'bg-blue-300 text-indigo-900 border-indigo-500 shadow-[0_6px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
+    'Homemade Soft Serve': 'bg-blue-300 text-indigo-900 border-indigo-500 shadow-[0_6px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
+    'Hot Dogs': 'bg-yellow-400 text-indigo-900 border-yellow-600 shadow-[0_6px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1',
+    'Musubi': 'bg-yellow-400 text-indigo-900 border-yellow-600 shadow-[0_6px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1'
   };
-  return styleMap[category] ?? 'bg-blue-400 text-indigo-900 border-blue-600';
+  return styleMap[category] ?? 'bg-blue-400 text-indigo-900 border-blue-600 shadow-[0_6px_0_rgb(37,99,235)] hover:shadow-[0_4px_0px_rgb(37,99,235)] hover:translate-y-1';
 };
 
 const getAvailableCategories = (products: readonly ProductItem[]): readonly FoodCategory[] => {
@@ -83,11 +83,11 @@ const BouncyPillButton: React.FC<BouncyPillButtonProps> = ({
   className = '',
   'aria-label': ariaLabel,
 }) => {
-  const defaultStyle = 'bg-white text-indigo-900 border-indigo-300 shadow-[0_8px_0_rgb(165,180,252)] hover:shadow-[0_4px_0px_rgb(165,180,252)] hover:translate-y-1 hover:bg-indigo-50';
+  const defaultStyle = 'bg-white text-indigo-900 border-indigo-300 baloo-regular rounded-full shadow-[0_6px_0_rgb(165,180,252)] hover:shadow-[0_4px_0px_rgb(165,180,252)] hover:translate-y-1 transition-all duration-200 active:scale-95';
   
   return (
     <button
-      className={`px-6 py-3 font-bold text-lg font-navigation baloo-regular cursor-pointer rounded-full border-2 transition-all duration-200 hover:scale-105 active:scale-95 ${
+      className={`px-6 py-3 font-bold text-lg baloo-regular cursor-pointer rounded-full transition-all duration-200 hover:translate-y-1 active:scale-95 ${
         isActive ? activeStyle : defaultStyle
       } ${className}`}
       onClick={onClick}
@@ -389,23 +389,25 @@ const ProductCarousel: React.FC<{
 
       {showNavigation && (
         <div className="flex items-center justify-center mt-6 space-x-4">
-          <BouncyPillButton
-            text={<ChevronLeft className="h-6 w-6 text-indigo-700" />}
+          <button
             onClick={onPrevious}
-            className="p-2 bg-pink-100 hover:bg-gray-100 border-indigo-300"
+            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] text-[#0A2463] border-2 border-[#bbfaf5] shadow-[0_4px_0_rgb(187,250,245)] hover:shadow-[0_4px_0px_rgb(91,232,240)] hover:translate-y-1 transition-all duration-200 active:scale-95"
             aria-label="Previous product"
-          />
-          <BouncyPillButton
-            text={`${currentIndex + 1} / ${products.length}`}
-            onClick={() => {}}
-            className="bg-pink-100 bg-opacity-80 backdrop-blur-sm px-6 py-2 text-indigo-700 text-sm"
-          />
-          <BouncyPillButton
-            text={<ChevronRight className="h-6 w-6 text-indigo-700" />}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          <button
+            className=" bg-opacity-80 backdrop-blur-sm px-6 py-2 text-sm font-bold baloo-regular rounded-full bg-[#19b4bd] text-[#0A2463] border-2 border-[#bbfaf5] shadow-[0_4px_0_rgb(187,250,245)]"
+          >
+            {`${currentIndex + 1} / ${products.length}`}
+          </button>
+          <button
             onClick={onNext}
-            className="p-2 bg-pink-100 hover:bg-gray-100 border-indigo-300"
+            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] text-[#0A2463] border-2 border-[#bbfaf5] shadow-[0_4px_0_rgb(187,250,245)] hover:shadow-[0_4px_0px_rgb(91,232,240)] hover:translate-y-1 transition-all duration-200 active:scale-95"
             aria-label="Next product"
-          />
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
         </div>
       )}
     </div>

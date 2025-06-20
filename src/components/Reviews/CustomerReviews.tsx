@@ -179,14 +179,14 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
                 <div className="flex justify-between mt-8">
                   <button
                     onClick={goToPrevReview}
-                    className="px-4 py-2 text-base font-bold font-navigation baloo-regular rounded-full cursor-pointer border-2 bg-amber-50 text-amber-900 border-amber-300 shadow-[0_6px_0_rgb(217,180,114)] hover:shadow-[0_4px_0px_rgb(217,180,114)] hover:translate-y-1 transition-all duration-200 hover:scale-105 active:scale-95"
+                    className="px-4 py-2 text-base font-bold font-navigation baloo-regular rounded-full cursor-pointer bg-amber-100 text-amber-900 shadow-[0_6px_0_rgb(217,180,114)] hover:shadow-[0_4px_0px_rgb(217,180,114)] hover:translate-y-1 transition-all duration-200 hover:scale-105 active:scale-95"
                     aria-label="Previous review"
                   >
                     Previous
                   </button>
                   <button
                     onClick={goToNextReview}
-                    className="px-4 py-2 text-base font-bold font-navigation baloo-regular rounded-full cursor-pointer border-2 bg-amber-50 text-amber-900 border-amber-300 shadow-[0_6px_0_rgb(217,180,114)] hover:shadow-[0_4px_0px_rgb(217,180,114)] hover:translate-y-1 transition-all duration-200 hover:scale-105 active:scale-95"
+                    className="px-4 py-2 text-base font-bold font-navigation baloo-regular rounded-full cursor-pointer bg-amber-100 text-amber-900 shadow-[0_6px_0_rgb(217,180,114)] hover:shadow-[0_4px_0px_rgb(217,180,114)] hover:translate-y-1 transition-all duration-200 hover:scale-105 active:scale-95"
                     aria-label="Next review"
                   >
                     Next
@@ -223,7 +223,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
             </div>
             <button
               onClick={() => window.open("https://www.google.com/search?q=kailani+shave+ice&oq=kailani+shave+ice&gs_lcrp=EgZjaHJvbWUqDwgAECMYJxjjAhiABBiKBTIPCAAQIxgnGOMCGIAEGIoFMhUIARAuGCcYrwEYxwEYgAQYigUYjgUyBwgCEAAYgAQyBwgDEAAYgAQyCAgEEAAYFhgeMgYIBRBFGDwyBggGEEUYPDIGCAcQRRg80gEIMjgzM2owajeoAgCwAgA&sourceid=chrome&ie=UTF-8#lrd=0x89c2f1ae22d3ec51:0x51f4646c6ec4c202,3,,,,", "_blank")}
-              className="mt-2 px-8 py-4 text-base font-bold font-navigation baloo-regular rounded-full cursor-pointer border-2 bg-amber-50 text-amber-900 border-amber-300 shadow-[0_6px_0_rgb(217,180,114)] hover:shadow-[0_4px_0px_rgb(217,180,114)] hover:translate-y-1 transition-all duration-200 hover:scale-105 active:scale-95"
+              className="mt-2 px-8 py-4 text-base font-bold font-navigation baloo-regular rounded-full cursor-pointer bg-green-500 text-white shadow-[0_6px_0_rgb(5,150,105)] hover:shadow-[0_4px_0px_rgb(5,150,105)] hover:translate-y-1 transition-all duration-200 hover:scale-105 active:scale-95"
               aria-label="Leave us a Google review"
             >
               <span className="flex items-center">

@@ -1,43 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-// import '../../styles/footerAnimations.css';
-
-// Add a playful, bubbly font (Google Fonts suggestion in comment)
-// In your index.html or CSS, import: 
-// @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&display=swap');
-
-// Hand-drawn style SVGs for footer icons
-const HandDrawnBowl = () => (
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-    <ellipse cx="20" cy="28" rx="14" ry="7" fill="#FFF8E7" stroke="#F7C873" strokeWidth="2.5" />
-    <path d="M8 28c0 6 24 6 24 0" stroke="#F7C873" strokeWidth="2.5" strokeLinecap="round"/>
-    <path d="M16 18c-2-2 2-4 0-6" stroke="#B2DFFC" strokeWidth="2.5" strokeLinecap="round"/>
-    <path d="M24 18c-2-2 2-4 0-6" stroke="#B2F7C3" strokeWidth="2.5" strokeLinecap="round"/>
-  </svg>
-);
-const HandDrawnPineapple = () => (
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-    <ellipse cx="16" cy="22" rx="8" ry="7" fill="#F7C873" stroke="#F7E7B3" strokeWidth="2" />
-    <path d="M16 15v-7" stroke="#B2DFFC" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M16 15l-3-5" stroke="#B2F7C3" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M16 15l3-5" stroke="#F7B3D7" strokeWidth="2" strokeLinecap="round"/>
-  </svg>
-);
-const HandDrawnFlower = () => (
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-    <circle cx="16" cy="16" r="6" fill="#F7B3D7" stroke="#F7C873" strokeWidth="2" />
-    <ellipse cx="16" cy="7" rx="3" ry="6" fill="#FFF8E7" stroke="#F7B3D7" strokeWidth="1.5" />
-    <ellipse cx="16" cy="25" rx="3" ry="6" fill="#FFF8E7" stroke="#F7B3D7" strokeWidth="1.5" />
-    <ellipse cx="7" cy="16" rx="6" ry="3" fill="#FFF8E7" stroke="#F7B3D7" strokeWidth="1.5" />
-    <ellipse cx="25" cy="16" rx="6" ry="3" fill="#FFF8E7" stroke="#F7B3D7" strokeWidth="1.5" />
-  </svg>
-);
-const HandDrawnCoconut = () => (
-  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-    <ellipse cx="16" cy="20" rx="8" ry="7" fill="#F7E7B3" stroke="#B2DFFC" strokeWidth="2" />
-    <ellipse cx="16" cy="20" rx="4" ry="3" fill="#FFF" stroke="#B2F7C3" strokeWidth="1.5" />
-  </svg>
-);
 
 interface KailaniFooterProps {
   restaurantName: string;
@@ -46,129 +8,164 @@ interface KailaniFooterProps {
 const KailaniFooter: React.FC<KailaniFooterProps> = ({ restaurantName }) => {
   const currentYear = new Date().getFullYear();
   return (
-    <footer className="w-full bg-[#E7F8FF] pt-0 pb-0" style={{ fontFamily: 'Baloo 2, Comic Sans MS, Comic Neue, sans-serif' }}>
-      {/* Decorative Pastel Wave */}
-      <div className="w-full h-8 bg-gradient-to-r from-[#B2DFFC] via-[#E7F8FF] to-[#B2F7C3] rounded-b-3xl"></div>
+    <footer className="w-full bg-[#19b4bd] pt-12 pb-6 text-white font-sans relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-0 left-0 w-24 h-24 rounded-br-full bg-white/10"></div>
+      <div className="absolute top-1/3 right-0 w-40 h-40 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/2"></div>
+      <div className="absolute bottom-0 left-1/4 w-16 h-16 rounded-full bg-white/5"></div>
+      
       {/* Order Online CTA Banner */}
-      <div className="max-w-5xl mx-auto px-4 py-8 rounded-[2.5rem] bg-[#E7F8FF] shadow-xl mt-[-24px] mb-10 flex flex-col md:flex-row items-center justify-between gap-6 border-2 border-[#B2DFFC]">
-        <div className="flex items-center gap-4 min-w-0 flex-1">
-          <div className="flex-shrink-0"><HandDrawnBowl /></div>
-          <div className="min-w-0">
-            <h3 className="text-2xl font-bold text-[#3B3B3B] mb-1">Hungry? Don't wait!</h3>
-            <p className="text-[#7FC29B] text-base">Fresh Hawaiian flavors delivered to your door</p>
-          </div>
+      <div className="relative z-10 max-w-5xl mx-auto px-6 py-8 baloo-regular rounded-3xl bg-white shadow-xl mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="flex-1">
+          <h3 className="text-2xl font-bold text-[#19b4bd] mb-2">Taste of Hawaii</h3>
+          <p className="text-base text-gray-700">Fresh flavors delivered straight to your door</p>
         </div>
         <a 
           href="https://order.toasttab.com/online/kailanishaveice" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="rounded-full bg-[#B2DFFC] hover:bg-[#E7F8FF] text-[#3B3B3B] font-bold px-8 py-4 text-lg shadow border-2 border-[#B2DFFC] transition-colors duration-200 flex items-center gap-2"
-          style={{ fontFamily: 'Baloo 2, Comic Sans MS, Comic Neue, sans-serif' }}
+          className="px-8 py-4 text-base font-bold rounded-full bg-[#b8f3f6] text-[#1a5b9a]  border-[#0e8a91] shadow-[0_6px_0_rgb(14,138,145)] hover:shadow-[0_4px_0px_rgb(14,138,145)] hover:translate-y-1 transition-all duration-200 hover:scale-105 active:scale-95"
         >
-          <span>ORDER NOW</span>
-          <span style={{ fontSize: 28 }}>🍽️</span>
+          ORDER NOW
         </a>
-        {/* Decorative hand-drawn food icons */}
-        <div className="hidden md:flex items-center gap-2 ml-4">
-          <HandDrawnPineapple />
-          <HandDrawnFlower />
-          <HandDrawnCoconut />
-        </div>
       </div>
+      
       {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-10 baloo-regular">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
           {/* Logo and About */}
-          <div className="md:col-span-1 flex flex-col items-center md:items-start">
-            <div className="text-3xl font-bold mb-4 text-[#3B3B3B]">{restaurantName}</div>
-            <p className="text-[#7FC29B] mb-4 text-center md:text-left text-base">
-              Experience the taste of Hawaii with our delicious dishes made with aloha!
+          <div className="md:col-span-5 flex flex-col">
+            <h2 className="text-2xl font-bold tracking-wide text-white md:text-3xl lg:text-4xl xl:text-5xl px-0.5"
+            style={{
+                    fontFamily: 'Baloo, sans-serif',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    letterSpacing: '0.04em',
+                    textShadow: '-4px 4px 0px oklch(70.4% 0.04 256.788)'
+                  }}
+          >{restaurantName}</h2>
+            <p className="text-white/90 mb-6 text-lg leading-relaxed">
+              Experience the authentic taste of Hawaii with our delicious dishes made with aloha!
             </p>
-            <div className="flex space-x-4 mt-2">
-              <a href="https://facebook.com" aria-label="Facebook" className="rounded-full bg-[#B2DFFC] p-2 hover:bg-[#E7F8FF] transition-colors">
-                {/* Hand-drawn style Facebook icon */}
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="11" ry="11" fill="#FFF" stroke="#7FC29B" strokeWidth="2"/><path d="M13 8h2V6.5A2.5 2.5 0 0 0 12.5 4h-1A2.5 2.5 0 0 0 9 6.5V8H7v3h2v7h3v-7h2l.5-3H13V8z" stroke="#3B3B3B" strokeWidth="1.5" fill="none"/></svg>
+            <div className="flex space-x-5 mt-2">
+              <a 
+                href="https://facebook.com" 
+                aria-label="Facebook" 
+                className="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-[#19b4bd] hover:bg-yellow-400 transition-colors"
+              >
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M13.5 8H17V4h-3.5a4.5 4.5 0 00-4.5 4.5v2.5H6v4h3v8h4v-8h3.5l.5-4h-4v-2.5A.5.5 0 0113.5 8z"/></svg>
               </a>
-              <a href="https://instagram.com" aria-label="Instagram" className="rounded-full bg-[#F7B3D7] p-2 hover:bg-[#E7F8FF] transition-colors">
-                {/* Hand-drawn style Instagram icon */}
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="11" ry="11" fill="#FFF" stroke="#B2DFFC" strokeWidth="2"/><rect x="7" y="7" width="10" height="10" rx="4" stroke="#3B3B3B" strokeWidth="1.5" fill="none"/><circle cx="12" cy="12" r="2.5" stroke="#3B3B3B" strokeWidth="1.5" fill="none"/><circle cx="16" cy="8" r="1" fill="#F7B3D7"/></svg>
+              <a 
+                href="https://instagram.com" 
+                aria-label="Instagram" 
+                className="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-[#19b4bd] hover:bg-yellow-400 transition-colors"
+              >
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c-2.716 0-3.056.012-4.123.06-1.064.049-1.791.218-2.427.465a4.902 4.902 0 00-1.772 1.153A4.902 4.902 0 002.525 5.45c-.247.636-.416 1.363-.465 2.427C2.012 8.944 2 9.284 2 12s.012 3.056.06 4.123c.049 1.064.218 1.791.465 2.427a4.902 4.902 0 001.153 1.772 4.902 4.902 0 001.772 1.153c.636.247 1.363.416 2.427.465 1.067.048 1.407.06 4.123.06s3.056-.012 4.123-.06c1.064-.049 1.791-.218 2.427-.465a4.902 4.902 0 001.772-1.153 4.902 4.902 0 001.153-1.772c.247-.636.416-1.363.465-2.427.048-1.067.06-1.407.06-4.123s-.012-3.056-.06-4.123c-.049-1.064-.218-1.791-.465-2.427a4.902 4.902 0 00-1.153-1.772 4.902 4.902 0 00-1.772-1.153c-.636-.247-1.363-.416-2.427-.465C15.056 2.012 14.716 2 12 2zm0 1.802c2.67 0 2.986.01 4.04.058.976.045 1.505.207 1.858.344.466.181.8.398 1.15.748.35.35.566.684.748 1.15.137.353.3.882.344 1.857.048 1.055.058 1.37.058 4.041 0 2.67-.01 2.986-.058 4.04-.044.976-.207 1.505-.344 1.858-.181.466-.398.8-.748 1.15-.35.35-.684.566-1.15.748-.353.137-.882.3-1.857.344-1.054.048-1.37.058-4.041.058-2.67 0-2.987-.01-4.04-.058-.976-.044-1.505-.207-1.858-.344a3.097 3.097 0 01-1.15-.748 3.097 3.097 0 01-.748-1.15c-.137-.353-.3-.882-.344-1.857-.048-1.055-.058-1.37-.058-4.041 0-2.67.01-2.986.058-4.04.045-.976.207-1.505.344-1.858.181-.466.398-.8.748-1.15.35-.35.684-.567 1.15-.748.353-.137.882-.3 1.857-.344 1.055-.048 1.37-.058 4.041-.058zm0 11.531a3.333 3.333 0 110-6.666 3.333 3.333 0 010 6.666zm0-8.468a5.135 5.135 0 100 10.27 5.135 5.135 0 000-10.27zm6.538-.203a1.2 1.2 0 11-2.4 0 1.2 1.2 0 012.4 0z"/></svg>
               </a>
-              <a href="https://twitter.com" aria-label="Twitter" className="rounded-full bg-[#E7F8FF] p-2 hover:bg-[#B2DFFC] transition-colors">
-                {/* Hand-drawn style Twitter icon */}
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="11" ry="11" fill="#FFF" stroke="#F7B3D7" strokeWidth="2"/><path d="M7 16c6 0 9-5 9-9v-.5A6.5 6.5 0 0 0 18 5a6.5 6.5 0 0 1-2 .5A3.5 3.5 0 0 0 17 4a6.5 6.5 0 0 1-2 .5A3.5 3.5 0 0 0 7 8.5c0 .3 0 .6.1.9A9.9 9.9 0 0 1 4 5.5s-4 9 5 13c-1.5 1-3.5 1-5 1 9 5 20 0 20-11.5 0-.2 0-.4 0-.6A7.2 7.2 0 0 0 22 6.5" stroke="#3B3B3B" strokeWidth="1.5" fill="none"/></svg>
+              <a 
+                href="https://twitter.com" 
+                aria-label="Twitter" 
+                className="w-10 h-10 rounded-lg bg-white flex items-center justify-center text-[#19b4bd] hover:bg-yellow-400 transition-colors"
+              >
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
               </a>
             </div>
           </div>
+          
           {/* Quick Links */}
-          <div>
-            <h3 className="text-xl font-bold text-[#3B3B3B] mb-3">Explore</h3>
-            <ul className="space-y-2">
+          <div className="md:col-span-3 md:ml-auto">
+            <h3 className="text-xl font-bold text-white mb-6 pb-2 border-b-2 border-white/20">Explore</h3>
+            <ul className="space-y-4">
               <li>
-                <Link to="/" className="flex items-center gap-2 text-[#7FC29B] hover:text-[#3B3B3B] text-lg font-semibold">
-                  <span style={{ fontSize: 22 }}>🏠</span> Home
+                <Link to="/" className="text-white hover:text-yellow-400 text-lg font-medium flex items-center group">
+                  <span className="w-1.5 h-1.5 bg-white rounded-full mr-2 group-hover:scale-125 transition-transform"></span>
+                  Home
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="flex items-center gap-2 text-[#7FC29B] hover:text-[#3B3B3B] text-lg font-semibold">
-                  <span style={{ fontSize: 22 }}>📖</span> About Us
+                <Link to="/about" className="text-white hover:text-yellow-400 text-lg font-medium flex items-center group">
+                  <span className="w-1.5 h-1.5 bg-white rounded-full mr-2 group-hover:scale-125 transition-transform"></span>
+                  About Us
                 </Link>
               </li>
               <li>
-                <Link to="/gallery" className="flex items-center gap-2 text-[#7FC29B] hover:text-[#3B3B3B] text-lg font-semibold">
-                  <span style={{ fontSize: 22 }}>🍽️</span> Food Gallery
+                <Link to="/gallery" className="text-white hover:text-yellow-400 text-lg font-medium flex items-center group">
+                  <span className="w-1.5 h-1.5 bg-white rounded-full mr-2 group-hover:scale-125 transition-transform"></span>
+                  Food Gallery
                 </Link>
               </li>
               <li>
-                <Link to="/jobs" className="flex items-center gap-2 text-[#7FC29B] hover:text-[#3B3B3B] text-lg font-semibold">
-                  <span style={{ fontSize: 22 }}>💼</span> Careers
+                <Link to="/jobs" className="text-white hover:text-yellow-400 text-lg font-medium flex items-center group">
+                  <span className="w-1.5 h-1.5 bg-white rounded-full mr-2 group-hover:scale-125 transition-transform"></span>
+                  Careers
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact?tab=hours" className="text-white hover:text-yellow-400 text-lg font-medium flex items-center group">
+                  <span className="w-1.5 h-1.5 bg-white rounded-full mr-2 group-hover:scale-125 transition-transform"></span>
+                  Hours & Location
                 </Link>
               </li>
             </ul>
           </div>
+          
           {/* Contact */}
-          <div>
-            <h3 className="text-xl font-bold text-[#3B3B3B] mb-3">Contact Us</h3>
-            <ul className="space-y-2 text-lg">
-              <li className="flex items-center gap-2 text-[#7FC29B]">
-                <span style={{ fontSize: 22 }}>📍</span> 840 River Rd, New Milford, NJ
+          <div className="md:col-span-4">
+            <h3 className="text-xl font-bold text-white mb-6 pb-2 border-b-2 border-white/20">Contact Us</h3>
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <div className="mr-3 mt-1 p-1.5 bg-white/10 rounded-lg">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  </svg>
+                </div>
+                <span className="text-white/90 text-lg">840 River Rd, New Milford, NJ</span>
               </li>
-              <li className="flex items-center gap-2 text-[#7FC29B]">
-                <span style={{ fontSize: 22 }}>📞</span> (201) 402-9600
+              <li className="flex items-start">
+                <div className="mr-3 mt-1 p-1.5 bg-white/10 rounded-lg">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                  </svg>
+                </div>
+                <span className="text-white/90 text-lg">(201) 402-9600</span>
               </li>
-              <li className="flex items-center gap-2 text-[#7FC29B]">
-                <span style={{ fontSize: 22 }}>📧</span> aloha@kailani.com
-              </li>
-              <li className="flex items-center gap-2 text-[#7FC29B]">
-                <span style={{ fontSize: 22 }}>🕒</span>
-                <Link to="/contact?tab=hours" className="text-[#F7B3D7] hover:text-[#B2DFFC] font-semibold underline ml-1">View all hours</Link>
+              <li className="flex items-start">
+                <div className="mr-3 mt-1 p-1.5 bg-white/10 rounded-lg">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                <span className="text-white/90 text-lg">aloha@kailani.com</span>
               </li>
             </ul>
-          </div>
-          {/* Newsletter */}
-          <div>
-            <h3 className="text-xl font-bold text-[#3B3B3B] mb-3">Join Our Ohana</h3>
-            <p className="text-[#7FC29B] mb-4 text-base">Subscribe for special offers and updates!</p>
-            <form className="flex flex-col space-y-2">
-              <input 
-                type="email" 
-                placeholder="Your email" 
-                className="rounded-full border-2 border-[#B2DFFC] px-4 py-2 text-lg bg-[#FFF] focus:outline-none focus:border-[#B2DFFC] placeholder-[#B2DFFC]"
-                aria-label="Email for newsletter"
-              />
-              <button type="button" className="rounded-full bg-[#B2DFFC] hover:bg-[#E7F8FF] text-[#3B3B3B] font-bold px-6 py-2 text-lg border-2 border-[#B2DFFC] transition-colors duration-200">
-                Subscribe
-              </button>
-            </form>
           </div>
         </div>
+        
         {/* Bottom section */}
-        <div className="mt-12 pt-6 border-t-2 border-[#B2DFFC] w-full">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-[#B2DFFC] text-base mb-4 md:mb-0">&copy; {currentYear} {restaurantName} | All Rights Reserved</p>
-            <div className="flex flex-wrap justify-center md:justify-end gap-4 text-base">
-              <a href="#" className="text-[#B2DFFC] hover:text-[#3B3B3B]">Privacy Policy</a>
-              <a href="#" className="text-[#B2DFFC] hover:text-[#3B3B3B]">Terms of Service</a>
-              <a href="#" className="text-[#B2DFFC] hover:text-[#3B3B3B]">Accessibility</a>
+        <div className="mt-16 pt-6 border-t border-white/20 w-full">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <p className="text-white/80 text-base">&copy; {currentYear} {restaurantName} | All Rights Reserved</p>
+            <div className="flex flex-wrap justify-center md:justify-end gap-8 text-base">
+              <a 
+                href="#" 
+                className="text-white/80 hover:text-white transition-colors"
+              >
+                Privacy Policy
+              </a>
+              <a 
+                href="#" 
+                className="text-white/80 hover:text-white transition-colors"
+              >
+                Terms of Service
+              </a>
+              <a 
+                href="#" 
+                className="text-white/80 hover:text-white transition-colors"
+              >
+                Accessibility
+              </a>
             </div>
           </div>
         </div>

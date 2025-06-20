@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import BouncyPillButton from '../UI/BouncyPillButton';
 import { getFavoriteFoodItems } from '../../firebase/foodService';
 
 // Types
@@ -165,22 +164,21 @@ const GalleryItem: React.FC<{ item: FoodItem; isHighlighted: boolean }> = ({ ite
 const GalleryFooter: React.FC = () => (
   <div className="mt-12 text-center">
     <Link to="/gallery">
-      <BouncyPillButton
-        text={
-          <span className="flex items-center justify-center">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-2">
-              <rect x="2" y="5" width="20" height="14" rx="4" fill="#ffe0f0" stroke="#6366f1" strokeWidth="1.5"/>
-              <circle cx="7.5" cy="10" r="1.5" fill="#6366f1"/>
-              <path d="M2 17l5-5c1-1 2.5-1 3.5 0l3 3 2-2c1-1 2.5-1 3.5 0l2 2" stroke="#6366f1" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-            </svg>
-            View Full Gallery
-          </span>
-        }
+      <button 
         onClick={() => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
-        className="bg-white text-indigo-900 baloo-regular border-indigo-300 shadow-[0_8px_0_rgb(165,180,252)] px-8 py-2 text-4xl"
-      />
+        className="px-8 py-4 text-lg font-bold font-navigation baloo-regular rounded-full cursor-pointer bg-white text-[#7B3F00] shadow-[0_6px_0_rgb(186,183,201)] hover:shadow-[0_4px_0px_rgb(186,183,201)] hover:translate-y-1 transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2"
+      >
+        <span className="flex items-center justify-center">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-2">
+            <rect x="2" y="5" width="20" height="14" rx="4" fill="#e3e1ed" stroke="#7B3F00" strokeWidth="1.5"/>
+            <circle cx="7.5" cy="10" r="1.5" fill="#7B3F00"/>
+            <path d="M2 17l5-5c1-1 2.5-1 3.5 0l3 3 2-2c1-1 2.5-1 3.5 0l2 2" stroke="#7B3F00" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+          </svg>
+          View Full Gallery
+        </span>
+      </button>
     </Link>
   </div>
 );
