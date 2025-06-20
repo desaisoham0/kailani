@@ -7,7 +7,6 @@ import CustomerReviews from './components/Reviews/CustomerReviews';
 import KailaniFooter from './components/Footer/KailaniFooter';
 import BackToTopButton from './components/UI/BackToTopButton';
 import FloatingOrderButton from './components/UI/FloatingOrderButton';
-import { customerReviews } from './data/reviews';
 import { AuthProvider } from './contexts/AuthContext';
 
 const JobsPage = lazy(() => import('./pages/JobsPage'));
@@ -47,11 +46,10 @@ function App() {
                 maxImages={6}
               />
               
-              {/* Customer Reviews */}
+              {/* Customer Reviews - Featured Section */}
               <CustomerReviews 
-                reviews={customerReviews}
-                title="What Our Customers Say"
-                subtitle="Read reviews from our happy customers"
+                title="Our Google Reviews"
+                subtitle="See what our customers are saying about us on Google"
               />
             </main>
           } />
@@ -59,6 +57,25 @@ function App() {
           <Route path="/gallery" element={<Suspense fallback={<div>Loading...</div>}><GalleryPage /></Suspense>} />
           <Route path="/about" element={<Suspense fallback={<div>Loading...</div>}><AboutPage /></Suspense>} />
           <Route path="/contact" element={<Suspense fallback={<div>Loading...</div>}><ContactPage /></Suspense>} />
+          <Route path="/reviews" element={
+            <div className="flex-grow container mx-auto px-4 py-12">
+              <h1 className="text-4xl font-bold text-center mb-8">Customer Testimonials</h1>
+              <CustomerReviews 
+                title=""
+                subtitle="All of our Google reviews in one place"
+              />
+              <div className="mt-8 flex justify-center">
+                <a 
+                  href="https://g.page/review/kailani-restaurant" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition duration-300"
+                >
+                  Write a Review on Google
+                </a>
+              </div>
+            </div>
+          } />
           
           {/* Admin Routes */}
           <Route path="/admin/login" element={<Suspense fallback={<div>Loading...</div>}><AdminLogin /></Suspense>} />

@@ -4,10 +4,13 @@ import { logout } from '../../firebase/authService';
 import { useAuth } from '../../hooks/useAuth';
 import AdminFoodList from './AdminFoodList';
 import AdminFoodForm from './AdminFoodForm';
+import AdminReviews from './AdminReviews';
+import AdminReviewForm from './AdminReviewForm';
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<'list' | 'add'>('list');
+  const [activeTab, setActiveTab] = useState<'food-list' | 'food-add' | 'reviews-list' | 'reviews-add'>('food-list');
   const [editingFoodId, setEditingFoodId] = useState<string | null>(null);
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
   const { currentUser, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -28,12 +31,22 @@ export default function AdminDashboard() {
 
   const handleEditFood = (foodId: string) => {
     setEditingFoodId(foodId);
-    setActiveTab('add');
+    setActiveTab('food-add');
   };
 
-  const handleFormComplete = () => {
+  const handleFoodFormComplete = () => {
     setEditingFoodId(null);
-    setActiveTab('list');
+    setActiveTab('food-list');
+  };
+  
+  const handleEditReview = (reviewId: string) => {
+    setEditingReviewId(reviewId);
+    setActiveTab('reviews-add');
+  };
+
+  const handleReviewFormComplete = () => {
+    setEditingReviewId(null);
+    setActiveTab('reviews-list');
   };
 
   if (loading) {
@@ -46,6 +59,21 @@ export default function AdminDashboard() {
       </div>
     );
   }
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'food-list':
+        return <AdminFoodList onEditFood={handleEditFood} />;
+      case 'food-add':
+        return <AdminFoodForm foodId={editingFoodId} onComplete={handleFoodFormComplete} />;
+      case 'reviews-list':
+        return <AdminReviews onEditReview={handleEditReview} />;
+      case 'reviews-add':
+        return <AdminReviewForm reviewId={editingReviewId} onComplete={handleReviewFormComplete} />;
+      default:
+        return <AdminFoodList onEditFood={handleEditFood} />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -67,39 +95,55 @@ export default function AdminDashboard() {
             <nav className="-mb-px flex space-x-8">
               <button
                 className={`${
-                  activeTab === 'list'
+                  activeTab === 'food-list'
                     ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
-                onClick={() => setActiveTab('list')}
+                onClick={() => setActiveTab('food-list')}
               >
                 Food Items
               </button>
               <button
                 className={`${
-                  activeTab === 'add'
+                  activeTab === 'food-add'
                     ? 'border-blue-500 text-blue-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
                 onClick={() => {
                   setEditingFoodId(null);
-                  setActiveTab('add');
+                  setActiveTab('food-add');
                 }}
               >
-                {editingFoodId ? 'Edit Food Item' : 'Add Food Item'}
+                {editingFoodId && activeTab === 'food-add' ? 'Edit Food Item' : 'Add Food Item'}
+              </button>
+              <button
+                className={`${
+                  activeTab === 'reviews-list'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                onClick={() => setActiveTab('reviews-list')}
+              >
+                Reviews
+              </button>
+              <button
+                className={`${
+                  activeTab === 'reviews-add'
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                onClick={() => {
+                  setEditingReviewId(null);
+                  setActiveTab('reviews-add');
+                }}
+              >
+                {editingReviewId && activeTab === 'reviews-add' ? 'Edit Review' : 'Add Review'}
               </button>
             </nav>
           </div>
 
           <div className="mt-6">
-            {activeTab === 'list' ? (
-              <AdminFoodList onEditFood={handleEditFood} />
-            ) : (
-              <AdminFoodForm 
-                foodId={editingFoodId} 
-                onComplete={handleFormComplete} 
-              />
-            )}
+            {renderContent()}
           </div>
         </div>
       </main>
