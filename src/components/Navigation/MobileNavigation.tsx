@@ -32,7 +32,6 @@ const RESTAURANT_CONFIG = {
 const NAVIGATION_ITEMS: readonly NavigationItem[] = [
  { label: 'Home', href: '/', isExternalLink: false },
  { label: 'Menu', href: '/gallery', isExternalLink: false },
- { label: 'Reviews', href: '/reviews', isExternalLink: false },
  { label: 'Order Now', href: RESTAURANT_CONFIG.orderUrl, isExternalLink: true },
  { label: 'Careers', href: '/jobs', isExternalLink: false },
  { label: 'About Us', href: '/about', isExternalLink: false },
@@ -113,7 +112,7 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
      href={RESTAURANT_CONFIG.orderUrl}
      target="_blank"
      rel="noopener noreferrer"
-     className="baloo-regular flex items-center bg-transparent px-3 py-2 text-lg font-bold text-[#f7d34f] transition-all duration-300 ease-out hover:text-white hover:underline hover:decoration-2 hover:decoration-white hover:underline-offset-2"
+     className="baloo-regular flex items-center bg-transparent px-4 py-2 text-lg font-bold rounded-2xl border-1 border-[#f7d34f] text-white shadow-[0_2px_0_rgb(247,217,84)] transition-all duration-300 ease-out hover:text-white hover:underline hover:decoration-2 hover:decoration-white hover:underline-offset-2"
    >
      Order
    </a>
@@ -147,7 +146,7 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
 
 
  const NavigationLink = ({ item, onClick }: { item: NavigationItem; onClick: () => void }) => {
-   const baseClassName = "baloo-regular flex items-center justify-center rounded-lg border-2 border-[#f7d34f] bg-transparent p-4 text-lg font-semibold text-[#f7d34f] transition-all duration-300 ease-out hover:border-white hover:text-white hover:underline hover:decoration-2 hover:underline-offset-2";
+   const baseClassName = "baloo-regular flex items-center justify-center rounded-3xl border-1 border-[#f0c91f] bg-transparent p-4 text-lg font-semibold text-white shadow-[0_6px_0_rgb(247,217,84)] transition-all duration-300 ease-out hover:border-white hover:bg-[#19b4bd]/30 hover:text-[#f0c91f] hover:underline hover:decoration-2 hover:underline-offset-2";
   
    if (item.isExternalLink) {
      return (
@@ -178,37 +177,49 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
  };
 
 
- const MenuHeader = ({ name }: { name: string }) => (
-   <div className="mb-8 text-center">
-     <div className="mb-4 flex items-center justify-center gap-3">
-       <img
-         src={logoImage}
-         alt="Kailani Logo"
-         className="h-16 w-auto flex-shrink-0"
-       />
-     </div>
-     <div
-       className="baloo-regular text-3xl font-bold tracking-wide text-[#f7d34f]"
-       style={{
-         fontFamily: 'Baloo, sans-serif',
-         textShadow: '-1px 0 0 #8b4513, -2px 0 0 #8b4513, -3px 0 0 #8b4513'
-       }}
-     >
-       {name}
-     </div>
-     <div
-       className="baloo-regular mt-2 text-lg font-semibold text-white"
-       style={{ fontFamily: 'Baloo, sans-serif' }}
-     >
-       {RESTAURANT_CONFIG.tagline}
-     </div>
-     <div
-       className="baloo-regular mt-2 text-base font-medium text-[#f7d34f]"
-       style={{ fontFamily: 'Baloo, sans-serif' }}
-     >
-       {RESTAURANT_CONFIG.description}
-     </div>
-   </div>
+ const MenuHeader = () => (
+  <header className="py-4">
+    <div className="container mx-auto flex justify-center px-4">
+      <div className="flex flex-row items-center">
+        <img
+          src={logoImage}
+          alt="Kailani Logo"
+          className="h-36 w-36 mr-4 flex-shrink-0"
+        />
+        <div className="space-y-1">
+          <h3 className="baloo-regular text-[#f7d34f] font-bold text-lg sm:text-xl drop-shadow-sm px-1">
+            Hawaiian
+          </h3>
+          <h1 
+            className="baloo-regular text-[#f7d34f] font-extrabold text-4xl sm:text-5xl px-1"
+            style={{
+              fontFamily: 'Baloo, sans-serif',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              letterSpacing: '0.06em',
+              textShadow: '-4px 4px 0px #7F4F00'
+            }}
+          >
+            SHAVE ICE
+          </h1>
+          <h2 
+            className="baloo-regular text-white font-bold text-2xl sm:text-3xl px-1"
+            style={{
+              fontFamily: 'Baloo, sans-serif',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              letterSpacing: '0.04em',
+              textShadow: '-2px 2px 0px #e85fa8'
+            }}
+          >
+            &amp; Ramen
+          </h2>
+        </div>
+      </div>
+    </div>
+  </header>
  );
 
 
@@ -240,7 +251,7 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
      </header>
     
      <div
-       className={`fixed inset-0 z-40 w-full max-w-full bg-[#e83838] bg-opacity-95 backdrop-blur-md transition-all duration-300 ${
+       className={`fixed inset-0 z-40 w-full max-w-full bg-gradient-to-b from-[#e83838] via-[#19b4bd] to-amber-900 backdrop-blur-md transition-all duration-300 ${
          menuState.isMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'
        }`}
      >
@@ -250,14 +261,14 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
        >
          <button
            onClick={closeMenu}
-           className="absolute right-6 top-6 rounded-lg bg-[#f7d34f] p-3 text-xl font-bold text-[#e83838] transition-colors duration-300 hover:bg-white"
+           className="absolute right-6 top-6 rounded-lg bg-[#f0c91f] p-3 text-xl font-bold text-amber-900 transition-colors duration-300 hover:bg-white hover:text-[#19b4bd]"
            aria-label="Close menu"
          >
            <span className="baloo-regular">×</span>
          </button>
 
 
-         <MenuHeader name={displayName} />
+         <MenuHeader />
          <NavigationMenu items={NAVIGATION_ITEMS} onItemClick={closeMenu} />
        </div>
      </div>

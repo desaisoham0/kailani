@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logoImage from '../../assets/Kailani_logo.png';
 import '../../styles/fonts.css';
+import { SocialMediaLinks } from './SocialMediaLinks';
 
 
 type NavigationItem = {
@@ -25,7 +26,6 @@ const RESTAURANT_CONFIG = {
 const NAVIGATION_ITEMS: readonly NavigationItem[] = [
  { label: 'Home', href: '/', isExternalLink: false },
  { label: 'Menu', href: '/gallery', isExternalLink: false },
- { label: 'Reviews', href: '/reviews', isExternalLink: false },
  { label: 'Order Now', href: RESTAURANT_CONFIG.orderUrl, isExternalLink: true },
  { label: 'Careers', href: '/jobs', isExternalLink: false },
  { label: 'About Us', href: '/about', isExternalLink: false },

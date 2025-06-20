@@ -88,7 +88,7 @@ const LoadingDisplay: React.FC<GalleryDisplayProps> = ({ title, subtitle }) => (
         <h2 className="text-5xl md:text-5xl font-bold mb-2 baloo-regular text-[#7d3701] tracking-tight">
           {title}
         </h2>
-        <p className="text-md md:text-xl text-[#b25e00] max-w-2xl mx-auto baloo-regular mb-2 font-regular">
+        <p className="text-md md:text-xl text-[#b25e00] max-w-2xl mx-auto baloo-regular mb-2">
           {subtitle}
         </p>
       </div>

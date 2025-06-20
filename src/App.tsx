@@ -41,14 +41,14 @@ function App() {
               
               {/* Food Gallery Preview - Now loading from Firebase */}
               <HomeFoodGallery 
-                title="Our Food Gallery" 
+                title="Food Gallery" 
                 subtitle="Take a peek at our mouthwatering creations"
                 maxImages={6}
               />
               
               {/* Customer Reviews - Featured Section */}
               <CustomerReviews 
-                title="Our Google Reviews"
+                title="Google Reviews"
                 subtitle="See what our customers are saying about us on Google"
               />
             </main>

@@ -397,7 +397,7 @@ const ProductCarousel: React.FC<{
             <ChevronLeft className="h-6 w-6" />
           </button>
           <button
-            className=" bg-opacity-80 backdrop-blur-sm px-6 py-2 text-sm font-bold baloo-regular rounded-full bg-[#19b4bd] text-[#0A2463] border-2 border-[#bbfaf5] shadow-[0_4px_0_rgb(187,250,245)]"
+            className=" bg-opacity-80 backdrop-blur-sm px-6 py-2 text-sm baloo-regular rounded-full bg-[#19b4bd] text-[#0A2463] border-2 border-[#bbfaf5] shadow-[0_4px_0_rgb(187,250,245)]"
           >
             {`${currentIndex + 1} / ${products.length}`}
           </button>
