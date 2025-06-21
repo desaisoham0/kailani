@@ -18,13 +18,13 @@ const KailaniFooter: React.FC<KailaniFooterProps> = ({ restaurantName }) => {
       <div className="relative z-10 max-w-5xl mx-auto px-6 py-8 baloo-regular rounded-3xl bg-white shadow-xl mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex-1">
           <h3 className="text-2xl font-bold text-[#19b4bd] mb-2">Taste of Hawaii</h3>
-          <p className="text-base text-gray-700">Fresh flavors delivered straight to your door</p>
+          <p className="text-base text-[#003F47]">Fresh flavors delivered straight to your door</p>
         </div>
         <a 
           href="https://order.toasttab.com/online/kailanishaveice" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="px-8 py-4 text-base font-bold rounded-full bg-[#b8f3f6] text-[#1a5b9a]  border-[#0e8a91] shadow-[0_6px_0_rgb(14,138,145)] hover:shadow-[0_4px_0px_rgb(14,138,145)] hover:translate-y-1 transition-all duration-200 hover:scale-105 active:scale-95"
+          className="px-8 py-4 text-base font-bold rounded-full bg-[#b8f3f6] text-[#222222]  border-[#0e8a91] shadow-[0_6px_0_rgb(14,138,145)] hover:shadow-[0_4px_0px_rgb(14,138,145)] hover:translate-y-1 transition-all duration-200 hover:scale-105 active:scale-95"
         >
           ORDER NOW
         </a>

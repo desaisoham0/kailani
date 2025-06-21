@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import jobIllustration from '../assets/illustrations/job-illustration.svg';
-import successIcon from '../assets/illustrations/success-icon.svg';
-import formDecoration from '../assets/illustrations/form-decoration.svg';
 import { submitForm } from '../services/emailService';
 
 interface JobFormData {
@@ -119,55 +116,41 @@ const Job: React.FC<JobProps> = ({
   };
 
   return (
-    <div className="relative max-w-4xl mx-auto p-4 sm:p-6 md:p-8 job-form-container w-full max-w-full overflow-x-hidden">
-      {/* Decorative elements */}
-      <div className="job-form-decoration job-form-decoration-1"></div>
-      <div className="job-form-decoration job-form-decoration-2"></div>
-      <div className="job-form-decoration job-form-decoration-3"></div>
-      <div className="job-form-decoration job-form-decoration-4"></div>
-      
-      <div className="relative z-10 w-full max-w-full">
+    <div className="relative max-w-4xl mx-auto p-4 rounded-2xl sm:p-6 md:p-8 w-full overflow-x-hidden bg-white shadow-lg">
+      <div className="relative z-10 w-full">
         <div className="flex flex-col md:flex-row items-center justify-between mb-8">
-          <div className="text-center md:text-left w-full md:w-auto">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 jua-regular mb-3">Join Our Team</h2>
-            <p className="text-gray-600 nunito-sans max-w-md text-sm sm:text-base">
+          <div className="text-center w-full">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#19b4bd] mb-3 font-['Jua']">Join Our Team</h2>
+            <p className="text-gray-600 font-['Nunito_Sans'] max-w-md mx-auto text-sm sm:text-base">
               We're looking for talented individuals who are passionate about food and hospitality. 
               Apply below to start your journey with us!
             </p>
           </div>
-          <img 
-            src={jobIllustration} 
-            alt="Job application" 
-            className="w-32 sm:w-40 h-32 sm:h-40 mt-4 md:mt-0 logo-float max-w-full" 
-            style={{animationDuration: '8s'}}
-          />
         </div>
         
         {submitSuccess ? (
-          <div className="job-success-message bg-green-50 border-2 border-green-100 rounded-xl p-6 sm:p-8 text-center w-full max-w-full">
-            <img src={successIcon} alt="Success" className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-4 max-w-full" />
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 jua-regular mb-3">Application Submitted!</h3>
-            <p className="text-gray-600 nunito-sans mb-6 text-sm sm:text-base px-2">
+          <div className="bg-[#e6f7f8] border-2 border-[#19b4bd] rounded-xl p-6 sm:p-8 text-center w-full">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-full bg-[#19b4bd] text-white flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-bold text-[#19b4bd] font-['Jua'] mb-3">Application Submitted!</h3>
+            <p className="text-gray-600 font-['Nunito_Sans'] mb-6 text-sm sm:text-base px-2">
               Thank you for your interest in joining our team. We will review your application and get back to you soon.
             </p>
             <button 
               onClick={() => setSubmitSuccess(false)} 
-              className="job-form-button px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base"
+              className="bg-[#19b4bd] hover:bg-[#148f96] text-white rounded-md px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base transition-colors duration-200"
             >
               <span className="hidden sm:inline">Apply for Another Position</span>
               <span className="sm:hidden">Apply Again</span>
             </button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="relative w-full max-w-full">
-            <img 
-              src={formDecoration} 
-              alt="" 
-              className="absolute right-0 -top-10 w-32 sm:w-40 opacity-50 pointer-events-none hidden md:block max-w-full" 
-            />
-            
+          <form onSubmit={handleSubmit} className="relative w-full">
             {error && (
-              <div className="bg-red-50 border-2 border-red-100 text-red-700 px-3 sm:px-4 py-3 rounded-xl mb-6 relative w-full max-w-full">
+              <div className="bg-red-50 border-l-4 border-red-400 text-red-700 p-4 rounded-md mb-6 relative w-full">
                 <div className="flex">
                   <div className="flex-shrink-0">
                     <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -187,10 +170,10 @@ const Job: React.FC<JobProps> = ({
               </div>
             )}
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 job-form-section w-full max-w-full" style={{ animationDelay: '0.1s' }}>
-              <div className={`job-form-field p-1 w-full max-w-full ${activeField === 'fullName' ? 'highlight-field' : ''}`}>
-                <label htmlFor="fullName" className="block text-gray-700 font-medium px-3 pt-2 job-form-label text-sm sm:text-base">
-                  <span className="text-amber-500 mr-1">•</span> Full Name
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 w-full">
+              <div className="w-full">
+                <label htmlFor="fullName" className="block text-gray-700 font-medium mb-1 text-sm">
+                  Full Name
                 </label>
                 <input
                   type="text"
@@ -201,14 +184,14 @@ const Job: React.FC<JobProps> = ({
                   onChange={handleInputChange}
                   onFocus={() => handleFocus('fullName')}
                   onBlur={handleBlur}
-                  className="w-full max-w-full bg-transparent px-3 py-2 focus:outline-none rounded-lg text-gray-800 text-sm sm:text-base"
+                  className={`w-full px-3 py-2 rounded-md border ${activeField === 'fullName' ? 'border-[#19b4bd] ring-1 ring-[#19b4bd] ring-opacity-50' : 'border-gray-300'} focus:outline-none focus:border-[#19b4bd] focus:ring-1 focus:ring-[#19b4bd] text-gray-800 text-sm sm:text-base`}
                   placeholder="Enter your full name"
                 />
               </div>
               
-              <div className={`job-form-field p-1 w-full max-w-full ${activeField === 'email' ? 'highlight-field' : ''}`}>
-                <label htmlFor="email" className="block text-gray-700 font-medium px-3 pt-2 job-form-label text-sm sm:text-base">
-                  <span className="text-blue-500 mr-1">•</span> Email
+              <div className="w-full">
+                <label htmlFor="email" className="block text-gray-700 font-medium mb-1 text-sm">
+                  Email
                 </label>
                 <input
                   type="email"
@@ -219,16 +202,16 @@ const Job: React.FC<JobProps> = ({
                   onChange={handleInputChange}
                   onFocus={() => handleFocus('email')}
                   onBlur={handleBlur}
-                  className="w-full max-w-full bg-transparent px-3 py-2 focus:outline-none rounded-lg text-gray-800 text-sm sm:text-base"
+                  className={`w-full px-3 py-2 rounded-md border ${activeField === 'email' ? 'border-[#19b4bd] ring-1 ring-[#19b4bd] ring-opacity-50' : 'border-gray-300'} focus:outline-none focus:border-[#19b4bd] focus:ring-1 focus:ring-[#19b4bd] text-gray-800 text-sm sm:text-base`}
                   placeholder="Enter your email"
                 />
               </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 job-form-section w-full max-w-full" style={{ animationDelay: '0.2s' }}>
-              <div className={`job-form-field p-1 w-full max-w-full ${activeField === 'phone' ? 'highlight-field' : ''}`}>
-                <label htmlFor="phone" className="block text-gray-700 font-medium px-3 pt-2 job-form-label text-sm sm:text-base">
-                  <span className="text-pink-500 mr-1">•</span> Phone Number
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 w-full">
+              <div className="w-full">
+                <label htmlFor="phone" className="block text-gray-700 font-medium mb-1 text-sm">
+                  Phone Number
                 </label>
                 <input
                   type="tel"
@@ -239,14 +222,14 @@ const Job: React.FC<JobProps> = ({
                   onChange={handleInputChange}
                   onFocus={() => handleFocus('phone')}
                   onBlur={handleBlur}
-                  className="w-full max-w-full bg-transparent px-3 py-2 focus:outline-none rounded-lg text-gray-800 text-sm sm:text-base"
+                  className={`w-full px-3 py-2 rounded-md border ${activeField === 'phone' ? 'border-[#19b4bd] ring-1 ring-[#19b4bd] ring-opacity-50' : 'border-gray-300'} focus:outline-none focus:border-[#19b4bd] focus:ring-1 focus:ring-[#19b4bd] text-gray-800 text-sm sm:text-base`}
                   placeholder="Enter your phone number"
                 />
               </div>
               
-              <div className={`job-form-field p-1 w-full max-w-full ${activeField === 'position' ? 'highlight-field' : ''}`}>
-                <label htmlFor="position" className="block text-gray-700 font-medium px-3 pt-2 job-form-label text-sm sm:text-base">
-                  <span className="text-purple-500 mr-1">•</span> Position
+              <div className="w-full">
+                <label htmlFor="position" className="block text-gray-700 font-medium mb-1 text-sm">
+                  Position
                 </label>
                 <select
                   id="position"
@@ -256,11 +239,7 @@ const Job: React.FC<JobProps> = ({
                   onChange={handleInputChange}
                   onFocus={() => handleFocus('position')}
                   onBlur={handleBlur}
-                  className="w-full max-w-full bg-transparent px-3 py-2 focus:outline-none rounded-lg text-gray-800 appearance-none text-sm sm:text-base"
-                  style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, 
-                          backgroundPosition: 'right 0.5rem center', 
-                          backgroundRepeat: 'no-repeat', 
-                          backgroundSize: '1.5em 1.5em' }}
+                  className={`w-full px-3 py-2 rounded-md border ${activeField === 'position' ? 'border-[#19b4bd] ring-1 ring-[#19b4bd] ring-opacity-50' : 'border-gray-300'} focus:outline-none focus:border-[#19b4bd] focus:ring-1 focus:ring-[#19b4bd] text-gray-800 text-sm sm:text-base bg-white`}
                 >
                   <option value="">Select a position</option>
                   {availablePositions.map((position) => (
@@ -270,53 +249,49 @@ const Job: React.FC<JobProps> = ({
               </div>
             </div>
             
-            <div className="mb-6 job-form-section w-full max-w-full" style={{ animationDelay: '0.3s' }}>
-              <div className={`job-form-field p-1 w-full max-w-full ${activeField === 'experience' ? 'highlight-field' : ''}`}>
-                <label htmlFor="experience" className="block text-gray-700 font-medium px-3 pt-2 job-form-label text-sm sm:text-base">
-                  <span className="text-teal-500 mr-1">•</span> Years of Experience
-                </label>
-                <input
-                  type="text"
-                  id="experience"
-                  name="experience"
-                  required
-                  value={formData.experience}
-                  onChange={handleInputChange}
-                  onFocus={() => handleFocus('experience')}
-                  onBlur={handleBlur}
-                  className="w-full max-w-full bg-transparent px-3 py-2 focus:outline-none rounded-lg text-gray-800 text-sm sm:text-base"
-                  placeholder="e.g., 2 years as a server"
-                />
-              </div>
+            <div className="mb-6 w-full">
+              <label htmlFor="experience" className="block text-gray-700 font-medium mb-1 text-sm">
+                Years of Experience
+              </label>
+              <input
+                type="text"
+                id="experience"
+                name="experience"
+                required
+                value={formData.experience}
+                onChange={handleInputChange}
+                onFocus={() => handleFocus('experience')}
+                onBlur={handleBlur}
+                className={`w-full px-3 py-2 rounded-md border ${activeField === 'experience' ? 'border-[#19b4bd] ring-1 ring-[#19b4bd] ring-opacity-50' : 'border-gray-300'} focus:outline-none focus:border-[#19b4bd] focus:ring-1 focus:ring-[#19b4bd] text-gray-800 text-sm sm:text-base`}
+                placeholder="e.g., 2 years as a server"
+              />
             </div>
             
-            <div className="mb-6 job-form-section w-full max-w-full" style={{ animationDelay: '0.4s' }}>
-              <div className={`job-form-field p-3 sm:p-4 w-full max-w-full ${activeField === 'resume' ? 'highlight-field' : ''}`}>
-                <label className="block text-gray-700 font-medium mb-2 job-form-label text-sm sm:text-base">
-                  <span className="text-amber-500 mr-1">•</span> Resume
-                </label>
-                <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 bg-gray-50 w-full max-w-full">
-                  <div className="file-upload-wrapper w-full max-w-full flex justify-center">
-                    <label htmlFor="resume" className="file-upload-button text-sm sm:text-base">
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                      </svg>
-                      Choose File
-                    </label>
-                    <input
-                      type="file"
-                      id="resume"
-                      name="resume"
-                      accept=".pdf,.doc,.docx"
-                      onChange={handleFileChange}
-                      onFocus={() => handleFocus('resume')}
-                      onBlur={handleBlur}
-                      className="absolute opacity-0 w-0 h-0"
-                    />
-                  </div>
+            <div className="mb-6 w-full">
+              <label className="block text-gray-700 font-medium mb-1 text-sm">
+                Resume
+              </label>
+              <div className="border border-gray-300 rounded-md p-4 bg-gray-50">
+                <div className="w-full flex flex-col items-center justify-center">
+                  <label htmlFor="resume" className="bg-white border border-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md cursor-pointer text-sm sm:text-base inline-flex items-center hover:bg-gray-50">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2 inline text-[#19b4bd]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    Choose File
+                  </label>
+                  <input
+                    type="file"
+                    id="resume"
+                    name="resume"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleFileChange}
+                    onFocus={() => handleFocus('resume')}
+                    onBlur={handleBlur}
+                    className="absolute opacity-0 w-0 h-0"
+                  />
                   {fileName ? (
-                    <div className="file-name-display mt-3 w-full max-w-full text-center">
-                      <svg className="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <div className="mt-3 w-full text-center">
+                      <svg className="w-4 h-4 mr-1 inline-block text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <span className="text-sm break-all">{fileName}</span>
@@ -333,35 +308,33 @@ const Job: React.FC<JobProps> = ({
               </div>
             </div>
             
-            <div className="mb-8 job-form-section w-full max-w-full" style={{ animationDelay: '0.5s' }}>
-              <div className={`job-form-field p-1 w-full max-w-full ${activeField === 'coverLetter' ? 'highlight-field' : ''}`}>
-                <label htmlFor="coverLetter" className="block text-gray-700 font-medium px-3 pt-2 job-form-label text-sm sm:text-base">
-                  <span className="text-blue-500 mr-1">•</span> Cover Letter (Optional)
-                </label>
-                <textarea
-                  id="coverLetter"
-                  name="coverLetter"
-                  rows={4}
-                  value={formData.coverLetter}
-                  onChange={handleInputChange}
-                  onFocus={() => handleFocus('coverLetter')}
-                  onBlur={handleBlur}
-                  className="w-full max-w-full bg-transparent px-3 py-2 focus:outline-none rounded-lg text-gray-800 text-sm sm:text-base resize-y min-h-[100px]"
-                  placeholder="Tell us why you'd like to work with us..."
-                ></textarea>
-              </div>
+            <div className="mb-8 w-full">
+              <label htmlFor="coverLetter" className="block text-gray-700 font-medium mb-1 text-sm">
+                Cover Letter (Optional)
+              </label>
+              <textarea
+                id="coverLetter"
+                name="coverLetter"
+                rows={4}
+                value={formData.coverLetter}
+                onChange={handleInputChange}
+                onFocus={() => handleFocus('coverLetter')}
+                onBlur={handleBlur}
+                className={`w-full px-3 py-2 rounded-md border ${activeField === 'coverLetter' ? 'border-[#19b4bd] ring-1 ring-[#19b4bd] ring-opacity-50' : 'border-gray-300'} focus:outline-none focus:border-[#19b4bd] focus:ring-1 focus:ring-[#19b4bd] text-gray-800 text-sm sm:text-base resize-y min-h-[100px]`}
+                placeholder="Tell us why you'd like to work with us..."
+              ></textarea>
             </div>
             
-            <div className="flex justify-center job-form-section w-full max-w-full" style={{ animationDelay: '0.6s' }}>
+            <div className="flex justify-center w-full">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="job-form-button group relative px-6 sm:px-8 py-3 text-sm sm:text-base"
+                className="bg-[#19b4bd] hover:bg-[#148f96] cursor-pointer text-white font-semibold rounded-md px-6 sm:px-8 py-3 text-sm sm:text-base border-2 border-[#0b7980] shadow-[0_6px_0_rgb(11,121,128)] transition-colors duration-200"
               >
                 <span className="relative z-10">
                   {isSubmitting ? (
                     <span className="flex items-center">
-                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <svg className="-ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>

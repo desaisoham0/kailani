@@ -1,11 +1,6 @@
 /* Import fonts first */
 @import "./styles/fonts.css";
-@import "./styles/headerAnimations.css";
-@import "./styles/jobFormAnimations.css";
-@import "./styles/aboutAnimations.css";
 @import "tailwindcss";
-@import "./styles/fonts.css";
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&display=swap');
 
 /* Base styles */
 :root {

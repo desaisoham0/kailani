@@ -116,7 +116,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
 
   if (loading) {
     return (
-      <section className="py-16 px-4 bg-amber-900">
+      <section className="py-16 px-4 bg-[#78350F]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-200 mx-auto"></div>
@@ -135,13 +135,13 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
     <section className="py-16 px-4 bg-amber-800 border-b-2 border-[#ffe0f0]">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-wide mb-3 text-amber-50 baloo-regular">{title}</h2>
-          <p className="text-xl text-amber-200 tracking-wide baloo-regular">{subtitle}</p>
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-wide mb-3 text-[#F5E1A4] baloo-regular">{title}</h2>
+          <p className="text-xl text-[#FFFFF0] tracking-wide baloo-regular">{subtitle}</p>
           
           <div className="mt-6 inline-flex justify-center items-center bg-amber-900/40 px-6 py-3 rounded-xl mx-auto">
-            <p className="font-bold text-2xl text-amber-100 mr-3 baloo-regular">{averageRating.toFixed(1)}</p>
+            <p className="font-bold text-3xl text-[#FFFFFF] mr-3 baloo-regular">{averageRating.toFixed(1)}</p>
             <StarRating rating={Math.round(averageRating)} />
-            <p className="ml-3 text-sm text-amber-200 baloo-regular">({totalReviews} reviews)</p>
+            <p className="ml-3 text-sm text-[#FFFFFF] baloo-regular">({totalReviews} reviews)</p>
           </div>
         </div>
 
@@ -168,7 +168,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
                       {reviews[currentIndex].author}
                     </cite>
                   </div>
-                  <p className="text-base leading-relaxed text-gray-700 font-sans">
+                  <p className="text-base leading-relaxed text-[#000000] font-sans">
                     "{reviews[currentIndex].text}"
                   </p>
                 </div>
