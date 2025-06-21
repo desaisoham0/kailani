@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { submitForm } from '../services/emailService';
 import { getHoursOfOperation } from '../firebase/hoursService';
-import type { DayHours } from '../firebase/hoursService';
 
 interface OpeningHours {
   day: string;
