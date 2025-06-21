@@ -33,7 +33,7 @@ const FloatingOrderButton: React.FC = () => {
       className={`
         fixed bottom-6 right-4 z-50
         bg-[#e83838] hover:bg-[#d42323]
-        text-white font-bold py-3 px-4
+        text-white font-bold py-3 px-6 baloo-regular tracking-wide text-xl
         rounded-lg border-2 border-[#f0c91f]
         shadow-[0_4px_0_rgb(25,180,189)]
         transition-colors duration-200
@@ -42,21 +42,6 @@ const FloatingOrderButton: React.FC = () => {
       `}
       aria-label="Order food online from Kailani"
     >
-      <div className="relative w-6 h-6">
-        <svg viewBox="0 0 32 32" className="w-full h-full">
-          {/* Ice cup base */}
-          <path 
-            d="M8 16 L24 16 L22 28 L10 28 Z" 
-            fill="white"
-          />
-          
-          {/* Colorful shave ice layers */}
-          <ellipse cx="16" cy="15" rx="8" ry="3" fill="#f0c91f" />
-          <ellipse cx="16" cy="13" rx="7" ry="2.5" fill="#19b4bd" />
-          <ellipse cx="16" cy="11" rx="6" ry="2" fill="#f0c91f" />
-          <ellipse cx="16" cy="9" rx="5" ry="1.5" fill="#e83838" />
-        </svg>
-      </div>
         
       <span className="font-semibold text-white">
         Order Now

@@ -52,14 +52,14 @@ const foodDataAdapter = {
 // UI utility functions
 const createCategoryButtonStyles = (category: FoodCategory): string => {
   const styleMap: Record<FoodCategory, string> = {
-    'Ramen': 'bg-yellow-400 text-indigo-900 border-yellow-600 shadow-[0_6px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1',
-    'Shave Ice': 'bg-blue-300 text-indigo-900 border-indigo-500 shadow-[0_6px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
-    'Acai': 'bg-blue-300 text-indigo-900 border-indigo-500 shadow-[0_6px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
-    'Homemade Soft Serve': 'bg-blue-300 text-indigo-900 border-indigo-500 shadow-[0_6px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
-    'Hot Dogs': 'bg-yellow-400 text-indigo-900 border-yellow-600 shadow-[0_6px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1',
-    'Musubi': 'bg-yellow-400 text-indigo-900 border-yellow-600 shadow-[0_6px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1'
+    'Ramen': 'bg-yellow-400 text-[#000000] border-yellow-600 shadow-[0_6px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1',
+    'Shave Ice': 'bg-blue-300 text-[#000000] border-indigo-500 shadow-[0_6px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
+    'Acai': 'bg-blue-300 text-[#000000] border-indigo-500 shadow-[0_6px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
+    'Homemade Soft Serve': 'bg-blue-300 text-[#000000] border-indigo-500 shadow-[0_6px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
+    'Hot Dogs': 'bg-yellow-400 text-[#000000] border-yellow-600 shadow-[0_6px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1',
+    'Musubi': 'bg-yellow-400 text-[#000000] border-yellow-600 shadow-[0_6px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1'
   };
-  return styleMap[category] ?? 'bg-blue-400 text-indigo-900 border-blue-600 shadow-[0_6px_0_rgb(37,99,235)] hover:shadow-[0_4px_0px_rgb(37,99,235)] hover:translate-y-1';
+  return styleMap[category] ?? 'bg-blue-400 border-blue-600 tracking-wide shadow-[0_6px_0_rgb(37,99,235)] hover:shadow-[0_4px_0px_rgb(37,99,235)] hover:translate-y-1';
 };
 
 const getAvailableCategories = (products: readonly ProductItem[]): readonly FoodCategory[] => {
@@ -83,11 +83,11 @@ const BouncyPillButton: React.FC<BouncyPillButtonProps> = ({
   className = '',
   'aria-label': ariaLabel,
 }) => {
-  const defaultStyle = 'bg-white text-indigo-900 border-indigo-300 baloo-regular rounded-full shadow-[0_6px_0_rgb(165,180,252)] hover:shadow-[0_4px_0px_rgb(165,180,252)] hover:translate-y-1 transition-all duration-200 active:scale-95';
+  const defaultStyle = 'bg-white text-[#000000] baloo-regular rounded-full shadow-[0_6px_0_rgb(165,180,252)] hover:shadow-[0_4px_0px_rgb(165,180,252)] hover:translate-y-1 transition-all duration-200 active:scale-95';
   
   return (
     <button
-      className={`px-6 py-3 font-bold text-lg baloo-regular cursor-pointer rounded-full transition-all duration-200 hover:translate-y-1 active:scale-95 ${
+      className={`px-6 py-3 font-bold text-lg tracking-wide baloo-regular cursor-pointer rounded-full transition-all duration-200 hover:translate-y-1 active:scale-95 ${
         isActive ? activeStyle : defaultStyle
       } ${className}`}
       onClick={onClick}
@@ -222,7 +222,7 @@ const useCarouselState = (categoryProducts: readonly ProductItem[]) => {
 };
 
 const BestSellers: React.FC<BestSellersProps> = React.memo(({
-  title = "Our Best Sellers"
+  title = "We proudly serve"
 }) => {
   const { products, isLoading, error } = useFavoriteFoodItems();
   const [selectedCategory, setSelectedCategory] = useState<FoodCategory>('Ramen');
@@ -270,7 +270,7 @@ const BestSellers: React.FC<BestSellersProps> = React.memo(({
         <BrandHeader />
         
         <div className="text-center mb-10 mt-6">
-          <h2 className="text-4xl text-[#0A2463] font-bold mb-2 font-navigation baloo-regular">
+          <h2 className="text-4xl text-[#003F47] font-bold mb-2 font-navigation baloo-regular">
             {title}
           </h2>
         </div>
@@ -303,7 +303,7 @@ const LoadingDisplay: React.FC<{ title: string }> = ({ title }) => (
     <div className="container mx-auto px-4 relative z-10 max-w-full">
       <BrandHeader />
       <div className="text-center mb-10 mt-6">
-        <h2 className="text-4xl text-[#0A2463] font-bold mb-2 font-navigation baloo-regular">
+        <h2 className="text-4xl text-[#003F47 ] font-bold mb-2 font-navigation baloo-regular">
           {title}
         </h2>
       </div>
@@ -320,7 +320,7 @@ const ErrorDisplay: React.FC<{ title: string }> = ({ title }) => (
     <div className="container mx-auto px-4 relative z-10 max-w-full">
       <BrandHeader />
       <div className="text-center mb-10 mt-6">
-        <h2 className="text-4xl text-[#0A2463] font-bold mb-2 font-navigation baloo-regular">
+        <h2 className="text-4xl text-[#003F47] font-bold mb-2 font-navigation baloo-regular">
           {title}
         </h2>
       </div>
@@ -336,7 +336,7 @@ const EmptyDisplay: React.FC<{ title: string }> = ({ title }) => (
     <div className="container mx-auto px-4 relative z-10 max-w-full">
       <BrandHeader />
       <div className="text-center mb-10 mt-6">
-        <h2 className="text-4xl text-[#0A2463] font-bold mb-2 font-navigation baloo-regular">
+        <h2 className="text-4xl text-[#003F47] font-bold mb-2 font-navigation baloo-regular">
           {title}
         </h2>
       </div>
@@ -391,19 +391,19 @@ const ProductCarousel: React.FC<{
         <div className="flex items-center justify-center mt-6 space-x-4">
           <button
             onClick={onPrevious}
-            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] text-[#0A2463] border-2 border-[#bbfaf5] shadow-[0_4px_0_rgb(187,250,245)] hover:shadow-[0_4px_0px_rgb(91,232,240)] hover:translate-y-1 transition-all duration-200 active:scale-95"
+            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] text-[#003F47] border-2 border-[#bbfaf5] shadow-[0_4px_0_rgb(187,250,245)] hover:shadow-[0_4px_0px_rgb(91,232,240)] hover:translate-y-1 transition-all duration-200 active:scale-95"
             aria-label="Previous product"
           >
             <ChevronLeft className="h-6 w-6" />
           </button>
           <button
-            className=" bg-opacity-80 backdrop-blur-sm px-6 py-2 text-sm baloo-regular rounded-full bg-[#19b4bd] text-[#0A2463] border-2 border-[#bbfaf5] shadow-[0_4px_0_rgb(187,250,245)]"
+            className=" bg-opacity-80 backdrop-blur-sm px-6 py-2 text-sm baloo-regular rounded-full bg-[#19b4bd] text-[#003F47] border-2 border-[#bbfaf5] shadow-[0_4px_0_rgb(187,250,245)]"
           >
             {`${currentIndex + 1} / ${products.length}`}
           </button>
           <button
             onClick={onNext}
-            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] text-[#0A2463] border-2 border-[#bbfaf5] shadow-[0_4px_0_rgb(187,250,245)] hover:shadow-[0_4px_0px_rgb(91,232,240)] hover:translate-y-1 transition-all duration-200 active:scale-95"
+            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] text-[#003F47] border-2 border-[#bbfaf5] shadow-[0_4px_0_rgb(187,250,245)] hover:shadow-[0_4px_0px_rgb(91,232,240)] hover:translate-y-1 transition-all duration-200 active:scale-95"
             aria-label="Next product"
           >
             <ChevronRight className="h-6 w-6" />
