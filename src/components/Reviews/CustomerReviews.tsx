@@ -132,7 +132,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
   }
 
   return (
-    <section className="py-16 px-4 bg-amber-800 border-b-2 border-[#ffe0f0]">
+    <section className="py-16 px-4 bg-[#78350F] border-b-2 border-[#ffe0f0]">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-semibold tracking-wide mb-3 text-[#F5E1A4] baloo-regular">{title}</h2>

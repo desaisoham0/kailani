@@ -6,11 +6,15 @@ import AdminFoodList from './AdminFoodList';
 import AdminFoodForm from './AdminFoodForm';
 import AdminReviews from './AdminReviews';
 import AdminReviewForm from './AdminReviewForm';
+import AdminHoursForm from './AdminHoursForm';
+import AdminOffers from './AdminOffers';
+import AdminOfferForm from './AdminOfferForm';
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<'food-list' | 'food-add' | 'reviews-list' | 'reviews-add'>('food-list');
+  const [activeTab, setActiveTab] = useState<'food-list' | 'food-add' | 'reviews-list' | 'reviews-add' | 'hours' | 'offers-list' | 'offers-add'>('food-list');
   const [editingFoodId, setEditingFoodId] = useState<string | null>(null);
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+  const [editingOfferId, setEditingOfferId] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { currentUser, loading } = useAuth();
   const navigate = useNavigate();
@@ -50,6 +54,17 @@ export default function AdminDashboard() {
   const handleReviewFormComplete = () => {
     setEditingReviewId(null);
     setActiveTab('reviews-list');
+  };
+  
+  const handleEditOffer = (offerId: string) => {
+    setEditingOfferId(offerId);
+    setActiveTab('offers-add');
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleOfferFormComplete = () => {
+    setEditingOfferId(null);
+    setActiveTab('offers-list');
   };
 
   const handleTabChange = (tab: typeof activeTab) => {
@@ -111,6 +126,36 @@ export default function AdminDashboard() {
       ),
       onClick: () => setEditingReviewId(null),
     },
+    {
+      id: 'hours' as const,
+      label: 'Hours of Operation',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+        </svg>
+      ),
+      onClick: () => {},
+    },
+    {
+      id: 'offers-list' as const,
+      label: 'Offers & Upcoming',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm4.707 3.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L8.414 9H10a3 3 0 013 3v1a1 1 0 102 0v-1a5 5 0 00-5-5H8.414l1.293-1.293z" clipRule="evenodd" />
+        </svg>
+      ),
+      onClick: () => {},
+    },
+    {
+      id: 'offers-add' as const,
+      label: editingOfferId && activeTab === 'offers-add' ? 'Edit Offer' : 'Add Offer',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z" />
+        </svg>
+      ),
+      onClick: () => setEditingOfferId(null),
+    },
   ];
 
   // Render content based on active tab
@@ -124,6 +169,12 @@ export default function AdminDashboard() {
         return <AdminReviews onEditReview={handleEditReview} />;
       case 'reviews-add':
         return <AdminReviewForm reviewId={editingReviewId} onComplete={handleReviewFormComplete} />;
+      case 'hours':
+        return <AdminHoursForm />;
+      case 'offers-list':
+        return <AdminOffers onEditOffer={handleEditOffer} />;
+      case 'offers-add':
+        return <AdminOfferForm offerId={editingOfferId} onComplete={handleOfferFormComplete} />;
       default:
         return <AdminFoodList onEditFood={handleEditFood} />;
     }

@@ -8,6 +8,7 @@ import KailaniFooter from './components/Footer/KailaniFooter';
 import BackToTopButton from './components/UI/BackToTopButton';
 import FloatingOrderButton from './components/UI/FloatingOrderButton';
 import { AuthProvider } from './contexts/AuthContext';
+import OffersDisplay from './components/Offers/OffersDisplay';
 
 const JobsPage = lazy(() => import('./pages/JobsPage'));
 const GalleryPage = lazy(() => import('./pages/GalleryPage'));
@@ -38,6 +39,9 @@ function App() {
               <BestSellers 
                 title="We proudly serve"
               />
+              
+              {/* Special Offers & Upcoming Items - Conditionally renders if there are active offers */}
+              <OffersDisplay />
               
               {/* Food Gallery Preview - Now loading from Firebase */}
               <HomeFoodGallery 
