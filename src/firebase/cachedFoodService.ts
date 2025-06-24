@@ -9,7 +9,7 @@ import {
   type DocumentChange,
   type Unsubscribe
 } from 'firebase/firestore';
-import { firestoreUsageTracker } from '../utils/firestoreUsage';
+import { firestoreUsageTracker } from '../utils/firestoreUsageTracker';
 import { devLog } from '../utils/environment';
 
 export interface FoodItem {

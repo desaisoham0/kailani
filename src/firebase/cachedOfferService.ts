@@ -9,7 +9,7 @@ import {
   type DocumentChange,
   type Unsubscribe
 } from 'firebase/firestore';
-import { firestoreUsageTracker } from '../utils/firestoreUsage';
+import { firestoreUsageTracker } from '../utils/firestoreUsageTracker';
 
 export interface Offer {
   id: string;

@@ -14,7 +14,7 @@ import {
   Timestamp
 } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
-import { firestoreUsageTracker } from '../utils/firestoreUsage';
+import { firestoreUsageTracker } from '../utils/firestoreUsageTracker';
 
 export interface FoodItem {
   id?: string;

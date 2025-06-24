@@ -5,7 +5,7 @@ import {
   Timestamp,
   type Unsubscribe
 } from 'firebase/firestore';
-import { firestoreUsageTracker } from '../utils/firestoreUsage';
+import { firestoreUsageTracker } from '../utils/firestoreUsageTracker';
 
 export interface HoursDay {
   day: string;
@@ -97,7 +97,7 @@ class CachedHoursService {
   /**
    * Handle document updates from Firestore
    */
-  private handleDocumentUpdate(docSnapshot: any): void {
+  private handleDocumentUpdate(docSnapshot: import('firebase/firestore').DocumentSnapshot): void {
     const source = docSnapshot.metadata.fromCache ? 'local cache' : 'server';
     
     // Track reads only if from server (not from cache)

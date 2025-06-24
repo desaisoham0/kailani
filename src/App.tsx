@@ -9,7 +9,7 @@ import BackToTopButton from './components/UI/BackToTopButton';
 import FloatingOrderButton from './components/UI/FloatingOrderButton';
 import { AuthProvider } from './contexts/AuthContext';
 import { CacheProvider, CacheStatus } from './contexts/CacheContext';
-import { FirestoreUsageDisplay } from './utils/firestoreUsage';
+import { FirestoreUsageDisplay } from './utils/firestoreUsageComponents';
 import OffersDisplay from './components/Offers/OffersDisplay';
 import ErrorBoundary from './components/ErrorBoundary';
 

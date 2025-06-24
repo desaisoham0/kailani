@@ -6,17 +6,17 @@ export const isProduction = import.meta.env.PROD;
  * Development-only logging that gets stripped in production
  */
 export const devLog = {
-  log: (...args: any[]) => {
+  log: (...args: unknown[]) => {
     if (isDevelopment) {
       console.log(...args);
     }
   },
-  warn: (...args: any[]) => {
+  warn: (...args: unknown[]) => {
     if (isDevelopment) {
       console.warn(...args);
     }
   },
-  error: (...args: any[]) => {
+  error: (...args: unknown[]) => {
     // Always log errors, even in production
     console.error(...args);
   }
@@ -52,11 +52,14 @@ export function handleAsyncError(error: unknown, context: string): void {
   console.error(`Error in ${context}:`, errorMessage);
   
   // In production, you might want to send to error tracking service
-  if (isProduction && (window as any).gtag) {
-    (window as any).gtag('event', 'exception', {
-      description: `${context}: ${errorMessage}`,
-      fatal: false
-    });
+  if (isProduction) {
+    const windowWithGtag = window as Window & { gtag?: (command: string, action: string, parameters?: object) => void };
+    if (windowWithGtag.gtag) {
+      windowWithGtag.gtag('event', 'exception', {
+        description: `${context}: ${errorMessage}`,
+        fatal: false
+      });
+    }
   }
 }
 

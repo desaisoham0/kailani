@@ -1,13 +1,7 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { cachedFoodService, type CacheStats } from '../firebase/cachedFoodService';
-
-interface CacheContextValue {
-  isReady: boolean;
-  stats: CacheStats;
-  error: Error | null;
-}
-
-const CacheContext = createContext<CacheContextValue | undefined>(undefined);
+import { CacheContext, type CacheContextValue } from './cache.types';
+import { useCache } from './cache.hooks';
 
 interface CacheProviderProps {
   children: React.ReactNode;
@@ -77,17 +71,6 @@ export const CacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
       {children}
     </CacheContext.Provider>
   );
-};
-
-/**
- * Hook to access cache context
- */
-export const useCache = (): CacheContextValue => {
-  const context = useContext(CacheContext);
-  if (context === undefined) {
-    throw new Error('useCache must be used within a CacheProvider');
-  }
-  return context;
 };
 
 /**
