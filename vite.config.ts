@@ -30,7 +30,27 @@ export default defineConfig({
   build: {
     commonjsOptions: {
       transformMixedEsModules: true
-    }
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Separate Firebase into its own chunk
+          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
+          // Separate React into its own chunk
+          react: ['react', 'react-dom'],
+          // Separate date utilities
+          'date-fns': ['date-fns'],
+          // Separate router
+          router: ['react-router-dom'],
+          // Separate animation library
+          animation: ['framer-motion']
+        }
+      }
+    },
+    // Increase chunk size warning limit to 1MB
+    chunkSizeWarningLimit: 1000,
+    // Enable source maps for production debugging
+    sourcemap: true
   },
   server: {
     // Add your Ngrok host to the allowed hosts

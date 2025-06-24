@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { getFavoriteFoodItems } from '../../firebase/foodService';
+import useCachedFoodItems from '../../hooks/useCachedFoodItems';
 import logo from '../../assets/Kailani_logo.png';
 
 type FoodCategory = 'Ramen' | 'Shave Ice' | 'Acai' | 'Homemade Soft Serve' | 'Hot Dogs' | 'Musubi';
@@ -155,32 +155,24 @@ const BrandHeader: React.FC = () => (
   </header>
 );
 
-// Data fetching hook
+// Data fetching hook using cached service
 const useFavoriteFoodItems = () => {
+  const { favoriteItems, isLoading, error: cacheError } = useCachedFoodItems();
   const [products, setProducts] = useState<readonly ProductItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadFavoriteItems = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        
-        const favorites = await getFavoriteFoodItems();
-        const transformedProducts = favorites.map(foodDataAdapter.transformFoodItemToProduct);
-        
-        setProducts(transformedProducts);
-      } catch (err) {
-        setError('Failed to load favorite items');
-        console.error('Error fetching favorite items:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadFavoriteItems();
-  }, []);
+    try {
+      const transformedProducts = favoriteItems.map(foodDataAdapter.transformFoodItemToProduct);
+      setProducts(transformedProducts);
+      setError(cacheError?.message || null);
+      
+      console.log(`🍕 BestSellers: Updated with ${transformedProducts.length} favorite items`);
+    } catch (err) {
+      setError('Failed to transform favorite items');
+      console.error('Error transforming favorite items:', err);
+    }
+  }, [favoriteItems, cacheError?.message]); // Only depend on error message, not the error object
 
   return { products, isLoading, error };
 };

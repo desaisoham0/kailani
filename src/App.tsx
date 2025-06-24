@@ -8,7 +8,10 @@ import KailaniFooter from './components/Footer/KailaniFooter';
 import BackToTopButton from './components/UI/BackToTopButton';
 import FloatingOrderButton from './components/UI/FloatingOrderButton';
 import { AuthProvider } from './contexts/AuthContext';
+import { CacheProvider, CacheStatus } from './contexts/CacheContext';
+import { FirestoreUsageDisplay } from './utils/firestoreUsage';
 import OffersDisplay from './components/Offers/OffersDisplay';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const JobsPage = lazy(() => import('./pages/JobsPage'));
 const GalleryPage = lazy(() => import('./pages/GalleryPage'));
@@ -22,16 +25,18 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 function App() {
   const [restaurantName] = useState('KAILANI');
   return (
-    <AuthProvider>
-      <Router>
-        <div className="min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
-          {/* Restaurant Header (responsive for both mobile and desktop) */}
-          <RestaurantHeader restaurantName={restaurantName} />
-          
-          <BackToTopButton />
-          <FloatingOrderButton />
-          
-          <Routes>
+    <ErrorBoundary>
+      <CacheProvider>
+        <AuthProvider>
+          <Router>
+            <div className="min-h-screen flex flex-col w-full max-w-full overflow-x-hidden">
+              {/* Restaurant Header (responsive for both mobile and desktop) */}
+              <RestaurantHeader restaurantName={restaurantName} />
+              
+              <BackToTopButton />
+              <FloatingOrderButton />
+              
+              <Routes>
             <Route path="/" element={
             <main className="w-full max-w-full flex-grow flex flex-col overflow-x-hidden">
 
@@ -98,9 +103,15 @@ function App() {
         </Routes>
         
         <KailaniFooter restaurantName={restaurantName} />
+        
+        {/* Development-only status displays */}
+        <CacheStatus />
+        <FirestoreUsageDisplay />
       </div>
     </Router>
     </AuthProvider>
+    </CacheProvider>
+    </ErrorBoundary>
   );
 }
 

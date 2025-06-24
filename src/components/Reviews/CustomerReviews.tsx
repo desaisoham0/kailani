@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { getAllReviews, getReviewStats } from '../../firebase/reviewService';
+import React, { useState } from 'react';
+import useCachedReviews from '../../hooks/useCachedReviews';
 
 // Professional star rating component
 const StarRating = ({ rating }: { rating: number }) => (
@@ -52,58 +52,18 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
   subtitle = "What Our Customers Say"
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [averageRating, setAverageRating] = useState(0);
-  const [totalReviews, setTotalReviews] = useState(0);
-  const [loading, setLoading] = useState(false);
-
-  // Fetch reviews from Firebase if no reviews are provided as props
-  useEffect(() => {
-    if (propReviews && propReviews.length > 0) {
-      setReviews(propReviews);
-      // Don't calculate, use the stats from Firebase
-      fetchReviewStats();
-    } else {
-      fetchReviewsAndStats();
-    }
-  }, [propReviews]);
-
-  const fetchReviewStats = async () => {
-    try {
-      const stats = await getReviewStats();
-      setAverageRating(stats.averageRating);
-      setTotalReviews(stats.totalReviews);
-    } catch (error) {
-      console.error('Error fetching review stats:', error);
-    }
-  };
-
-  const fetchReviewsAndStats = async () => {
-    setLoading(true);
-    try {
-      // Get reviews
-      const fetchedReviews = await getAllReviews();
-      const formattedReviews = fetchedReviews.map(review => ({
-        ...review,
-        id: review.id || '',
-        date: review.date?.toDate ? review.date.toDate().toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
-        }) : typeof review.date === 'string' ? review.date : ''
-      }));
-      setReviews(formattedReviews as Review[]);
-      
-      // Get stats
-      const stats = await getReviewStats();
-      setAverageRating(stats.averageRating);
-      setTotalReviews(stats.totalReviews);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
+  // Use cached reviews hook
+  const { 
+    reviews: cachedReviews, 
+    reviewStats, 
+    isLoading
+  } = useCachedReviews();
+  
+  // Use provided reviews or cached reviews
+  const reviews = propReviews && propReviews.length > 0 ? propReviews : cachedReviews;
+  const averageRating = reviewStats.averageRating;
+  const totalReviews = reviewStats.totalReviews;
 
   // Handle navigation
   const goToNextReview = () => {
@@ -114,7 +74,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
     setCurrentIndex((prevIndex) => (prevIndex - 1 + reviews.length) % reviews.length);
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <section className="py-16 px-4 bg-[#78350F]">
         <div className="max-w-6xl mx-auto">

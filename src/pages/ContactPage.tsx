@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { submitForm } from '../services/emailService';
-import { getHoursOfOperation } from '../firebase/hoursService';
+import useCachedHours from '../hooks/useCachedHours';
 
 interface OpeningHours {
   day: string;
@@ -21,10 +21,11 @@ const ContactPage: React.FC = React.memo(() => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [formError, setFormError] = useState('');
   const [todaysDay, setTodaysDay] = useState<string>('');
-  const [openingHours, setOpeningHours] = useState<OpeningHours[]>([]);
-  const [loading, setLoading] = useState(true);
   
-  // Get today's day and fetch hours of operation from Firestore
+  // Use cached hours hook
+  const { hoursData, isLoading: hoursLoading } = useCachedHours();
+  
+  // Get today's day and handle URL params
   useEffect(() => {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const today = new Date().getDay();
@@ -33,7 +34,6 @@ const ContactPage: React.FC = React.memo(() => {
 
     if (tabParam === 'hours' || tabParam === 'location' || tabParam === 'contact') {
       setActiveTab(tabParam);
-
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
@@ -41,40 +41,14 @@ const ContactPage: React.FC = React.memo(() => {
     }
     
     setTodaysDay(days[today]);
-    
-    // Fetch hours from Firestore
-    const fetchHours = async () => {
-      try {
-        setLoading(true);
-        const hoursData = await getHoursOfOperation();
-        
-        // Map the hours data to our OpeningHours interface
-        const formattedHours = hoursData.days.map(day => ({
-          day: day.day,
-          hours: day.isOpen ? day.hours : 'Closed',
-          isToday: day.day === days[today]
-        }));
-        
-        setOpeningHours(formattedHours);
-      } catch (error) {
-        console.error('Error fetching hours of operation:', error);
-        // Fallback to default hours if there's an error
-        setOpeningHours([
-          { day: 'Monday', hours: 'Closed', isToday: todaysDay === 'Monday' },
-          { day: 'Tuesday', hours: '11:30 AM - 8:00 PM', isToday: todaysDay === 'Tuesday' },
-          { day: 'Wednesday', hours: '11:30 AM - 8:00 PM', isToday: todaysDay === 'Wednesday' },
-          { day: 'Thursday', hours: '11:30 AM - 8:00 PM', isToday: todaysDay === 'Thursday' },
-          { day: 'Friday', hours: '11:30 AM - 9:00 PM', isToday: todaysDay === 'Friday' },
-          { day: 'Saturday', hours: '11:30 AM - 9:00 PM', isToday: todaysDay === 'Saturday' },
-          { day: 'Sunday', hours: '11:30 AM - 9:00 PM', isToday: todaysDay === 'Sunday' },
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchHours();
   }, []);
+
+  // Format hours data for display
+  const openingHours: OpeningHours[] = hoursData?.days.map(day => ({
+    day: day.day,
+    hours: day.isOpen ? day.hours : 'Closed',
+    isToday: day.day === todaysDay
+  })) || [];
 
   const handleFocus = (field: string) => {
     setActiveField(field);
@@ -533,7 +507,7 @@ const ContactPage: React.FC = React.memo(() => {
                     </p>
                     
                     <div className="border-t border-gray-200 py-4">
-                      {loading ? (
+                      {hoursLoading ? (
                         <div className="py-8 flex justify-center items-center">
                           <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-b-4 border-teal-500 mr-2"></div>
                           <span className="text-teal-600">Loading hours...</span>

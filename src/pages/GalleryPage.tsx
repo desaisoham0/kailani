@@ -1,14 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { getAllFoodItems } from '../firebase/foodService';
-
-interface FoodItem {
-  id?: string;
-  name: string;
-  description: string;
-  category: string;
-  favorite: boolean;
-  imageUrl: string;
-}
+import React, { useState } from 'react';
+import useCachedFoodItems from '../hooks/useCachedFoodItems';
 
 // About Our Food component
 const AboutOurFood: React.FC = () => {
@@ -58,10 +49,15 @@ const defaultButtonStyle = 'bg-white text-[#000000] rounded-full shadow-[0_6px_0
 const categoryOrder = ['all', 'Ramen', 'Shave Ice', 'Acai', 'Homemade Soft Serve', 'Hot Dogs', 'Musubi'];
 
 const GalleryPage: React.FC = React.memo(() => {
-  const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
+  const { foodItems: allFoodItems, isLoading, error: cacheError } = useCachedFoodItems();
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  
+  // Filter to only include items with valid images
+  const foodItems = React.useMemo(() => {
+    return allFoodItems.filter(item => item.imageUrl && item.imageUrl.trim() !== '');
+  }, [allFoodItems]);
+  
+  const error = cacheError?.message || null;
 
   // Get all available categories from food items and sort them based on predefined order
   const categories = React.useMemo(() => {
@@ -86,28 +82,6 @@ const GalleryPage: React.FC = React.memo(() => {
     if (activeCategory === 'all') return foodItems;
     return foodItems.filter(item => item.category === activeCategory);
   }, [foodItems, activeCategory]);
-
-  useEffect(() => {
-    const loadFoodItems = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        
-        const items = await getAllFoodItems();
-        // Only include items with valid images
-        const validItems = items.filter(item => item.imageUrl && item.imageUrl.trim() !== '');
-        
-        setFoodItems(validItems);
-      } catch (err) {
-        setError('Failed to load gallery images');
-        console.error('Error fetching food items:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadFoodItems();
-  }, []);
 
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);

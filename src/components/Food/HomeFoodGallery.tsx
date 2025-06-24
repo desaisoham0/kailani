@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getFavoriteFoodItems } from '../../firebase/foodService';
+import useCachedFoodItems from '../../hooks/useCachedFoodItems';
 
 // Types
 type FoodItem = {
@@ -29,55 +29,31 @@ const shuffleArray = <T,>(array: T[]): T[] => {
   return newArray;
 };
 
-// Data adapter that isolates Firebase interaction
-const fetchFavoriteItems = async (): Promise<FoodItem[]> => {
-  try {
-    const favorites = await getFavoriteFoodItems();
-    return favorites.filter(item => item.imageUrl && item.imageUrl.trim() !== '');
-  } catch (error) {
-    console.error('Error fetching gallery images:', error);
-    throw new Error('Failed to load gallery images');
-  }
-};
-
-// React hook that handles data fetching and state
+// React hook that handles data fetching and state using cached service
 const useRandomFoodItems = (maxCount: number) => {
-  const [state, setState] = React.useState<{
-    items: FoodItem[];
-    status: 'idle' | 'loading' | 'success' | 'error';
-    error: string | null;
-  }>({
-    items: [],
-    status: 'idle',
-    error: null
-  });
+  const { favoriteItems, isLoading, error: cacheError } = useCachedFoodItems();
+  const [randomItems, setRandomItems] = React.useState<FoodItem[]>([]);
+  const initializedRef = React.useRef(false);
 
   React.useEffect(() => {
-    const loadItems = async () => {
-      setState(prev => ({ ...prev, status: 'loading' }));
+    // Filter items with valid images
+    const validItems = favoriteItems.filter(item => item.imageUrl && item.imageUrl.trim() !== '');
+    
+    // Only shuffle once when we first get data, or if we have no items yet
+    if (!initializedRef.current && validItems.length > 0) {
+      const randomized = shuffleArray(validItems).slice(0, maxCount);
+      setRandomItems(randomized);
+      initializedRef.current = true;
       
-      try {
-        const validItems = await fetchFavoriteItems();
-        const randomized = shuffleArray(validItems).slice(0, maxCount);
-        
-        setState({
-          items: randomized,
-          status: 'success',
-          error: null
-        });
-      } catch (error) {
-        setState({
-          items: [],
-          status: 'error',
-          error: error instanceof Error ? error.message : 'Unknown error occurred'
-        });
-      }
-    };
+      console.log(`🏠 HomeFoodGallery: Initialized with ${randomized.length} random items from cache`);
+    }
+  }, [favoriteItems, maxCount]);
 
-    loadItems();
-  }, [maxCount]);
-
-  return state;
+  return {
+    items: randomItems,
+    status: isLoading ? 'loading' : cacheError ? 'error' : 'success',
+    error: cacheError?.message || null
+  };
 };
 
 // UI Components
