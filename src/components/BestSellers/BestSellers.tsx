@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import useCachedFoodItems from '../../hooks/useCachedFoodItems';
 import logo from '../../assets/Kailani_logo.png';
+import { SocialMediaLinks } from '../Navigation/SocialMediaLinks';
 
 type FoodCategory = 'Ramen' | 'Shave Ice' | 'Acai' | 'Homemade Soft Serve' | 'Hot Dogs' | 'Musubi';
 
@@ -151,6 +152,13 @@ const BrandHeader: React.FC = () => (
           </h2>
         </div>
       </div>
+    </div>
+    {/* Social Media Links */}
+    <div className="flex justify-center mt-4">
+      <SocialMediaLinks 
+        variant="mobile" 
+        className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 shadow-lg"
+      />
     </div>
   </header>
 );
