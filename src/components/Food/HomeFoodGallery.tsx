@@ -150,7 +150,7 @@ const GalleryFooter: React.FC = () => (
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-2">
             <rect x="2" y="5" width="20" height="14" rx="4" fill="#e3e1ed" stroke="#002B5B" strokeWidth="1.5"/>
             <circle cx="7.5" cy="10" r="1.5" fill="#002B5B"/>
-            <path d="M2 17l5-5c1-1 2.5-1 3.5 0l3 3 2-2c1-1 2.5-1 3.5 0l2 2" stroke="#002B5B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+            <path d="M2 16l4-4c1-1 2-1 3 0l2 2 1.5-1.5c1-1 2-1 3 0L22 16" stroke="#002B5B" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
           </svg>
           View Full Gallery
         </span>
