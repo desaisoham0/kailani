@@ -105,8 +105,8 @@ function App() {
         <KailaniFooter restaurantName={restaurantName} />
         
         {/* Development-only status displays */}
-        {/* <CacheStatus />
-        <FirestoreUsageDisplay /> */}
+        <CacheStatus />
+        <FirestoreUsageDisplay />
       </div>
     </Router>
     </AuthProvider>
