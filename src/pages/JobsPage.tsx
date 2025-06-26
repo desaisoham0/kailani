@@ -31,11 +31,59 @@ const JobsPage = () => {
           
           <div className="flex flex-col md:flex-row justify-center items-center space-y-6 md:space-y-0 md:space-x-10">
             <div className="w-full max-w-md">
-              <img 
-                src="/src/assets/illustrations/about-team.svg" 
-                alt="Team Illustration" 
-                className="w-full h-auto max-h-80 object-contain"
-              />
+              {/* Custom Team Illustration using Tailwind */}
+              <div className="relative bg-white/10 rounded-3xl p-8 backdrop-blur-sm">
+                <div className="flex justify-center items-end space-x-4 mb-4">
+                  {/* Team Member 1 - Chef */}
+                  <div className="flex flex-col items-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mb-2 shadow-lg">
+                      <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 01-1 1H8a1 1 0 01-1-1V9a1 1 0 011-1h4a1 1 0 011 1v2z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="w-12 h-8 bg-white rounded-t-full"></div>
+                    <span className="text-xs text-white/80 mt-1">Chef</span>
+                  </div>
+                  
+                  {/* Team Member 2 - Server */}
+                  <div className="flex flex-col items-center">
+                    <div className="w-20 h-20 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center mb-2 shadow-lg">
+                      <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="w-16 h-10 bg-white rounded-t-full"></div>
+                    <span className="text-xs text-white/80 mt-1">Server</span>
+                  </div>
+                  
+                  {/* Team Member 3 - Manager */}
+                  <div className="flex flex-col items-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mb-2 shadow-lg">
+                      <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="w-12 h-8 bg-white rounded-t-full"></div>
+                    <span className="text-xs text-white/80 mt-1">Manager</span>
+                  </div>
+                </div>
+                
+                {/* Connecting lines */}
+                <div className="flex justify-center mb-4">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-0.5 bg-white/30"></div>
+                    <div className="w-2 h-2 bg-white/50 rounded-full"></div>
+                    <div className="w-8 h-0.5 bg-white/30"></div>
+                    <div className="w-2 h-2 bg-white/50 rounded-full"></div>
+                    <div className="w-8 h-0.5 bg-white/30"></div>
+                  </div>
+                </div>
+                
+                {/* Decorative elements */}
+                <div className="absolute top-4 right-4 w-3 h-3 bg-yellow-300 rounded-full"></div>
+                <div className="absolute bottom-6 left-4 w-2 h-2 bg-pink-300 rounded-full"></div>
+                <div className="absolute top-1/2 right-6 w-1.5 h-1.5 bg-blue-300 rounded-full"></div>
+              </div>
             </div>
             <div className="w-full max-w-md text-white">
               <h2 className="text-2xl md:text-3xl font-bold mb-4 jua-regular">Why Work With Us?</h2>
