@@ -14,7 +14,6 @@ import {
   Timestamp
 } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
-import { firestoreUsageTracker } from '../utils/firestoreUsageTracker';
 
 export interface FoodItem {
   id?: string;
@@ -62,8 +61,7 @@ export const addFoodItem = async (foodItem: Omit<FoodItem, 'id' | 'createdAt' | 
       updatedAt: serverTimestamp()
     });
     
-    // Track the write operation
-    firestoreUsageTracker.trackWrite(1);
+    // Previously tracked write operation
     
     return { id: docRef.id, ...foodItem, imageUrl };
   } catch (error) {
@@ -123,8 +121,7 @@ export const updateFoodItem = async (
     // Update document in Firestore
     await updateDoc(foodItemRef, updatedData);
     
-    // Track the write operation
-    firestoreUsageTracker.trackWrite(1);
+    // Previously tracked write operation
     
     return { id, ...foodItemData, ...(imageFile ? { imageUrl: updatedData.imageUrl } : {}) };
   } catch (error) {
@@ -157,8 +154,7 @@ export const deleteFoodItem = async (id: string) => {
     // Delete document from Firestore
     await deleteDoc(foodItemRef);
     
-    // Track the delete operation
-    firestoreUsageTracker.trackDelete(1);
+    // Previously tracked delete operation
     
     return id;
   } catch (error) {

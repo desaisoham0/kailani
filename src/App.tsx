@@ -8,8 +8,7 @@ import KailaniFooter from './components/Footer/KailaniFooter';
 import BackToTopButton from './components/UI/BackToTopButton';
 import FloatingOrderButton from './components/UI/FloatingOrderButton';
 import { AuthProvider } from './contexts/AuthContext';
-import { CacheProvider, CacheStatus } from './contexts/CacheContext';
-import { FirestoreUsageDisplay } from './utils/firestoreUsageComponents';
+import { CacheProvider } from './contexts/CacheContext';
 import OffersDisplay from './components/Offers/OffersDisplay';
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -103,10 +102,6 @@ function App() {
         </Routes>
         
         <KailaniFooter restaurantName={restaurantName} />
-        
-        {/* Development-only status displays */}
-        <CacheStatus />
-        <FirestoreUsageDisplay />
       </div>
     </Router>
     </AuthProvider>

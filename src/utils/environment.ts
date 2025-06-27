@@ -3,16 +3,22 @@ export const isDevelopment = import.meta.env.DEV;
 export const isProduction = import.meta.env.PROD;
 
 /**
+ * Debug flag to enable/disable development logs
+ * Set this to false to disable all development logs
+ */
+export const enableDebugLogs = false;
+
+/**
  * Development-only logging that gets stripped in production
  */
 export const devLog = {
   log: (...args: unknown[]) => {
-    if (isDevelopment) {
+    if (isDevelopment && enableDebugLogs) {
       console.log(...args);
     }
   },
   warn: (...args: unknown[]) => {
-    if (isDevelopment) {
+    if (isDevelopment && enableDebugLogs) {
       console.warn(...args);
     }
   },
@@ -70,7 +76,7 @@ export function measurePerformance<T>(
   operation: () => T | Promise<T>,
   label: string
 ): T | Promise<T> {
-  if (!isDevelopment) {
+  if (!isDevelopment || !enableDebugLogs) {
     return operation();
   }
 

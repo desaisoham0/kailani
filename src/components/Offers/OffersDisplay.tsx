@@ -1,5 +1,5 @@
-import { useState, memo } from 'react';
-import useCachedOffers from '../../hooks/useCachedOffers';
+import { useState, memo, useEffect } from 'react';
+import { getCurrentOffers, getUpcomingOffers, type Offer } from '../../firebase/offerService';
 import OptimizedImage from '../UI/OptimizedImage';
 
 // Add custom styles for animations
@@ -23,32 +23,70 @@ const customStyles = `
 // Main component
 const OffersDisplay = memo(() => {
   const [activeTab, setActiveTab] = useState<'current' | 'upcoming'>('current');
+  const [currentOffers, setCurrentOffers] = useState<Offer[]>([]);
+  const [upcomingOffers, setUpcomingOffers] = useState<Offer[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  
+  // Fetch offers data
+  useEffect(() => {
+    const fetchOffers = async () => {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        // Fetch both types of offers in parallel
+        const [currentOffersData, upcomingOffersData] = await Promise.all([
+          getCurrentOffers(),
+          getUpcomingOffers()
+        ]);
+        
+        setCurrentOffers(currentOffersData);
+        setUpcomingOffers(upcomingOffersData);
+      } catch (err) {
+        console.error("Error fetching offers:", err);
+        setError(err instanceof Error ? err : new Error('Failed to fetch offers'));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchOffers();
+  }, []); // Empty dependency array - fetch once on component mount
 
-  // Use cached offers hook
-  const { 
-    currentOffers, 
-    upcomingOffers, 
-    isLoading, 
-    error 
-  } = useCachedOffers();
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   // Inject custom styles
-  if (typeof document !== 'undefined' && !document.getElementById('offers-custom-styles')) {
-    const style = document.createElement('style');
-    style.id = 'offers-custom-styles';
-    style.textContent = customStyles;
-    document.head.appendChild(style);
-  }
+  useEffect(() => {
+    if (typeof document !== 'undefined' && !document.getElementById('offers-custom-styles')) {
+      const style = document.createElement('style');
+      style.id = 'offers-custom-styles';
+      style.textContent = customStyles;
+      document.head.appendChild(style);
+    }
+    
+    return () => {
+      // Cleanup styles on unmount
+      if (typeof document !== 'undefined') {
+        const styleEl = document.getElementById('offers-custom-styles');
+        if (styleEl) {
+          styleEl.remove();
+        }
+      }
+    };
+  }, []);
 
   // If there are no offers of either type, don't render the component
+  // Only return null after loading is complete to avoid flash of loading UI
   if (!isLoading && currentOffers.length === 0 && upcomingOffers.length === 0) {
     return null;
   }
 
   // If there are no current offers but there are upcoming ones,
-  // show upcoming by default
-  if (currentOffers.length === 0 && upcomingOffers.length > 0 && activeTab === 'current') {
+  // show upcoming by default (only run this effect once)
+  if (!hasInitialized && !isLoading && currentOffers.length === 0 && upcomingOffers.length > 0 && activeTab === 'current') {
     setActiveTab('upcoming');
+    setHasInitialized(true);
   }
 
   return (
@@ -136,7 +174,7 @@ const OffersDisplay = memo(() => {
               </div>
             </div>
           </div>
-        ) : error && currentOffers.length === 0 && upcomingOffers.length === 0 ? (
+        ) : error ? (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">😔</div>
             <div className="text-xl font-bold text-red-500 mb-2">Oops! Something went wrong</div>

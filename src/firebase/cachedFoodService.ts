@@ -9,7 +9,6 @@ import {
   type DocumentChange,
   type Unsubscribe
 } from 'firebase/firestore';
-import { firestoreUsageTracker } from '../utils/firestoreUsageTracker';
 import { devLog } from '../utils/environment';
 
 export interface FoodItem {
@@ -109,10 +108,7 @@ class CachedFoodService {
   private handleSnapshotUpdate(snapshot: QuerySnapshot): void {
     const source = snapshot.metadata.fromCache ? 'local cache' : 'server';
     
-    // Track reads only if from server (not from cache)
-    if (!snapshot.metadata.fromCache) {
-      firestoreUsageTracker.trackRead(snapshot.docs.length);
-    }
+    // Previously tracked reads here
     
     console.log(`📡 Received ${snapshot.docChanges().length} changes from ${source}`);
 
