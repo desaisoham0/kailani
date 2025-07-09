@@ -112,20 +112,20 @@ const ChevronRight: React.FC<{ className?: string }> = ({ className = '' }) => (
 );
 
 const BrandHeader: React.FC = () => (
-  <header className="py-4">
-    <div className="container mx-auto flex justify-center px-4">
+  <header className="py-0">
+    <div className="container mx-auto flex justify-center">
       <div className="flex flex-row items-center">
         <img
           src={logo}
           alt="Kailani Logo"
-          className="h-36 w-36 mr-4 flex-shrink-0"
+          className="h-36 w-36 flex-shrink-0"
         />
         <div className="space-y-1">
-          <h3 className="baloo-regular text-[#f7d34f] font-bold text-lg sm:text-xl drop-shadow-sm px-1">
+          <h3 className="baloo-regular text-[#f7d34f] font-bold text-lg sm:text-xl drop-shadow-sm">
             Hawaiian
           </h3>
           <h1 
-            className="baloo-regular text-[#f7d34f] font-extrabold text-4xl sm:text-5xl px-1"
+            className="baloo-regular text-[#f7d34f] font-extrabold text-4xl sm:text-5xl pr-4"
             style={{
               fontFamily: 'Baloo, sans-serif',
               whiteSpace: 'nowrap',
@@ -138,7 +138,7 @@ const BrandHeader: React.FC = () => (
             SHAVE ICE
           </h1>
           <h2 
-            className="baloo-regular text-white font-bold text-2xl sm:text-3xl px-1"
+            className="baloo-regular text-white font-bold text-2xl sm:text-3xl"
             style={{
               fontFamily: 'Baloo, sans-serif',
               whiteSpace: 'nowrap',
@@ -270,7 +270,7 @@ const BestSellers: React.FC<BestSellersProps> = React.memo(({
         <BrandHeader />
         
         <div className="text-center mb-10 mt-6">
-          <h2 className="text-4xl text-[#003F47] font-bold mb-2 font-navigation baloo-regular">
+          <h2 className="text-4xl text-[#f7d34f] font-bold mb-2 font-navigation baloo-regular">
             {title}
           </h2>
         </div>

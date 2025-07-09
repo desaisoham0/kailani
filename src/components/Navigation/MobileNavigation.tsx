@@ -82,7 +82,7 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
 
  const BrandLogo = ({ name }: { name: string }) => (
    <Link to="/" className="flex min-w-0 items-center justify-start gap-2">
-     <div className="flex-shrink-0">
+     {/* <div className="flex-shrink-0">
        <img
          src={logoImage}
          srcSet="/Kailani_logo.webp 1x, /Kailani_logo.png 2x"
@@ -91,10 +91,10 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
          loading="lazy"
          className="h-10 w-10 object-contain"
        />
-     </div>
+     </div> */}
      <div className="flex items-center justify-center min-w-0">
        <span
-         className="baloo-regular text-3xl font-bold tracking-wide text-[#f7d34f]"
+         className="baloo-regular text-4xl font-bold tracking-wide text-[#f7d34f]"
          style={{
                 fontFamily: 'Baloo, sans-serif',
                 whiteSpace: 'nowrap',

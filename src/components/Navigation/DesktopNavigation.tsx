@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logoImage from '../../assets/Kailani_logo.png';
 import '../../styles/fonts.css';
-// import { SocialMediaLinks } from './SocialMediaLinks';
 
 
 type NavigationItem = {
