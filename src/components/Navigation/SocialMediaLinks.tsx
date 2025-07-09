@@ -1,14 +1,16 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFacebookF, faInstagram, faTiktok } from '@fortawesome/free-brands-svg-icons';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 type SocialMediaLink = {
   readonly name: string;
   readonly url: string;
-  readonly icon: string;
+  readonly icon: IconDefinition;
   readonly ariaLabel: string;
 };
 
 type SocialMediaLinksProps = {
-  readonly variant?: 'desktop' | 'mobile';
   readonly className?: string;
 };
 
@@ -16,54 +18,56 @@ const SOCIAL_MEDIA_LINKS: readonly SocialMediaLink[] = [
   { 
     name: 'Facebook', 
     url: 'https://www.facebook.com/people/Kailani-Shave-Ice-NJ/100086558511217/?_rdr', 
-    icon: 'M18.8976 0.5H1.10139C0.797405 0.5 0.5 0.801025 0.5 1.14884V18.8492C0.5 19.199 0.797405 19.5 1.10139 19.5H10.6636V12.0262H8.09634V9.08691H10.6636V6.98736C10.6636 4.48403 12.2126 3.10952 14.4136 3.10952C15.4582 3.10952 16.3451 3.18859 16.6087 3.22281V5.83769L15.0965 5.83867C13.9033 5.83867 13.6712 6.38751 13.6712 7.19825V9.08691H16.5076L16.1273 12.0262H13.6712V19.5H18.8976C19.2026 19.5 19.5 19.199 19.5 18.8502V1.14884C19.5 0.801025 19.2026 0.5 18.8976 0.5Z', 
+    icon: faFacebookF, 
     ariaLabel: 'Follow us on Facebook' 
   },
   { 
     name: 'Instagram', 
     url: 'https://www.instagram.com/kailanishaveicenj/', 
-    icon: 'M10 0C7.2835 0 6.944 0.0115 5.877 0.06C4.8115 0.11 4.0855 0.2775 3.45 0.525C2.7915 0.7805 2.234 1.1225 1.678 1.678C1.1225 2.234 0.7805 2.7915 0.525 3.45C0.2775 4.0855 0.11 4.8115 0.06 5.877C0.0115 6.944 0 7.2835 0 10C0 12.7165 0.0115 13.056 0.06 14.123C0.11 15.1885 0.2775 15.9145 0.525 16.55C0.7805 17.2085 1.1225 17.766 1.678 18.322C2.234 18.8775 2.7915 19.2195 3.45 19.475C4.0855 19.7225 4.8115 19.89 5.877 19.94C6.944 19.9885 7.2835 20 10 20C12.7165 20 13.056 19.9885 14.123 19.94C15.1885 19.89 15.9145 19.7225 16.55 19.475C17.2085 19.2195 17.766 18.8775 18.322 18.322C18.8775 17.766 19.2195 17.2085 19.475 16.55C19.7225 15.9145 19.89 15.1885 19.94 14.123C19.9885 13.056 20 12.7165 20 10C20 7.2835 19.9885 6.944 19.94 5.877C19.89 4.8115 19.7225 4.0855 19.475 3.45C19.2195 2.7915 18.8775 2.234 18.322 1.678C17.766 1.1225 17.2085 0.7805 16.55 0.525C15.9145 0.2775 15.1885 0.11 14.123 0.06C13.056 0.0115 12.7165 0 10 0ZM10 1.802C12.67 1.802 12.9865 1.812 14.0415 1.86C15.0165 1.904 15.5455 2.0665 15.898 2.2045C16.365 2.385 16.6975 2.6025 17.048 2.952C17.3975 3.3025 17.615 3.635 17.7955 4.102C17.9335 4.4545 18.096 4.9835 18.14 5.9585C18.188 7.0135 18.198 7.33 18.198 10C18.198 12.67 18.188 12.9865 18.14 14.0415C18.096 15.0165 17.9335 15.5455 17.7955 15.898C17.615 16.365 17.3975 16.6975 17.048 17.048C16.6975 17.3975 16.365 17.615 15.898 17.7955C15.5455 17.9335 15.0165 18.096 14.0415 18.14C12.9865 18.188 12.67 18.198 10 18.198C7.33 18.198 7.0135 18.188 5.9585 18.14C4.9835 18.096 4.4545 17.9335 4.102 17.7955C3.635 17.615 3.3025 17.3975 2.952 17.048C2.6025 16.6975 2.385 16.365 2.2045 15.898C2.0665 15.5455 1.904 15.0165 1.86 14.0415C1.812 12.9865 1.802 12.67 1.802 10C1.802 7.33 1.812 7.0135 1.86 5.9585C1.904 4.9835 2.0665 4.4545 2.2045 4.102C2.385 3.635 2.6025 3.3025 2.952 2.952C3.3025 2.6025 3.635 2.385 4.102 2.2045C4.4545 2.0665 4.9835 1.904 5.9585 1.86C7.0135 1.812 7.33 1.802 10 1.802ZM10 4.865C7.1635 4.865 4.865 7.1635 4.865 10C4.865 12.8365 7.1635 15.135 10 15.135C12.8365 15.135 15.135 12.8365 15.135 10C15.135 7.1635 12.8365 4.865 10 4.865ZM10 13.333C8.159 13.333 6.667 11.841 6.667 10C6.667 8.159 8.159 6.667 10 6.667C11.841 6.667 13.333 8.159 13.333 10C13.333 11.841 11.841 13.333 10 13.333ZM16.538 4.662C16.538 5.325 16 5.862 15.338 5.862C14.675 5.862 14.138 5.325 14.138 4.662C14.138 4 14.675 3.462 15.338 3.462C16 3.462 16.538 4 16.538 4.662Z', 
+    icon: faInstagram, 
     ariaLabel: 'Follow us on Instagram'
   },
   { 
     name: 'TikTok', 
     url: 'https://www.tiktok.com/place/Kailani-Shave-Ice-NJ-21568226288998491?language=en', 
-    icon: 'M9.37 1.44h3.33v13.37c0 1.49-1.09 2.7-2.58 2.83a2.91 2.91 0 01-3.25-2.9 2.87 2.87 0 013.11-2.81c.35 0 .59.04.83.14V8.43c-.28-.04-.48-.05-.71-.05-4.13 0-7.1 3.33-7.1 7.46 0 3.55 2.61 6.59 6.21 7.12 3.88.57 7.28-1.88 7.82-5.58.1-.65.1-1.31.1-2.07V6.71c2.85 2.07 6.41 2.22 6.41 2.22V5.6c-.76.02-4.48-.46-6.41-3.51-.08-.15-.17-.28-.26-.41-.13-.24-.34-.86-.65-1.24H9.37z', 
+    icon: faTiktok, 
     ariaLabel: 'Follow us on TikTok'
   }
 ];
 
 export const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({ 
-  variant = 'desktop', 
   className = '' 
 }) => {
-  const wrapperClassName = variant === 'desktop'
-    ? `flex items-center gap-2 ${className}`
-    : `flex justify-center items-center gap-3 my-4 ${className}`;
+  const getIconClassName = (socialName: string) => {
+    const colorMap = {
+      Facebook: 'text-blue-700 hover:text-blue-800',
+      Instagram: 'text-pink-600 hover:text-pink-700',
+      TikTok: 'text-gray-800 hover:text-gray-900'
+    };
 
-  const iconClassName = variant === 'desktop'
-    ? "h-4 w-4 fill-[#e83838] hover:fill-white opacity-80 hover:opacity-100 transition-all duration-300"
-    : "h-6 w-6 fill-[#e83838] hover:fill-white opacity-80 hover:opacity-100 transition-all duration-300";
+    const colors = colorMap[socialName as keyof typeof colorMap] || 'text-yellow-400 hover:text-yellow-300';
+    return `text-2xl md:text-4xl w-12 h-14 md:w-16 md:h-18 ${colors} transition-all duration-150 rounded-xl py-1 border-2 border-b-4 active:border-b-2 border-white/20 hover:border-white/40 flex items-center justify-center hover:translate-y-0 active:translate-y-1 shadow-lg hover:shadow-md active:shadow-sm transform`;
+  };
 
   return (
-    <div className={wrapperClassName} aria-label="Social Media Links">
-      {SOCIAL_MEDIA_LINKS.map((link) => (
-        <a
-          key={link.name}
-          href={link.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={link.ariaLabel}
-          className="transition-all duration-300 hover:scale-105"
-        >
-          <svg 
-            viewBox="0 0 24 24" 
-            className={iconClassName}
+    <div className={`flex items-center justify-center gap-4 md:gap-8 relative text-gray-700 px-8 py-3 ${className}`} aria-label="Social Media Links">
+      <div className="relative z-10 flex justify-center items-center gap-4 md:gap-8">
+        {SOCIAL_MEDIA_LINKS.map((link) => (
+          <a
+            key={link.name}
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={link.ariaLabel}
+            className="transition-all duration-300"
           >
-            <path d={link.icon} />
-          </svg>
-        </a>
-      ))}
+            <FontAwesomeIcon 
+              icon={link.icon}
+              className={getIconClassName(link.name)}
+            />
+          </a>
+        ))}
+      </div>
     </div>
   );
 };

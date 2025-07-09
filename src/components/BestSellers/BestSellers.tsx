@@ -3,7 +3,7 @@ import useCachedFoodItems from '../../hooks/useCachedFoodItems';
 import logo from '../../assets/Kailani_logo.png';
 import { SocialMediaLinks } from '../Navigation/SocialMediaLinks';
 
-type FoodCategory = 'Ramen' | 'Shave Ice' | 'Acai' | 'Homemade Soft Serve' | 'Hot Dogs' | 'Musubi';
+type FoodCategory = 'Shave Ice' | 'Ramen' | 'Homemade Ice Cream' | 'Soft Serve' | 'Hot Dogs' | 'Musubi';
 
 interface ProductItem {
   readonly id: string;
@@ -31,10 +31,10 @@ const foodDataAdapter = {
   normalizeCategoryName: (category: string): FoodCategory => {
     const normalized = category.toLowerCase().trim();
     const categoryMap: Record<string, FoodCategory> = {
-      'ramen': 'Ramen',
       'shave ice': 'Shave Ice',
-      'acai': 'Acai',
-      'homemade soft serve': 'Homemade Soft Serve',
+      'ramen': 'Ramen',
+      'homemade ice cream': 'Homemade Ice Cream',
+      'soft serve': 'Soft Serve',
       'hot dogs': 'Hot Dogs',
       'musubi': 'Musubi'
     };
@@ -50,29 +50,64 @@ const foodDataAdapter = {
   })
 };
 
+// ===== CENTRALIZED ORDER SYSTEM =====
+// 🎯 CHANGE THESE NUMBERS TO REORDER CATEGORIES ON DASHBOARD
+// Lower numbers = higher priority (1 shows first, 2 shows second, etc.)
+const CATEGORY_ORDER_CONFIG: Record<FoodCategory, number> = {
+  'Shave Ice': 1,
+  'Ramen': 2,
+  'Homemade Ice Cream': 3,
+  'Soft Serve': 4,
+  'Hot Dogs': 5,
+  'Musubi': 6
+};
+
+// Central function to get category order
+const getCategoryOrder = (category: FoodCategory): number => {
+  return CATEGORY_ORDER_CONFIG[category] ?? 999; // Unknown categories go to the end
+};
+
+// Get the default (first) category based on order
+const getDefaultCategory = (): FoodCategory => {
+  const sortedEntries = Object.entries(CATEGORY_ORDER_CONFIG)
+    .sort(([, a], [, b]) => a - b);
+  return sortedEntries[0][0] as FoodCategory;
+};
+
 // UI utility functions
 const createCategoryButtonStyles = (category: FoodCategory): string => {
   const styleMap: Record<FoodCategory, string> = {
-    'Ramen': 'bg-yellow-400 text-[#000000] border-yellow-600 shadow-[0_6px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1',
-    'Shave Ice': 'bg-blue-300 text-[#000000] border-indigo-500 shadow-[0_6px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
-    'Acai': 'bg-blue-300 text-[#000000] border-indigo-500 shadow-[0_6px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
-    'Homemade Soft Serve': 'bg-blue-300 text-[#000000] border-indigo-500 shadow-[0_6px_0_rgb(79,70,229)] hover:shadow-[0_4px_0px_rgb(79,70,229)] hover:translate-y-1',
-    'Hot Dogs': 'bg-yellow-400 text-[#000000] border-yellow-600 shadow-[0_6px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1',
-    'Musubi': 'bg-yellow-400 text-[#000000] border-yellow-600 shadow-[0_6px_0_rgb(202,138,4)] hover:shadow-[0_4px_0px_rgb(202,138,4)] hover:translate-y-1'
+    'Ramen': 'bg-yellow-400 text-[#000000] border-yellow-600 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform',
+    'Shave Ice': 'bg-blue-300 text-[#000000] border-indigo-500 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-blue-400 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform',
+    'Homemade Ice Cream': 'bg-blue-300 text-[#000000] border-indigo-500 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-blue-400 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform',
+    'Soft Serve': 'bg-blue-300 text-[#000000] border-indigo-500 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-blue-400 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform',
+    'Hot Dogs': 'bg-yellow-400 text-[#000000] border-yellow-600 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform',
+    'Musubi': 'bg-yellow-400 text-[#000000] border-yellow-600 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform'
   };
-  return styleMap[category] ?? 'bg-blue-400 border-blue-600 tracking-wide shadow-[0_6px_0_rgb(37,99,235)] hover:shadow-[0_4px_0px_rgb(37,99,235)] hover:translate-y-1';
+  return styleMap[category] ?? 'bg-blue-400 border-blue-600 rounded-full shadow-lg hover:bg-blue-500 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform';
 };
 
 const getAvailableCategories = (products: readonly ProductItem[]): readonly FoodCategory[] => {
-  const categories: FoodCategory[] = ['Ramen', 'Shave Ice', 'Acai', 'Homemade Soft Serve', 'Hot Dogs', 'Musubi'];
-  return categories.filter(category => 
-    products.some(product => product.category === category)
-  );
+  const allCategories: FoodCategory[] = ['Shave Ice', 'Ramen', 'Homemade Ice Cream', 'Soft Serve', 'Hot Dogs', 'Musubi'];
+  
+  return allCategories
+    .filter(category => products.some(product => product.category === category))
+    .sort((a, b) => getCategoryOrder(a) - getCategoryOrder(b));
 };
 
 const selectDefaultCategory = (products: readonly ProductItem[]): FoodCategory => {
-  const hasRamen = products.some(product => product.category === 'Ramen');
-  return hasRamen ? 'Ramen' : products[0]?.category ?? 'Ramen';
+  const allCategories: FoodCategory[] = ['Shave Ice', 'Ramen', 'Homemade Ice Cream', 'Soft Serve', 'Hot Dogs', 'Musubi'];
+  
+  // Sort categories by their order and find the first one that has products
+  const sortedCategories = allCategories.sort((a, b) => getCategoryOrder(a) - getCategoryOrder(b));
+  
+  for (const category of sortedCategories) {
+    if (products.some(product => product.category === category)) {
+      return category;
+    }
+  }
+  
+  return products[0]?.category ?? getDefaultCategory();
 };
 
 // Reusable UI components
@@ -84,11 +119,11 @@ const BouncyPillButton: React.FC<BouncyPillButtonProps> = ({
   className = '',
   'aria-label': ariaLabel,
 }) => {
-  const defaultStyle = 'bg-white text-[#000000] baloo-regular rounded-full shadow-[0_6px_0_rgb(165,180,252)] hover:shadow-[0_4px_0px_rgb(165,180,252)] hover:translate-y-1 transition-all duration-200 active:scale-95';
+  const defaultStyle = 'bg-white text-[#000000] baloo-regular rounded-full shadow-lg hover:bg-gray-100 hover:shadow-xl active:scale-95 active:shadow-md border-b-4 active:border-b-2 border-[#a5b4fc] transition-all duration-150 ease-in-out transform';
   
   return (
     <button
-      className={`px-6 py-3 font-bold text-lg tracking-wide baloo-regular cursor-pointer rounded-full transition-all duration-200 hover:translate-y-1 active:scale-95 ${
+      className={`px-6 py-3 font-bold text-lg tracking-wide baloo-regular cursor-pointer rounded-full ${
         isActive ? activeStyle : defaultStyle
       } ${className}`}
       onClick={onClick}
@@ -121,11 +156,11 @@ const BrandHeader: React.FC = () => (
           className="h-36 w-36 flex-shrink-0"
         />
         <div className="space-y-1">
-          <h3 className="baloo-regular text-[#f7d34f] font-bold text-lg sm:text-xl drop-shadow-sm">
+          <h3 className="milkshake-regular text-[#f7d34f] font-bold text-lg sm:text-xl drop-shadow-sm">
             Hawaiian
           </h3>
           <h1 
-            className="baloo-regular text-[#f7d34f] font-extrabold text-4xl sm:text-5xl pr-4"
+            className="baloo-regular text-[#f7d34f] font-extrabold text-4xl sm:text-5xl pr-4 -mt-3"
             style={{
               fontFamily: 'Baloo, sans-serif',
               whiteSpace: 'nowrap',
@@ -153,12 +188,10 @@ const BrandHeader: React.FC = () => (
         </div>
       </div>
     </div>
+    
     {/* Social Media Links */}
     <div className="flex justify-center mt-4">
-      <SocialMediaLinks 
-        variant="mobile" 
-        className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 shadow-lg"
-      />
+      <SocialMediaLinks/>
     </div>
   </header>
 );
@@ -171,16 +204,25 @@ const useFavoriteFoodItems = () => {
 
   useEffect(() => {
     try {
-      const transformedProducts = favoriteItems.map(foodDataAdapter.transformFoodItemToProduct);
+      const transformedProducts = favoriteItems
+        .map(foodDataAdapter.transformFoodItemToProduct)
+        .sort((a, b) => {
+          // First sort by category order using centralized system
+          const categorySort = getCategoryOrder(a.category) - getCategoryOrder(b.category);
+          if (categorySort !== 0) return categorySort;
+          
+          // Then sort by name within category
+          return a.name.localeCompare(b.name);
+        });
       setProducts(transformedProducts);
       setError(cacheError?.message || null);
       
-      console.log(`🍕 BestSellers: Updated with ${transformedProducts.length} favorite items`);
+      console.log(`🍕 BestSellers: Updated with ${transformedProducts.length} favorite items (sorted by centralized order system)`);
     } catch (err) {
       setError('Failed to transform favorite items');
       console.error('Error transforming favorite items:', err);
     }
-  }, [favoriteItems, cacheError?.message]); // Only depend on error message, not the error object
+  }, [favoriteItems, cacheError?.message]);
 
   return { products, isLoading, error };
 };
@@ -225,7 +267,7 @@ const BestSellers: React.FC<BestSellersProps> = React.memo(({
   title = "We proudly serve"
 }) => {
   const { products, isLoading, error } = useFavoriteFoodItems();
-  const [selectedCategory, setSelectedCategory] = useState<FoodCategory>('Ramen');
+  const [selectedCategory, setSelectedCategory] = useState<FoodCategory>(getDefaultCategory());
   
   const availableCategories = useMemo(() => 
     getAvailableCategories(products), [products]
@@ -391,19 +433,19 @@ const ProductCarousel: React.FC<{
         <div className="flex items-center justify-center mt-6 space-x-4">
           <button
             onClick={onPrevious}
-            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] text-[#003F47] border-2 border-[#bbfaf5] shadow-[0_4px_0_rgb(187,250,245)] hover:shadow-[0_4px_0px_rgb(91,232,240)] hover:translate-y-1 transition-all duration-200 active:scale-95"
+            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] hover:bg-[#0faeb8] text-[#003F47] border-1 border-b-4 active:border-b-2 border-[#bbfaf5] hover:border-[#8dd9d3] shadow-lg hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform"
             aria-label="Previous product"
           >
             <ChevronLeft className="h-6 w-6" />
           </button>
           <button
-            className=" bg-opacity-80 backdrop-blur-sm px-6 py-2 text-sm baloo-regular rounded-full bg-[#19b4bd] text-[#003F47] border-2 border-[#bbfaf5] shadow-[0_4px_0_rgb(187,250,245)]"
+            className=" bg-opacity-80 backdrop-blur-sm px-6 py-2 text-sm baloo-regular rounded-full bg-[#19b4bd] text-[#003F47] border-1 border-b-4 border-[#bbfaf5]"
           >
             {`${currentIndex + 1} / ${products.length}`}
           </button>
           <button
             onClick={onNext}
-            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] text-[#003F47] border-2 border-[#bbfaf5] shadow-[0_4px_0_rgb(187,250,245)] hover:shadow-[0_4px_0px_rgb(91,232,240)] hover:translate-y-1 transition-all duration-200 active:scale-95"
+            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] hover:bg-[#0faeb8] text-[#003F47] border-1 border-b-4 active:border-b-2 border-[#bbfaf5] hover:border-[#8dd9d3] shadow-lg hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform"
             aria-label="Next product"
           >
             <ChevronRight className="h-6 w-6" />

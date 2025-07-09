@@ -2,8 +2,8 @@
 export const foodCategories = [
   'Ramen',
   'Shave Ice',
-  'Acai',
-  'Homemade Soft Serve',
+  'Homemade Ice Cream',
+  'Soft Serve',
   'Hot Dogs',
   'Musubi',
 ];

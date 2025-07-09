@@ -18,3 +18,17 @@
   font-weight: normal;
   font-style: normal;
 }
+
+@font-face {
+  font-family: 'Milkshake';
+  src: url('../assets/font/Milkshake.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.milkshake-regular {
+  font-family: 'Milkshake', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+}
