@@ -81,28 +81,32 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
 
 
  const BrandLogo = ({ name }: { name: string }) => (
-   <Link to="/" className="flex min-w-0 items-center gap-2">
-     <img
-       src={logoImage}
-       srcSet="/Kailani_logo.webp 1x, /Kailani_logo.png 2x"
-       sizes="(max-width: 600px) 100vw, 48px"
-       alt="Kailani Logo"
-       loading="lazy"
-       className="h-10 w-auto flex-shrink-0"
-     />
-     <span
-       className="baloo-regular text-2xl font-bold tracking-wide text-[#f7d34f]"
-       style={{
-              fontFamily: 'Baloo, sans-serif',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              letterSpacing: '0.04em',
-              textShadow: '-3px 3px 0px #7F4F00'
-            }}
-     >
-       {name}
-     </span>
+   <Link to="/" className="flex min-w-0 items-center justify-start gap-2">
+     <div className="flex-shrink-0">
+       <img
+         src={logoImage}
+         srcSet="/Kailani_logo.webp 1x, /Kailani_logo.png 2x"
+         sizes="(max-width: 600px) 100vw, 48px"
+         alt="Kailani Logo"
+         loading="lazy"
+         className="h-10 w-10 object-contain"
+       />
+     </div>
+     <div className="flex items-center justify-center min-w-0">
+       <span
+         className="baloo-regular text-3xl font-bold tracking-wide text-[#f7d34f]"
+         style={{
+                fontFamily: 'Baloo, sans-serif',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                letterSpacing: '0.04em',
+                textShadow: '-3px 3px 0px #7F4F00'
+              }}
+       >
+         {name}
+       </span>
+     </div>
    </Link>
  );
 
@@ -178,20 +182,20 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
 
 
  const MenuHeader = () => (
-  <header className="py-4">
-    <div className="container mx-auto flex justify-center px-4">
+  <header className="py-0">
+    <div className="container mx-auto flex justify-center">
       <div className="flex flex-row items-center">
         <img
           src={logoImage}
           alt="Kailani Logo"
-          className="h-36 w-36 mr-4 flex-shrink-0"
+          className="h-36 w-36 flex-shrink-0"
         />
-        <div className="space-y-1">
-          <h3 className="baloo-regular text-[#f7d34f] font-bold text-lg sm:text-xl drop-shadow-sm px-1">
+        <div className="space-y-0">
+          <h3 className="baloo-regular text-[#f7d34f] font-bold text-lg sm:text-xl drop-shadow-sm">
             Hawaiian
           </h3>
           <h1 
-            className="baloo-regular text-[#f7d34f] font-extrabold text-4xl sm:text-5xl px-1"
+            className="baloo-regular text-[#f7d34f] font-extrabold text-4xl sm:text-5xl pr-9"
             style={{
               fontFamily: 'Baloo, sans-serif',
               whiteSpace: 'nowrap',
@@ -204,7 +208,7 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
             SHAVE ICE
           </h1>
           <h2 
-            className="baloo-regular text-white font-bold text-2xl sm:text-3xl px-1"
+            className="baloo-regular text-white font-bold text-2xl sm:text-3xl"
             style={{
               fontFamily: 'Baloo, sans-serif',
               whiteSpace: 'nowrap',
