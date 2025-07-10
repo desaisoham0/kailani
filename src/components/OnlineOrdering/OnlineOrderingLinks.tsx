@@ -12,8 +12,8 @@ const OnlineOrderingLinks: React.FC<OnlineOrderingLinksProps> = ({ className = '
       name: 'Toast',
       type: 'pickup',
       url: 'https://order.toasttab.com/online/kailanishaveice',
-      bgColor: 'bg-orange-500',
-      hoverColor: 'hover:bg-orange-600',
+      bgColor: 'bg-sky-500',
+      hoverColor: 'hover:bg-sky-600',
       description: 'Order for Pickup'
     },
     {
@@ -36,8 +36,8 @@ const OnlineOrderingLinks: React.FC<OnlineOrderingLinksProps> = ({ className = '
       name: 'Grubhub',
       type: 'delivery',
       url: '#', // Replace with actual Grubhub URL
-      bgColor: 'bg-orange-400',
-      hoverColor: 'hover:bg-orange-500',
+      bgColor: 'bg-orange-500',
+      hoverColor: 'hover:bg-orange-600',
       description: 'Delivery'
     }
   ];
@@ -71,8 +71,8 @@ const OnlineOrderingLinks: React.FC<OnlineOrderingLinksProps> = ({ className = '
               `}
             >
               <div className="text-center">
-                <div className={`font-bold ${isDropdown ? 'text-sm' : 'text-lg'}`}>{option.name}</div>
-                <div className={`opacity-90 ${isDropdown ? 'text-xs' : 'text-sm'}`}>{option.description}</div>
+                <div className={`font-bold ${isDropdown ? 'text-base sm:text-md' : 'text-lg sm:text-xl'}`}>{option.name}</div>
+                <div className={`opacity-90 ${isDropdown ? 'text-sm sm:text-xs' : 'text-base sm:text-sm'}`}>{option.description}</div>
               </div>
             </a>
           </div>
