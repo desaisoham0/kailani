@@ -52,6 +52,12 @@ jobs:
           npm run format:check
           echo "✅ Format check completed"
 
+      - name: '🧪 Run Tests'
+        run: |
+          echo "Running test suite..."
+          npm run test
+          echo "✅ Tests completed"
+
   build:
     name: '🏗️ Build Application'
     runs-on: ubuntu-latest
