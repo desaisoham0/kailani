@@ -30,7 +30,6 @@ export interface JobFormData {
   fullName: string;
   email: string;
   phone: string;
-  position: string;
   experience?: string;
   coverLetter?: string;
   resume?: File | null;

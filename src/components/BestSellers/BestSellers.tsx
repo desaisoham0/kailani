@@ -125,7 +125,7 @@ const BouncyPillButton: React.FC<BouncyPillButtonProps> = ({
     <button
       className={`px-6 py-3 font-bold text-lg tracking-wide baloo-regular cursor-pointer rounded-full ${
         isActive ? activeStyle : defaultStyle
-      } ${className} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
+      } ${className} focus:outline-none`}
       onClick={onClick}
       aria-label={ariaLabel}
       role={isActive ? "tab" : "button"}
@@ -498,7 +498,7 @@ const ProductCarousel: React.FC<{
         <div className="flex items-center justify-center mt-6 space-x-4">
           <button
             onClick={onPrevious}
-            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] hover:bg-[#0faeb8] text-[#003F47] border-1 border-b-4 active:border-b-2 border-[#bbfaf5] hover:border-[#8dd9d3] shadow-lg hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-150 transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] hover:bg-[#0faeb8] text-[#003F47] border-1 border-b-4 active:border-b-2 border-[#bbfaf5] hover:border-[#8dd9d3] shadow-lg hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-150 transform focus:outline-none"
             aria-label="Previous product"
             disabled={products.length <= 1}
           >
@@ -512,7 +512,7 @@ const ProductCarousel: React.FC<{
           </div>
           <button
             onClick={onNext}
-            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] hover:bg-[#0faeb8] text-[#003F47] border-1 border-b-4 active:border-b-2 border-[#bbfaf5] hover:border-[#8dd9d3] shadow-lg hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-150 transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] hover:bg-[#0faeb8] text-[#003F47] border-1 border-b-4 active:border-b-2 border-[#bbfaf5] hover:border-[#8dd9d3] shadow-lg hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-150 transform focus:outline-none"
             aria-label="Next product"
             disabled={products.length <= 1}
           >

@@ -97,22 +97,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } 
     else if (type === 'job') {
       // Process job application form
-      const { fullName, email, phone, position, experience, coverLetter } = formData;
+      const { fullName, email, phone, experience, coverLetter } = formData;
       
-      if (!fullName || !email || !phone || !position) {
-        return res.status(400).json({ message: 'Name, email, phone and position are required' });
+      if (!fullName || !email || !phone) {
+        return res.status(400).json({ message: 'Name, email, and phone are required' });
       }
       
       if (!isValidEmail(email)) {
         return res.status(400).json({ message: 'Invalid email format' });
       }
       
-      emailSubject = `Kailani Job Application: ${position}`;
+      emailSubject = `Kailani Job Application`;
       emailText = `
         Name: ${fullName}
         Email: ${email}
         Phone: ${phone}
-        Position: ${position}
         Experience: ${experience || 'N/A'}
         
         Cover Letter:
@@ -123,7 +122,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         <p><strong>Name:</strong> ${fullName}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Position:</strong> ${position}</p>
         <p><strong>Experience:</strong> ${experience || 'N/A'}</p>
         <p><strong>Cover Letter:</strong></p>
         <p>${(coverLetter || 'N/A').replace(/\n/g, '<br>')}</p>

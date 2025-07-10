@@ -33,7 +33,7 @@ const CATEGORY_BUTTON_STYLES: Record<string, string> = {
   'Musubi': 'bg-yellow-400 text-gray-900 border-yellow-600 hover:bg-yellow-500 focus:bg-yellow-500',
 } as const;
 
-const DEFAULT_BUTTON_STYLE = 'bg-white text-gray-900 border-indigo-300 hover:bg-gray-50 focus:bg-gray-50';
+const DEFAULT_BUTTON_STYLE = 'bg-white text-gray-900 border-indigo-300 hover:bg-white/90 focus:bg-gray-50';
 const BUTTON_BASE_CLASSES = 'px-3 py-2 text-sm sm:text-base md:text-lg cursor-pointer font-bold rounded-full shadow-lg border-b-4 transition-all duration-200 hover:shadow-xl active:shadow-md active:border-b-2 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed';
 
 // ===== UTILITY FUNCTIONS =====

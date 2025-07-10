@@ -29,84 +29,23 @@ const JobsPage = () => {
             </p>
           </div>
           
-          <div className="flex flex-col md:flex-row justify-center items-center space-y-6 md:space-y-0 md:space-x-10">
-            <div className="w-full max-w-md">
-              {/* Custom Team Illustration using Tailwind */}
-              <div className="relative bg-white/10 rounded-3xl p-8 backdrop-blur-sm">
-                <div className="flex justify-center items-end space-x-4 mb-4">
-                  {/* Team Member 1 - Chef */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mb-2 shadow-lg">
-                      <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 01-1 1H8a1 1 0 01-1-1V9a1 1 0 011-1h4a1 1 0 011 1v2z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div className="w-12 h-8 bg-white rounded-t-full"></div>
-                    <span className="text-xs text-white/80 mt-1">Chef</span>
-                  </div>
-                  
-                  {/* Team Member 2 - Server */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-20 h-20 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center mb-2 shadow-lg">
-                      <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div className="w-16 h-10 bg-white rounded-t-full"></div>
-                    <span className="text-xs text-white/80 mt-1">Server</span>
-                  </div>
-                  
-                  {/* Team Member 3 - Manager */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mb-2 shadow-lg">
-                      <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div className="w-12 h-8 bg-white rounded-t-full"></div>
-                    <span className="text-xs text-white/80 mt-1">Manager</span>
-                  </div>
+          <div className="max-w-4xl mx-auto text-center">
+            <div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 md:mb-8 jua-regular text-yellow-300">Why Work With Us?</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-base sm:text-lg">
+                <div className="space-y-2 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-emerald-300/30">
+                  <p className="font-bold text-emerald-300">Collaborative Environment</p>
+                  <p className="text-green-100">Supportive work environment where teamwork thrives</p>
                 </div>
-                
-                {/* Connecting lines */}
-                <div className="flex justify-center mb-4">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-8 h-0.5 bg-white/30"></div>
-                    <div className="w-2 h-2 bg-white/50 rounded-full"></div>
-                    <div className="w-8 h-0.5 bg-white/30"></div>
-                    <div className="w-2 h-2 bg-white/50 rounded-full"></div>
-                    <div className="w-8 h-0.5 bg-white/30"></div>
-                  </div>
+                <div className="space-y-2 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-yellow-300/30">
+                  <p className="font-bold text-yellow-300">Professional Growth</p>
+                  <p className="text-yellow-100">Opportunities for skill development and advancement</p>
                 </div>
-                
-                {/* Decorative elements */}
-                <div className="absolute top-4 right-4 w-3 h-3 bg-yellow-300 rounded-full"></div>
-                <div className="absolute bottom-6 left-4 w-2 h-2 bg-pink-300 rounded-full"></div>
-                <div className="absolute top-1/2 right-6 w-1.5 h-1.5 bg-blue-300 rounded-full"></div>
+                <div className="space-y-2 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-orange-300/30">
+                  <p className="font-bold text-orange-300">Competitive Benefits</p>
+                  <p className="text-orange-100">Attractive wages and comprehensive benefits package</p>
+                </div>
               </div>
-            </div>
-            <div className="w-full max-w-md text-white">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4 jua-regular">Why Work With Us?</h2>
-              <ul className="space-y-3">
-                <li className="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Collaborative and supportive work environment</span>
-                </li>
-                <li className="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Opportunities for professional growth and skill development</span>
-                </li>
-                <li className="flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Competitive wages and benefits package</span>
-                </li>
-              </ul>
             </div>
           </div>
         </div>
@@ -161,18 +100,9 @@ const JobsPage = () => {
       {/* Section 3 - Application Form with #78350F background */}
       <section className="bg-[#78350F] py-12 md:py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 jua-regular">
-              Apply Today
-            </h2>
-            <p className="max-w-2xl mx-auto text-white/90 text-base sm:text-lg mb-8">
-              Fill out the form below to start your journey with Kailani Restaurant.
-            </p>
-          </div>
           
           <div className="max-w-4xl mx-auto">
             <Job 
-              availablePositions={['Server', 'Chef', 'Host/Hostess', 'Manager', 'Bartender', 'Line Cook', 'Dishwasher']} 
               onSubmit={handleJobSubmit}
             />
           </div>
