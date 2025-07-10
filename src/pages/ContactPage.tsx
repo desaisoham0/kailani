@@ -361,7 +361,7 @@ const ContactPage: React.FC = React.memo(() => {
                       </div>
                       <div>
                         <h3 className="font-bold text-gray-700 jua-regular">Email</h3>
-                        <p className="text-gray-600 nunito-sans">aloha@kailani.com</p>
+                        <p className="text-gray-600 nunito-sans">kailanishaveicenj@gmail.com</p>
                       </div>
                     </div>
                     <div className="flex items-center">
