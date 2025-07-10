@@ -50,7 +50,7 @@ const foodDataAdapter = {
   })
 };
 
-// ===== CENTRALIZED ORDER SYSTEM =====
+// ===== CENTRALIZED CATEGORY SYSTEM =====
 // 🎯 CHANGE THESE NUMBERS TO REORDER CATEGORIES ON DASHBOARD
 // Lower numbers = higher priority (1 shows first, 2 shows second, etc.)
 const CATEGORY_ORDER_CONFIG: Record<FoodCategory, number> = {
@@ -62,52 +62,52 @@ const CATEGORY_ORDER_CONFIG: Record<FoodCategory, number> = {
   'Musubi': 6
 };
 
-// Central function to get category order
+// Centralized list of all categories (derived from config)
+const ALL_CATEGORIES: readonly FoodCategory[] = Object.keys(CATEGORY_ORDER_CONFIG)
+  .sort((a, b) => CATEGORY_ORDER_CONFIG[a as FoodCategory] - CATEGORY_ORDER_CONFIG[b as FoodCategory]) as FoodCategory[];
+
+// Central function to get category order (memoized for performance)
 const getCategoryOrder = (category: FoodCategory): number => {
   return CATEGORY_ORDER_CONFIG[category] ?? 999; // Unknown categories go to the end
 };
 
 // Get the default (first) category based on order
 const getDefaultCategory = (): FoodCategory => {
-  const sortedEntries = Object.entries(CATEGORY_ORDER_CONFIG)
-    .sort(([, a], [, b]) => a - b);
-  return sortedEntries[0][0] as FoodCategory;
+  return ALL_CATEGORIES[0];
 };
 
 // UI utility functions
 const createCategoryButtonStyles = (category: FoodCategory): string => {
   const styleMap: Record<FoodCategory, string> = {
-    'Ramen': 'bg-yellow-400 text-[#000000] border-yellow-600 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform',
-    'Shave Ice': 'bg-blue-300 text-[#000000] border-indigo-500 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-blue-400 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform',
-    'Homemade Ice Cream': 'bg-blue-300 text-[#000000] border-indigo-500 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-blue-400 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform',
-    'Soft Serve': 'bg-blue-300 text-[#000000] border-indigo-500 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-blue-400 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform',
-    'Hot Dogs': 'bg-yellow-400 text-[#000000] border-yellow-600 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform',
-    'Musubi': 'bg-yellow-400 text-[#000000] border-yellow-600 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform'
+    'Ramen': 'bg-yellow-400 text-[#000000] border-yellow-600 border-b-4 active:border-b-1 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-200 transform',
+    'Shave Ice': 'bg-blue-300 text-[#000000] border-indigo-500 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-blue-400 hover:shadow-xl active:scale-95 active:shadow-md active:translate-y-1 transition-all duration-300 transform',
+    'Homemade Ice Cream': 'bg-blue-300 text-[#000000] border-indigo-500 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-blue-400 hover:shadow-xl active:scale-95 active:shadow-md active:translate-y-1 transition-all duration-300 transform',
+    'Soft Serve': 'bg-blue-300 text-[#000000] border-indigo-500 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-blue-400 hover:shadow-xl active:scale-95 active:shadow-md active:translate-y-1 transition-all duration-300 transform',
+    'Hot Dogs': 'bg-yellow-400 text-[#000000] border-yellow-600 border-b-4 active:border-b-1 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-200 transform',
+    'Musubi': 'bg-yellow-400 text-[#000000] border-yellow-600 border-b-4 active:border-b-1 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-200 transform'
   };
-  return styleMap[category] ?? 'bg-blue-400 border-blue-600 rounded-full shadow-lg hover:bg-blue-500 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform';
+  return styleMap[category] ?? 'bg-blue-400 border-blue-600 rounded-full shadow-lg hover:bg-blue-500 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-300 transform';
 };
 
 const getAvailableCategories = (products: readonly ProductItem[]): readonly FoodCategory[] => {
-  const allCategories: FoodCategory[] = ['Shave Ice', 'Ramen', 'Homemade Ice Cream', 'Soft Serve', 'Hot Dogs', 'Musubi'];
+  if (!products.length) return [];
   
-  return allCategories
-    .filter(category => products.some(product => product.category === category))
-    .sort((a, b) => getCategoryOrder(a) - getCategoryOrder(b));
+  const productCategorySet = new Set(products.map(product => product.category));
+  return ALL_CATEGORIES.filter(category => productCategorySet.has(category));
 };
 
 const selectDefaultCategory = (products: readonly ProductItem[]): FoodCategory => {
-  const allCategories: FoodCategory[] = ['Shave Ice', 'Ramen', 'Homemade Ice Cream', 'Soft Serve', 'Hot Dogs', 'Musubi'];
+  if (!products.length) return getDefaultCategory();
   
-  // Sort categories by their order and find the first one that has products
-  const sortedCategories = allCategories.sort((a, b) => getCategoryOrder(a) - getCategoryOrder(b));
-  
-  for (const category of sortedCategories) {
+  // Find the first available category based on centralized order
+  for (const category of ALL_CATEGORIES) {
     if (products.some(product => product.category === category)) {
       return category;
     }
   }
   
-  return products[0]?.category ?? getDefaultCategory();
+  // Fallback to first product's category if no match found
+  return products[0].category;
 };
 
 // Reusable UI components
@@ -119,15 +119,18 @@ const BouncyPillButton: React.FC<BouncyPillButtonProps> = ({
   className = '',
   'aria-label': ariaLabel,
 }) => {
-  const defaultStyle = 'bg-white text-[#000000] baloo-regular rounded-full shadow-lg hover:bg-gray-100 hover:shadow-xl active:scale-95 active:shadow-md border-b-4 active:border-b-2 border-[#a5b4fc] transition-all duration-150 ease-in-out transform';
+  const defaultStyle = 'bg-white text-[#000000] baloo-regular rounded-full shadow-lg hover:bg-gray-100 hover:shadow-xl active:shadow-md border-b-4 active:border-b-2 border-[#a5b4fc] transition-all duration-150 active:translate-y-1 transform';
   
   return (
     <button
       className={`px-6 py-3 font-bold text-lg tracking-wide baloo-regular cursor-pointer rounded-full ${
         isActive ? activeStyle : defaultStyle
-      } ${className}`}
+      } ${className} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
       onClick={onClick}
       aria-label={ariaLabel}
+      role={isActive ? "tab" : "button"}
+      aria-selected={isActive}
+      tabIndex={0}
     >
       {text}
     </button>
@@ -196,15 +199,18 @@ const BrandHeader: React.FC = () => (
   </header>
 );
 
-// Data fetching hook using cached service
+// Data fetching hook using cached service with better error handling
 const useFavoriteFoodItems = () => {
   const { favoriteItems, isLoading, error: cacheError } = useCachedFoodItems();
   const [products, setProducts] = useState<readonly ProductItem[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  // Memoize the transformation to prevent unnecessary recalculations
+  const transformedProducts = useMemo(() => {
     try {
-      const transformedProducts = favoriteItems
+      if (!favoriteItems.length) return [];
+      
+      return favoriteItems
         .map(foodDataAdapter.transformFoodItemToProduct)
         .sort((a, b) => {
           // First sort by category order using centralized system
@@ -214,40 +220,74 @@ const useFavoriteFoodItems = () => {
           // Then sort by name within category
           return a.name.localeCompare(b.name);
         });
-      setProducts(transformedProducts);
-      setError(cacheError?.message || null);
-      
-      console.log(`🍕 BestSellers: Updated with ${transformedProducts.length} favorite items (sorted by centralized order system)`);
     } catch (err) {
-      setError('Failed to transform favorite items');
       console.error('Error transforming favorite items:', err);
+      return [];
     }
-  }, [favoriteItems, cacheError?.message]);
+  }, [favoriteItems]);
+
+  useEffect(() => {
+    setProducts(transformedProducts);
+    setError(cacheError?.message || null);
+    
+    if (transformedProducts.length > 0) {
+      console.log(`🍕 BestSellers: Updated with ${transformedProducts.length} favorite items (sorted by centralized order system)`);
+    }
+  }, [transformedProducts, cacheError?.message]);
 
   return { products, isLoading, error };
 };
 
-// Carousel state management hook
+// Carousel state management hook with improved safety and keyboard support
 const useCarouselState = (categoryProducts: readonly ProductItem[]) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const navigatePrevious = useCallback(() => {
-    setCurrentIndex(prevIndex => 
-      prevIndex === 0 ? categoryProducts.length - 1 : prevIndex - 1
-    );
+  // Validate and clamp index to prevent out-of-bounds errors
+  const validateIndex = useCallback((index: number) => {
+    if (categoryProducts.length === 0) return 0;
+    return Math.max(0, Math.min(index, categoryProducts.length - 1));
   }, [categoryProducts.length]);
 
+  const navigatePrevious = useCallback(() => {
+    setCurrentIndex(prevIndex => {
+      const newIndex = prevIndex === 0 ? categoryProducts.length - 1 : prevIndex - 1;
+      return validateIndex(newIndex);
+    });
+  }, [categoryProducts.length, validateIndex]);
+
   const navigateNext = useCallback(() => {
-    setCurrentIndex(prevIndex => 
-      prevIndex === categoryProducts.length - 1 ? 0 : prevIndex + 1
-    );
-  }, [categoryProducts.length]);
+    setCurrentIndex(prevIndex => {
+      const newIndex = prevIndex === categoryProducts.length - 1 ? 0 : prevIndex + 1;
+      return validateIndex(newIndex);
+    });
+  }, [categoryProducts.length, validateIndex]);
 
   const resetIndex = useCallback(() => {
     setCurrentIndex(0);
   }, []);
 
-  // Auto-rotation effect
+  // Handle keyboard navigation
+  const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
+    if (categoryProducts.length <= 1) return;
+    
+    switch (event.key) {
+      case 'ArrowLeft':
+        event.preventDefault();
+        navigatePrevious();
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        navigateNext();
+        break;
+    }
+  }, [navigatePrevious, navigateNext, categoryProducts.length]);
+
+  // Validate current index when products change
+  useEffect(() => {
+    setCurrentIndex(prevIndex => validateIndex(prevIndex));
+  }, [categoryProducts.length, validateIndex]);
+
+  // Auto-rotation effect with proper cleanup
   useEffect(() => {
     if (categoryProducts.length <= 1) return;
 
@@ -256,10 +296,11 @@ const useCarouselState = (categoryProducts: readonly ProductItem[]) => {
   }, [navigateNext, categoryProducts.length]);
 
   return {
-    currentIndex,
+    currentIndex: validateIndex(currentIndex),
     navigatePrevious,
     navigateNext,
-    resetIndex
+    resetIndex,
+    handleKeyDown
   };
 };
 
@@ -278,15 +319,18 @@ const BestSellers: React.FC<BestSellersProps> = React.memo(({
     [products, selectedCategory]
   );
 
-  const { currentIndex, navigatePrevious, navigateNext, resetIndex } = useCarouselState(categoryProducts);
+  const { currentIndex, navigatePrevious, navigateNext, resetIndex, handleKeyDown } = useCarouselState(categoryProducts);
 
-  // Initialize category when products load
+  // Initialize category when products load with validation
   useEffect(() => {
     if (products.length === 0) return;
     
     const defaultCategory = selectDefaultCategory(products);
-    setSelectedCategory(defaultCategory);
-  }, [products]);
+    // Only update if the current category is not available
+    if (!products.some(product => product.category === selectedCategory)) {
+      setSelectedCategory(defaultCategory);
+    }
+  }, [products, selectedCategory]);
 
   const handleCategoryChange = useCallback((category: FoodCategory) => {
     if (selectedCategory === category) return;
@@ -299,7 +343,7 @@ const BestSellers: React.FC<BestSellersProps> = React.memo(({
   }
 
   if (error) {
-    return <ErrorDisplay title={title} />;
+    return <ErrorDisplay title={title} error={error} />;
   }
 
   if (products.length === 0) {
@@ -329,6 +373,7 @@ const BestSellers: React.FC<BestSellersProps> = React.memo(({
             currentIndex={currentIndex}
             onPrevious={navigatePrevious}
             onNext={navigateNext}
+            onKeyDown={handleKeyDown}
           />
         ) : (
           <div className="text-center py-10 bg-white rounded-lg shadow max-w-4xl mx-auto">
@@ -339,6 +384,8 @@ const BestSellers: React.FC<BestSellersProps> = React.memo(({
     </section>
   );
 });
+
+BestSellers.displayName = 'BestSellers';
 
 const LoadingDisplay: React.FC<{ title: string }> = ({ title }) => (
   <section className="py-16 relative overflow-hidden w-full max-w-full bg-[#19b4bd]">
@@ -357,7 +404,7 @@ const LoadingDisplay: React.FC<{ title: string }> = ({ title }) => (
   </section>
 );
 
-const ErrorDisplay: React.FC<{ title: string }> = ({ title }) => (
+const ErrorDisplay: React.FC<{ title: string; error?: string }> = ({ title, error }) => (
   <section className="py-16 relative overflow-hidden w-full max-w-full bg-[#19b4bd]">
     <div className="container mx-auto px-4 relative z-10 max-w-full">
       <BrandHeader />
@@ -367,7 +414,9 @@ const ErrorDisplay: React.FC<{ title: string }> = ({ title }) => (
         </h2>
       </div>
       <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-xl mx-auto">
-        <p className="text-red-800">We couldn't load our favorites right now. Please check back later!</p>
+        <p className="text-red-800">
+          {error || "We couldn't load our favorites right now. Please check back later!"}
+        </p>
       </div>
     </div>
   </section>
@@ -394,12 +443,28 @@ const ProductCarousel: React.FC<{
   currentIndex: number;
   onPrevious: () => void;
   onNext: () => void;
-}> = ({ products, currentIndex, onPrevious, onNext }) => {
+  onKeyDown?: (event: React.KeyboardEvent) => void;
+}> = ({ products, currentIndex, onPrevious, onNext, onKeyDown }) => {
   const currentProduct = products[currentIndex];
   const showNavigation = products.length > 1;
 
+  if (!currentProduct) {
+    return (
+      <div className="text-center py-10 bg-white rounded-lg shadow max-w-4xl mx-auto">
+        <p className="text-gray-500">No product to display.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="relative max-w-4xl mx-auto">
+    <div 
+      className="relative max-w-4xl mx-auto" 
+      onKeyDown={onKeyDown}
+      tabIndex={0}
+      role="region"
+      aria-label="Product carousel"
+      aria-live="polite"
+    >
       <div className="overflow-hidden rounded-3xl shadow-2xl bg-white backdrop-blur-sm">
         <div className="flex flex-col md:flex-row">
           <div className="md:w-1/2">
@@ -433,20 +498,23 @@ const ProductCarousel: React.FC<{
         <div className="flex items-center justify-center mt-6 space-x-4">
           <button
             onClick={onPrevious}
-            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] hover:bg-[#0faeb8] text-[#003F47] border-1 border-b-4 active:border-b-2 border-[#bbfaf5] hover:border-[#8dd9d3] shadow-lg hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform"
+            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] hover:bg-[#0faeb8] text-[#003F47] border-1 border-b-4 active:border-b-2 border-[#bbfaf5] hover:border-[#8dd9d3] shadow-lg hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-150 transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             aria-label="Previous product"
+            disabled={products.length <= 1}
           >
             <ChevronLeft className="h-6 w-6" />
           </button>
-          <button
-            className=" bg-opacity-80 backdrop-blur-sm px-6 py-2 text-sm baloo-regular rounded-full bg-[#19b4bd] text-[#003F47] border-1 border-b-4 border-[#bbfaf5]"
+          <div
+            className="bg-opacity-80 backdrop-blur-sm px-6 py-2 text-sm baloo-regular rounded-full bg-[#19b4bd] text-[#003F47] border-1 border-b-4 border-[#bbfaf5]"
+            aria-label={`Product ${currentIndex + 1} of ${products.length}`}
           >
             {`${currentIndex + 1} / ${products.length}`}
-          </button>
+          </div>
           <button
             onClick={onNext}
-            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] hover:bg-[#0faeb8] text-[#003F47] border-1 border-b-4 active:border-b-2 border-[#bbfaf5] hover:border-[#8dd9d3] shadow-lg hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-150 ease-in-out transform"
+            className="p-4 font-bold baloo-regular cursor-pointer rounded-full bg-[#19b4bd] hover:bg-[#0faeb8] text-[#003F47] border-1 border-b-4 active:border-b-2 border-[#bbfaf5] hover:border-[#8dd9d3] shadow-lg hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-150 transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             aria-label="Next product"
+            disabled={products.length <= 1}
           >
             <ChevronRight className="h-6 w-6" />
           </button>
@@ -462,7 +530,11 @@ const CategorySelector: React.FC<{
   onCategorySelect: (category: FoodCategory) => void;
 }> = ({ categories, selectedCategory, onCategorySelect }) => (
   <div className="flex justify-center mb-10">
-    <div className="flex flex-wrap justify-center gap-4">
+    <div 
+      className="flex flex-wrap justify-center gap-4"
+      role="tablist"
+      aria-label="Product categories"
+    >
       {categories.map((category) => (
         <BouncyPillButton
           key={category}
@@ -470,6 +542,7 @@ const CategorySelector: React.FC<{
           isActive={selectedCategory === category}
           activeStyle={createCategoryButtonStyles(category)}
           onClick={() => onCategorySelect(category)}
+          aria-label={`Show ${category} products`}
         />
       ))}
     </div>

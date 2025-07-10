@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import logoImage from '../../assets/Kailani_logo.png';
 import '../../styles/fonts.css';
 
@@ -8,16 +8,12 @@ type NavigationItem = {
  readonly label: string;
  readonly href: string;
  readonly isExternalLink: boolean;
+ readonly ariaLabel?: string;
 };
 
 
 type MobileNavigationProps = {
  readonly restaurantName?: string;
-};
-
-
-type MenuState = {
- readonly isMenuOpen: boolean;
 };
 
 
@@ -30,36 +26,68 @@ const RESTAURANT_CONFIG = {
 
 
 const NAVIGATION_ITEMS: readonly NavigationItem[] = [
- { label: 'Home', href: '/', isExternalLink: false },
- { label: 'Menu', href: '/gallery', isExternalLink: false },
- { label: 'Order Now', href: RESTAURANT_CONFIG.orderUrl, isExternalLink: true },
- { label: 'Careers', href: '/jobs', isExternalLink: false },
- { label: 'About Us', href: '/about', isExternalLink: false },
- { label: 'Contact', href: '/contact', isExternalLink: false },
+ { label: 'Home', href: '/', isExternalLink: false, ariaLabel: 'Go to homepage' },
+ { label: 'Menu', href: '/gallery', isExternalLink: false, ariaLabel: 'View our menu gallery' },
+ { label: 'Order Now', href: RESTAURANT_CONFIG.orderUrl, isExternalLink: true, ariaLabel: 'Order food online (opens in new tab)' },
+ { label: 'Careers', href: '/jobs', isExternalLink: false, ariaLabel: 'View job opportunities' },
+ { label: 'About Us', href: '/about', isExternalLink: false, ariaLabel: 'Learn about us' },
+ { label: 'Contact', href: '/contact', isExternalLink: false, ariaLabel: 'Contact information' },
 ] as const;
 
 
 export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigationProps) => {
- const [menuState, setMenuState] = useState<MenuState>({ isMenuOpen: false });
-
+ const [isMenuOpen, setIsMenuOpen] = useState(false);
+ const location = useLocation();
+ const menuRef = useRef<HTMLDivElement>(null);
+ const closeButtonRef = useRef<HTMLButtonElement>(null);
 
  const displayName = restaurantName ?? RESTAURANT_CONFIG.defaultName;
 
 
  const toggleMenuVisibility = useCallback(() => {
-   setMenuState(prevState => {
-     const nextMenuState = !prevState.isMenuOpen;
+   setIsMenuOpen(prevState => {
+     const nextMenuState = !prevState;
      document.body.style.overflow = nextMenuState ? 'hidden' : 'auto';
-     return { isMenuOpen: nextMenuState };
+     return nextMenuState;
    });
  }, []);
 
-
  const closeMenu = useCallback(() => {
-   setMenuState({ isMenuOpen: false });
+   setIsMenuOpen(false);
    document.body.style.overflow = 'auto';
  }, []);
 
+ // Handle keyboard navigation
+ const handleKeyDown = useCallback((event: KeyboardEvent) => {
+   if (event.key === 'Escape' && isMenuOpen) {
+     closeMenu();
+   }
+ }, [isMenuOpen, closeMenu]);
+
+ // Cleanup body overflow on unmount
+ useEffect(() => {
+   return () => {
+     document.body.style.overflow = 'auto';
+   };
+ }, []);
+
+ // Handle escape key
+ useEffect(() => {
+   if (isMenuOpen) {
+     document.addEventListener('keydown', handleKeyDown);
+     return () => document.removeEventListener('keydown', handleKeyDown);
+   }
+ }, [isMenuOpen, handleKeyDown]);
+
+ // Focus management
+ useEffect(() => {
+   if (isMenuOpen && closeButtonRef.current) {
+     closeButtonRef.current.focus();
+   } else if (!isMenuOpen && closeButtonRef.current) {
+     // Remove focus from close button when menu closes
+     closeButtonRef.current.blur();
+   }
+ }, [isMenuOpen]);
 
  useEffect(() => {
    const handleOutsideClick = (event: MouseEvent) => {
@@ -67,68 +95,68 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
      const isClickInsideMenu = clickTarget.closest('[data-menu-content]');
      const isClickOnMenuButton = clickTarget.closest('[data-menu-button]');
     
-     if (menuState.isMenuOpen && !isClickInsideMenu && !isClickOnMenuButton) {
+     if (isMenuOpen && !isClickInsideMenu && !isClickOnMenuButton) {
        closeMenu();
      }
    };
 
-
-   if (menuState.isMenuOpen) {
+   if (isMenuOpen) {
      document.addEventListener('mousedown', handleOutsideClick);
      return () => document.removeEventListener('mousedown', handleOutsideClick);
    }
- }, [menuState.isMenuOpen, closeMenu]);
+ }, [isMenuOpen, closeMenu]);
 
 
- const BrandLogo = ({ name }: { name: string }) => (
-   <Link to="/" className="flex min-w-0 items-center justify-start gap-2">
-     {/* <div className="flex-shrink-0">
-       <img
-         src={logoImage}
-         srcSet="/Kailani_logo.webp 1x, /Kailani_logo.png 2x"
-         sizes="(max-width: 600px) 100vw, 48px"
-         alt="Kailani Logo"
-         loading="lazy"
-         className="h-10 w-10 object-contain"
-       />
-     </div> */}
-     <div className="flex items-center justify-center min-w-0">
-       <span
-         className="baloo-regular text-4xl font-bold tracking-wide text-[#f7d34f]"
-         style={{
-                fontFamily: 'Baloo, sans-serif',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                letterSpacing: '0.04em',
-                textShadow: '-3px 3px 0px #7F4F00'
-              }}
-       >
-         {name}
-       </span>
-     </div>
-   </Link>
- );
+ const BrandLogo = React.memo(({ name }: { name: string }) => (
+     <Link 
+       to="/" 
+       className="flex min-w-0 items-center justify-start gap-2"
+       aria-label="Go to homepage"
+       onClick={closeMenu}
+     >
+       <div className="flex items-center justify-center min-w-0">
+         <span
+           className="baloo-regular text-4xl font-bold tracking-wide text-[#f7d34f]"
+           style={{
+                  fontFamily: 'Baloo, sans-serif',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  letterSpacing: '0.04em',
+                  textShadow: '-3px 3px 0px #7F4F00'
+                }}
+           aria-hidden="true"
+         >
+           {name}
+         </span>
+       </div>
+     </Link>
+ ));
+ BrandLogo.displayName = 'BrandLogo';
 
 
- const QuickOrderButton = () => (
+ const QuickOrderButton = React.memo(() => (
    <a
      href={RESTAURANT_CONFIG.orderUrl}
      target="_blank"
      rel="noopener noreferrer"
-     className="baloo-regular flex items-center bg-transparent px-4 py-2 text-lg font-bold rounded-2xl border-1 border-[#f7d34f] text-white shadow-[0_2px_0_rgb(247,217,84)] transition-all duration-300 ease-out hover:text-white hover:underline hover:decoration-2 hover:decoration-white hover:underline-offset-2"
+     className="baloo-regular flex items-center bg-transparent px-4 py-2 text-lg font-bold border-1 border-[#f7d34f] text-white hover:text-white hover:underline hover:decoration-2 hover:decoration-white hover:underline-offset-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#e83838] border-b-4 active:border-b-1 rounded-2xl shadow-lg hover:bg-yellow-500 hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-200 transform"
+     aria-label="Order food online (opens in new tab)"
    >
      Order
    </a>
- );
+ ));
+ QuickOrderButton.displayName = 'QuickOrderButton';
 
 
- const MenuToggleButton = ({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => void }) => (
+ const MenuToggleButton = React.memo(({ isOpen, onToggle }: { isOpen: boolean; onToggle: () => void }) => (
    <button
      onClick={onToggle}
      data-menu-button
-     className="flex items-center justify-center rounded-lg bg-[#f7d34f] p-2 transition-colors duration-300 hover:bg-white"
+     className="flex items-center justify-center bg-[#f7d34f] p-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#e83838] rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-200 transform"
      aria-label={isOpen ? "Close menu" : "Open menu"}
+     aria-expanded={isOpen}
+     aria-controls="mobile-navigation-menu"
    >
      <svg
        className="h-6 w-6 text-[#e83838] transition-transform duration-300"
@@ -138,6 +166,7 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
        strokeWidth="3"
        viewBox="0 0 24 24"
        stroke="currentColor"
+       aria-hidden="true"
      >
        {isOpen ? (
          <path d="M6 18L18 6M6 6l12 12" />
@@ -146,11 +175,28 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
        )}
      </svg>
    </button>
- );
+ ));
+ MenuToggleButton.displayName = 'MenuToggleButton';
 
 
- const NavigationLink = ({ item, onClick }: { item: NavigationItem; onClick: () => void }) => {
-   const baseClassName = "baloo-regular flex items-center justify-center rounded-3xl border-1 border-[#f0c91f] bg-transparent p-4 text-lg font-semibold text-white shadow-[0_6px_0_rgb(247,217,84)] transition-all duration-300 ease-out hover:border-white hover:bg-[#19b4bd]/30 hover:text-[#f0c91f] hover:underline hover:decoration-2 hover:underline-offset-2";
+ const NavigationLink = React.memo(({ item, onClick, isCurrentPage }: { 
+   item: NavigationItem; 
+   onClick: () => void;
+   isCurrentPage: boolean;
+ }) => {
+   const baseClassName = "baloo-regular flex items-center justify-center rounded-3xl border-1 border-[#f0c91f] bg-transparent p-4 text-lg font-semibold text-white shadow-[0_6px_0_rgb(247,217,84)] transition-all duration-300 ease-out hover:border-white hover:bg-[#19b4bd]/30 hover:text-[#f0c91f] hover:underline hover:decoration-2 hover:underline-offset-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#19b4bd]";
+   
+   const linkClassName = `${baseClassName} ${
+     isCurrentPage ? 'border-white bg-[#19b4bd]/30 text-[#f0c91f]' : ''
+   }`;
+
+   const commonProps = {
+     className: linkClassName,
+     style: { fontFamily: 'Baloo, sans-serif' },
+     'aria-label': item.ariaLabel || item.label,
+     'aria-current': isCurrentPage ? 'page' as const : undefined,
+     onClick
+   };
   
    if (item.isExternalLink) {
      return (
@@ -158,96 +204,119 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
          href={item.href}
          target="_blank"
          rel="noopener noreferrer"
-         className={baseClassName}
-         style={{ fontFamily: 'Baloo, sans-serif' }}
-         onClick={onClick}
+         {...commonProps}
        >
          {item.label}
        </a>
      );
    }
 
-
    return (
      <Link
        to={item.href}
-       className={baseClassName}
-       style={{ fontFamily: 'Baloo, sans-serif' }}
-       onClick={onClick}
+       {...commonProps}
      >
        {item.label}
      </Link>
    );
- };
+ });
+ NavigationLink.displayName = 'NavigationLink';
 
 
- const MenuHeader = () => (
-  <header className="py-0">
-    <div className="container mx-auto flex justify-center">
-      <div className="flex flex-row items-center">
-        <img
-          src={logoImage}
-          alt="Kailani Logo"
-          className="h-36 w-36 flex-shrink-0"
-        />
-        <div className="space-y-0">
-          <h3 className="baloo-regular text-[#f7d34f] font-bold text-lg sm:text-xl drop-shadow-sm">
-            Hawaiian
-          </h3>
-          <h1 
-            className="baloo-regular text-[#f7d34f] font-extrabold text-4xl sm:text-5xl pr-9"
-            style={{
-              fontFamily: 'Baloo, sans-serif',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              letterSpacing: '0.06em',
-              textShadow: '-4px 4px 0px #7F4F00'
-            }}
-          >
-            SHAVE ICE
-          </h1>
-          <h2 
-            className="baloo-regular text-white font-bold text-2xl sm:text-3xl"
-            style={{
-              fontFamily: 'Baloo, sans-serif',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              letterSpacing: '0.04em',
-              textShadow: '-2px 2px 0px #e85fa8'
-            }}
-          >
-            &amp; Ramen
-          </h2>
-        </div>
-      </div>
-    </div>
-  </header>
- );
+ const MenuHeader = React.memo(() => {
+   const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
+     console.warn('Menu header logo image failed to load');
+     event.currentTarget.style.display = 'none';
+   };
+
+   return (
+     <header className="py-0" role="banner">
+       <div className="container mx-auto flex justify-center">
+         <div className="flex flex-row items-center">
+           <img
+             src={logoImage}
+             alt="Kailani restaurant logo"
+             className="h-36 w-36 flex-shrink-0"
+             onError={handleImageError}
+             width="144"
+             height="144"
+           />
+           <div className="space-y-0">
+             <h3 className="baloo-regular text-[#f7d34f] font-bold text-lg sm:text-xl drop-shadow-sm">
+               Hawaiian
+             </h3>
+             <h1 
+               className="baloo-regular text-[#f7d34f] font-extrabold text-4xl sm:text-5xl pr-9"
+               style={{
+                 fontFamily: 'Baloo, sans-serif',
+                 whiteSpace: 'nowrap',
+                 overflow: 'hidden',
+                 textOverflow: 'ellipsis',
+                 letterSpacing: '0.06em',
+                 textShadow: '-4px 4px 0px #7F4F00'
+               }}
+             >
+               SHAVE ICE
+             </h1>
+             <h2 
+               className="baloo-regular text-white font-bold text-2xl sm:text-3xl"
+               style={{
+                 fontFamily: 'Baloo, sans-serif',
+                 whiteSpace: 'nowrap',
+                 overflow: 'hidden',
+                 textOverflow: 'ellipsis',
+                 letterSpacing: '0.04em',
+                 textShadow: '-2px 2px 0px #e85fa8'
+               }}
+             >
+               &amp; Ramen
+             </h2>
+           </div>
+         </div>
+       </div>
+     </header>
+   );
+ });
+ MenuHeader.displayName = 'MenuHeader';
 
 
- const NavigationMenu = ({ items, onItemClick }: { items: readonly NavigationItem[]; onItemClick: () => void }) => (
-   <nav className="flex flex-1 flex-col gap-4 px-2 pb-20">
+ const NavigationMenu = React.memo(({ items, onItemClick, currentPath }: { 
+   items: readonly NavigationItem[]; 
+   onItemClick: () => void;
+   currentPath: string;
+ }) => (
+   <nav 
+     className="flex flex-1 flex-col gap-4 px-2 pb-20"
+     role="navigation"
+     aria-label="Mobile navigation menu"
+   >
      {items.map((item) => (
-       <div key={item.label} className="relative">
-         <NavigationLink item={item} onClick={onItemClick} />
+       <div key={item.href} className="relative">
+         <NavigationLink 
+           item={item} 
+           onClick={onItemClick} 
+           isCurrentPage={currentPath === item.href}
+         />
        </div>
      ))}
    </nav>
- );
+ ));
+ NavigationMenu.displayName = 'NavigationMenu';
 
 
  return (
    <>
-     <header className="sticky top-0 z-30 w-full max-w-full overflow-hidden border-b-2 border-[#ffe0f0] bg-[#e83838] shadow-xl">
+     <header 
+       className="sticky top-0 z-30 w-full max-w-full overflow-hidden border-b-2 border-[#ffe0f0] bg-[#e83838] shadow-xl"
+       role="banner"
+     >
        <div className="flex w-full flex-row items-center justify-between border-b-2 border-[#ffe0f0] px-4 py-3">
          <BrandLogo name={displayName} />
         
          <div className="flex gap-2">
            <QuickOrderButton />
            <MenuToggleButton
-             isOpen={menuState.isMenuOpen}
+             isOpen={isMenuOpen}
              onToggle={toggleMenuVisibility}
            />
          </div>
@@ -255,27 +324,41 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
      </header>
     
      <div
+       id="mobile-navigation-menu"
        className={`fixed inset-0 z-40 w-full max-w-full bg-gradient-to-b from-[#e83838] via-[#19b4bd] to-amber-900 backdrop-blur-md transition-all duration-300 ${
-         menuState.isMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'
+         isMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'
        }`}
+       aria-hidden={!isMenuOpen}
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="mobile-menu-header"
+       {...(!isMenuOpen && { inert: true })}
      >
        <div
+         ref={menuRef}
          data-menu-content
          className="relative z-10 flex h-full w-full max-w-full flex-col overflow-x-hidden overflow-y-auto p-6 pt-20"
        >
          <button
+           ref={closeButtonRef}
            onClick={closeMenu}
-           className="absolute right-6 top-6 rounded-lg bg-[#f0c91f] p-3 text-xl font-bold text-amber-900 transition-colors duration-300 hover:bg-white hover:text-[#19b4bd]"
+           className="absolute right-6 top-6 bg-[#f0c91f] p-3 text-xl font-bold text-amber-900 hover:text-[#19b4bd] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#19b4bd] border-b-4 active:border-b-1 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-200 transform"
            aria-label="Close menu"
+           tabIndex={isMenuOpen ? 0 : -1}
          >
-           <span className="baloo-regular">×</span>
+           <span className="baloo-regular" aria-hidden="true">×</span>
          </button>
 
-
          <MenuHeader />
-         <NavigationMenu items={NAVIGATION_ITEMS} onItemClick={closeMenu} />
+         <NavigationMenu 
+           items={NAVIGATION_ITEMS} 
+           onItemClick={closeMenu} 
+           currentPath={location.pathname}
+         />
        </div>
      </div>
    </>
  );
 });
+
+MobileNavigation.displayName = 'MobileNavigation';

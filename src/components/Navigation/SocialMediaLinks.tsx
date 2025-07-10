@@ -46,7 +46,7 @@ export const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
     };
 
     const colors = colorMap[socialName as keyof typeof colorMap] || 'text-yellow-400 hover:text-yellow-300';
-    return `text-2xl md:text-4xl w-12 h-14 md:w-16 md:h-18 ${colors} transition-all duration-150 rounded-xl py-1 border-2 border-b-4 active:border-b-2 border-white/20 hover:border-white/40 flex items-center justify-center hover:translate-y-0 active:translate-y-1 shadow-lg hover:shadow-md active:shadow-sm transform`;
+    return `text-2xl md:text-4xl w-12 h-14 md:w-16 md:h-18 ${colors} transition-all duration-250 rounded-xl py-1 border-2 border-b-4 active:border-b-2 border-white/20 hover:border-white/40 flex items-center justify-center hover:translate-y-0 active:translate-y-1 shadow-lg hover:shadow-md active:shadow-sm transform`;
   };
 
   return (
