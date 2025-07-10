@@ -28,26 +28,6 @@ const JobsPage = () => {
               If you're passionate about food, hospitality, and creating memorable moments, we'd love to hear from you!
             </p>
           </div>
-          
-          <div className="max-w-4xl mx-auto text-center">
-            <div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 md:mb-8 jua-regular text-yellow-300">Why Work With Us?</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-base sm:text-lg">
-                <div className="space-y-2 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-emerald-300/30">
-                  <p className="font-bold text-emerald-300">Collaborative Environment</p>
-                  <p className="text-green-100">Supportive work environment where teamwork thrives</p>
-                </div>
-                <div className="space-y-2 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-yellow-300/30">
-                  <p className="font-bold text-yellow-300">Professional Growth</p>
-                  <p className="text-yellow-100">Opportunities for skill development and advancement</p>
-                </div>
-                <div className="space-y-2 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-orange-300/30">
-                  <p className="font-bold text-orange-300">Competitive Benefits</p>
-                  <p className="text-orange-100">Attractive wages and comprehensive benefits package</p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -70,7 +50,7 @@ const JobsPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-[#0B3D0B] mb-3 jua-regular text-center">Competitive Pay</h3>
+              <h3 className="text-xl font-bold text-yellow-500 mb-3 jua-regular text-center">Competitive Pay</h3>
               <p className="text-[#002F4B] text-center">We offer competitive wages and opportunities for advancement as you grow with us.</p>
             </div>
             
@@ -80,7 +60,7 @@ const JobsPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-[#0B3D0B] mb-3 jua-regular text-center">Friendly Team</h3>
+              <h3 className="text-xl font-bold text-sky-500 mb-3 jua-regular text-center">Friendly Team</h3>
               <p className="text-[#002F4B] text-center">Join our diverse and supportive team that works together like a family.</p>
             </div>
             
@@ -90,7 +70,7 @@ const JobsPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-[#0B3D0B] mb-3 jua-regular text-center">Growth Opportunities</h3>
+              <h3 className="text-xl font-bold text-pink-500 mb-3 jua-regular text-center">Growth Opportunities</h3>
               <p className="text-[#002F4B] text-center">We believe in promoting from within and helping our employees develop their careers.</p>
             </div>
           </div>

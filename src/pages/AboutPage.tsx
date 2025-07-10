@@ -1,46 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import aboutStory from '../assets/illustrations/about-story.svg';
+import bigIslandYus from '../assets/Big Island Yus.jpg';
 import aboutTeam from '../assets/illustrations/about-team.svg';
-import aboutValues from '../assets/illustrations/about-values.svg';
-
-// SVG People Component
-const AboutPeopleSVG = () => (
-  <svg width="280" height="200" viewBox="0 0 280 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Person 1 */}
-    <circle cx="70" cy="60" r="30" fill="#FFFFFF" />
-    <circle cx="70" cy="50" r="12" fill="#333333" />
-    <rect x="50" y="70" width="40" height="60" rx="10" fill="#FFFFFF" />
-    <rect x="60" y="130" width="8" height="30" fill="#FFFFFF" />
-    <rect x="72" y="130" width="8" height="30" fill="#FFFFFF" />
-    <rect x="40" y="85" width="20" height="8" rx="4" fill="#FFFFFF" />
-    <rect x="80" y="85" width="20" height="8" rx="4" fill="#FFFFFF" />
-    
-    {/* Person 2 */}
-    <circle cx="140" cy="50" r="25" fill="#FFFFFF" />
-    <circle cx="140" cy="42" r="10" fill="#333333" />
-    <rect x="125" y="60" width="30" height="50" rx="8" fill="#FFFFFF" />
-    <rect x="133" y="110" width="6" height="25" fill="#FFFFFF" />
-    <rect x="143" y="110" width="6" height="25" fill="#FFFFFF" />
-    <rect x="115" y="70" width="15" height="6" rx="3" fill="#FFFFFF" />
-    <rect x="150" y="70" width="15" height="6" rx="3" fill="#FFFFFF" />
-    
-    {/* Person 3 */}
-    <circle cx="210" cy="55" r="28" fill="#FFFFFF" />
-    <circle cx="210" cy="46" r="11" fill="#333333" />
-    <rect x="192" y="68" width="36" height="55" rx="9" fill="#FFFFFF" />
-    <rect x="200" y="123" width="7" height="27" fill="#FFFFFF" />
-    <rect x="213" y="123" width="7" height="27" fill="#FFFFFF" />
-    <rect x="182" y="80" width="18" height="7" rx="3.5" fill="#FFFFFF" />
-    <rect x="220" y="80" width="18" height="7" rx="3.5" fill="#FFFFFF" />
-    
-    {/* Decorative elements */}
-    <circle cx="30" cy="160" r="8" fill="#FFFFFF" opacity="0.6" />
-    <circle cx="250" cy="170" r="10" fill="#FFFFFF" opacity="0.6" />
-    <circle cx="100" cy="180" r="6" fill="#FFFFFF" opacity="0.6" />
-    <circle cx="180" cy="165" r="7" fill="#FFFFFF" opacity="0.6" />
-  </svg>
-);
+import fullKailaniLogo from '../assets/Full Kailani logo.png';
+import familyImage from '../assets/Family.jpg';
 
 const AboutPage: React.FC = React.memo(() => {
   const [activeTab, setActiveTab] = useState('story');
@@ -51,7 +14,14 @@ const AboutPage: React.FC = React.memo(() => {
       <div className="relative h-80 md:h-96 overflow-hidden rounded-b-3xl shadow-md w-full" style={{backgroundColor: "#19b4bd"}}>
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center p-4">
           <div className="flex justify-center mb-6">
-            <AboutPeopleSVG />
+            <div className="relative">
+              <img 
+                src={familyImage} 
+                alt="Kailani Family" 
+                className="w-72 h-48 md:w-80 md:h-52 object-cover rounded-2xl shadow-lg border-4 border-white/20 hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+            </div>
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-2 drop-shadow-lg max-w-full baloo-regular">
             Our Story
@@ -114,7 +84,13 @@ const AboutPage: React.FC = React.memo(() => {
               <div className="w-full">
                 <div className="flex flex-col md:flex-row items-center gap-8 mb-12 w-full">
                   <div className="w-full md:w-1/2">
-                    <img src={aboutStory} alt="Our Story" className="w-full max-w-sm mx-auto" />
+                    <div className="flex justify-center">
+                      <img 
+                        src={bigIslandYus} 
+                        alt="Big Island Yus" 
+                        className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-full shadow-xl border-4 border-white hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
                   </div>
                   <div className="w-full md:w-1/2 min-w-0">
                     <h2 className="text-2xl text-[#002B5B] sm:text-3xl font-bold mb-4 relative inline-block pb-2 baloo-regular">
@@ -216,7 +192,7 @@ const AboutPage: React.FC = React.memo(() => {
                     We're continually growing and would love for you to join us on this journey.
                   </p>
                   <a 
-                    href="https://order.toasttab.com/online/kailanishaveice" 
+                    href="https://maps.app.goo.gl/KWjLfCxkkYvf7qYh8" 
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-6 py-3 text-lg font-bold font-navigation baloo-regular rounded-xl cursor-pointer bg-white text-[#000000] shadow-[0_6px_0_rgb(186,183,201)] hover:shadow-[0_4px_0px_rgb(186,183,201)] hover:translate-y-1 transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2"
@@ -358,7 +334,13 @@ const AboutPage: React.FC = React.memo(() => {
                     </div>
                   </div>
                   <div className="w-full md:w-1/2">
-                    <img src={aboutValues} alt="Our Values" className="w-full max-w-sm mx-auto" />
+                    <div className="flex justify-center">
+                      <img 
+                        src={fullKailaniLogo} 
+                        alt="Kailani Logo" 
+                        className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-full shadow-xl border-4 border-white hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
                   </div>
                 </div>
                 
