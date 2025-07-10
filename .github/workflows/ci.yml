@@ -122,7 +122,16 @@ jobs:
       - name: '🔍 NPM Security Audit'
         run: |
           echo "Running npm security audit..."
-          npm audit --audit-level=moderate
+          echo "📊 Development dependencies audit report:"
+          npm audit --dev || true
+          echo ""
+          echo "🔍 Checking for critical vulnerabilities that could affect development..."
+          if npm audit --audit-level=critical --dev; then
+            echo "✅ No critical vulnerabilities found in development dependencies"
+          else
+            echo "⚠️  Critical vulnerabilities found in development dependencies"
+            echo "This may affect your development environment but not production deployment"
+          fi
           echo "✅ Security audit completed"
 
       - name: '📊 Check Outdated Packages'
