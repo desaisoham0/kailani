@@ -494,74 +494,112 @@ const ContactPage: React.FC = React.memo(() => {
         
         {/* Hours Section */}
         {activeTab === 'hours' && (
-          <div className="mx-auto w-full overflow-x-hidden">
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden w-full max-w-full">
-              <div className="md:flex w-full">
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 via-teal-500 to-green-500"></div>
-                  
-                  <div className="w-full p-6">
-                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 jua-regular text-teal-600">Opening Hours</h2>
-                    <p className="text-gray-600 mb-8 nunito-sans">
-                      We're open 6 days a week to serve you the best Hawaiian flavors. 
+          <div className="max-w-4xl mx-auto px-3 sm:px-4">
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <div className="relative">
+                {/* Header gradient */}
+                <div className="h-1 bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400"></div>
+                
+                {/* Content */}
+                <div className="p-4 sm:p-6 lg:p-10">
+                  {/* Title Section */}
+                  <div className="text-center mb-6 sm:mb-8">
+                    <h2 className="text-xl sm:text-2xl lg:text-4xl font-bold text-gray-800 mb-2 sm:mb-3 jua-regular">
+                      Opening Hours
+                    </h2>
+                    <p className="text-sm sm:text-base text-gray-600 nunito-sans max-w-2xl mx-auto px-2">
                       Come visit us for lunch, dinner, or anytime in between!
                     </p>
-                    
-                    <div className="border-t border-gray-200 py-4">
-                      {hoursLoading ? (
-                        <div className="py-8 flex justify-center items-center">
-                          <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-b-4 border-teal-500 mr-2"></div>
-                          <span className="text-teal-600">Loading hours...</span>
-                        </div>
-                      ) : (
-                        openingHours.map((dayInfo) => (
+                  </div>
+
+                  {/* Hours Display */}
+                  <div className="max-w-sm sm:max-w-md mx-auto mb-6 sm:mb-10">
+                    {hoursLoading ? (
+                      <div className="flex flex-col items-center justify-center py-8 sm:py-12 space-y-3">
+                        <div className="animate-spin rounded-full h-8 w-8 sm:h-10 sm:w-10 border-4 border-teal-200 border-t-teal-500"></div>
+                        <span className="text-teal-600 font-medium text-sm sm:text-base">Loading hours...</span>
+                      </div>
+                    ) : (
+                      <div className="space-y-1.5 sm:space-y-2">
+                        {openingHours.map((dayInfo) => (
                           <div 
                             key={dayInfo.day}
-                            className={`flex justify-between py-3 border-b border-gray-100 ${dayInfo.isToday ? 'bg-teal-50 p-3 rounded-lg' : ''} hover:translate-x-1 transition-transform`}
-                        >
-                          <div className="flex items-center">
-                            {dayInfo.isToday && (
-                              <span className="w-3 h-3 bg-teal-500 rounded-full mr-3 animate-pulse"></span>
-                            )}
-                            <span className={`font-bold jua-regular ${dayInfo.isToday ? 'text-teal-700' : 'text-gray-800'}`}>
-                              {dayInfo.day}
-                              {dayInfo.isToday && <span className="ml-2 text-xs bg-teal-500 text-white px-2 py-1 rounded-full">Today</span>}
+                            className={`
+                              flex items-center justify-between py-3 sm:py-4 px-3 sm:px-4 rounded-lg sm:rounded-xl transition-all duration-200 hover:shadow-sm
+                              ${dayInfo.isToday 
+                                ? 'bg-gradient-to-r from-teal-50 to-cyan-50 border-2 border-teal-200' 
+                                : 'bg-gray-50 hover:bg-gray-100'
+                              }
+                            `}
+                          >
+                            <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                              {dayInfo.isToday && (
+                                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-teal-500 rounded-full animate-pulse flex-shrink-0"></div>
+                              )}
+                              <span className={`
+                                font-semibold jua-regular text-sm sm:text-base truncate
+                                ${dayInfo.isToday ? 'text-teal-700' : 'text-gray-800'}
+                              `}>
+                                {dayInfo.day}
+                              </span>
+                              {dayInfo.isToday && (
+                                <span className="px-1.5 py-0.5 sm:px-2 sm:py-1 text-xs font-medium bg-teal-500 text-white rounded-full flex-shrink-0">
+                                  Today
+                                </span>
+                              )}
+                            </div>
+                            <span className={`
+                              nunito-sans font-medium text-sm sm:text-base ml-2 flex-shrink-0
+                              ${dayInfo.isToday ? 'text-teal-700' : 'text-gray-600'}
+                            `}>
+                              {dayInfo.hours}
                             </span>
                           </div>
-                          <span className={`nunito-sans ${dayInfo.isToday ? 'text-teal-700 font-bold' : 'text-gray-600'}`}>
-                            {dayInfo.hours}
-                          </span>
-                        </div>
-                      ))
-                      )}
-                    </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
 
-                    {/* Call Enquiry Section - Combined into Hours section */}
-                    <div className="mt-8 border-t border-gray-200 pt-6">
-                      <h3 className="text-lg sm:text-xl font-bold mb-4 jua-regular text-teal-700">Have a question?</h3>
-                      <div className="bg-teal-50 rounded-lg p-4 shadow-sm">
-                        <div className="flex items-center mb-4">
-                          <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center mr-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  {/* Contact Section */}
+                  <div className="border-t border-gray-200 pt-6 sm:pt-8">
+                    <div className="text-center mb-4 sm:mb-6">
+                      <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-1 sm:mb-2 jua-regular">
+                        Have Questions?
+                      </h3>
+                      <p className="text-sm sm:text-base text-gray-600 nunito-sans px-2">
+                        Our friendly staff is here to help with any questions about our hours, menu, or services.
+                      </p>
+                    </div>
+                    
+                    <div className="max-w-xs sm:max-w-sm mx-auto">
+                      <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-teal-100">
+                        <div className="text-center mb-3 sm:mb-4">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                             </svg>
                           </div>
-                          <span className="text-teal-800 font-medium">Call us for any enquiries</span>
+                          <span className="text-teal-800 font-semibold nunito-sans text-sm sm:text-base">Call us anytime</span>
                         </div>
-                        <p className="text-gray-600 nunito-sans mb-4">
-                          Need more information? Our friendly staff is here to help you with any questions about our hours, menu, or services.
-                        </p>
+                        
                         <a 
                           href="tel:+1-201-402-9600" 
-                          className="inline-flex items-center py-2 px-4 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-bold rounded-lg transition-all duration-300 hover:shadow-lg"
+                          className="
+                            w-full flex items-center justify-center space-x-2 py-2.5 sm:py-3 px-3 sm:px-4 
+                            bg-gradient-to-r from-teal-500 to-teal-600 text-white font-bold 
+                            rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-105
+                            focus:outline-none focus:ring-4 focus:ring-teal-200 text-sm sm:text-base
+                          "
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                           </svg>
-                          (201) 402-9600
+                          <span>(201) 402-9600</span>
                         </a>
                       </div>
                     </div>
                   </div>
+                </div>
               </div>
             </div>
           </div>
