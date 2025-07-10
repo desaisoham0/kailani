@@ -20,7 +20,7 @@ const RESTAURANT_CONFIG = {
 
 const NAVIGATION_ITEMS: readonly NavigationItem[] = [
  { label: 'Home', href: '/', isExternalLink: false, ariaLabel: 'Go to homepage' },
- { label: 'Menu', href: '/gallery', isExternalLink: false, ariaLabel: 'View our menu gallery' },
+ { label: 'Menu', href: '/menu', isExternalLink: false, ariaLabel: 'View our menu gallery' },
  { label: 'Order Now', href: RESTAURANT_CONFIG.orderUrl, isExternalLink: true, ariaLabel: 'Order food online (opens in new tab)' },
  { label: 'Careers', href: '/jobs', isExternalLink: false, ariaLabel: 'View job opportunities' },
  { label: 'About Us', href: '/about', isExternalLink: false, ariaLabel: 'Learn about us' },

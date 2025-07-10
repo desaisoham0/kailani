@@ -27,7 +27,7 @@ const RESTAURANT_CONFIG = {
 
 const NAVIGATION_ITEMS: readonly NavigationItem[] = [
  { label: 'Home', href: '/', isExternalLink: false, ariaLabel: 'Go to homepage' },
- { label: 'Menu', href: '/gallery', isExternalLink: false, ariaLabel: 'View our menu gallery' },
+ { label: 'Menu', href: '/menu', isExternalLink: false, ariaLabel: 'View our menu gallery' },
  { label: 'Order Now', href: RESTAURANT_CONFIG.orderUrl, isExternalLink: true, ariaLabel: 'Order food online (opens in new tab)' },
  { label: 'Careers', href: '/jobs', isExternalLink: false, ariaLabel: 'View job opportunities' },
  { label: 'About Us', href: '/about', isExternalLink: false, ariaLabel: 'Learn about us' },
@@ -47,14 +47,37 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
  const toggleMenuVisibility = useCallback(() => {
    setIsMenuOpen(prevState => {
      const nextMenuState = !prevState;
-     document.body.style.overflow = nextMenuState ? 'hidden' : 'auto';
+     // Prevent body scroll when menu opens
+     if (nextMenuState) {
+       document.body.style.overflow = 'hidden';
+       document.body.style.position = 'fixed';
+       document.body.style.top = `-${window.scrollY}px`;
+       document.body.style.width = '100%';
+     } else {
+       const scrollY = document.body.style.top;
+       document.body.style.overflow = '';
+       document.body.style.position = '';
+       document.body.style.top = '';
+       document.body.style.width = '';
+       if (scrollY) {
+         window.scrollTo(0, parseInt(scrollY || '0') * -1);
+       }
+     }
      return nextMenuState;
    });
  }, []);
 
  const closeMenu = useCallback(() => {
    setIsMenuOpen(false);
-   document.body.style.overflow = 'auto';
+   // Restore body scroll
+   const scrollY = document.body.style.top;
+   document.body.style.overflow = '';
+   document.body.style.position = '';
+   document.body.style.top = '';
+   document.body.style.width = '';
+   if (scrollY) {
+     window.scrollTo(0, parseInt(scrollY || '0') * -1);
+   }
  }, []);
 
  // Handle keyboard navigation
@@ -67,7 +90,10 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
  // Cleanup body overflow on unmount
  useEffect(() => {
    return () => {
-     document.body.style.overflow = 'auto';
+     document.body.style.overflow = '';
+     document.body.style.position = '';
+     document.body.style.top = '';
+     document.body.style.width = '';
    };
  }, []);
 
@@ -116,7 +142,7 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
      >
        <div className="flex items-center justify-center min-w-0">
          <span
-           className="baloo-regular text-4xl font-bold tracking-wide text-[#f7d34f]"
+           className="baloo-regular text-4xl font-bold tracking-wide text-[#f7d34f] pt-1"
            style={{
                   fontFamily: 'Baloo, sans-serif',
                   whiteSpace: 'nowrap',

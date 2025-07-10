@@ -139,12 +139,12 @@ const GalleryItem: React.FC<{ item: FoodItem; isHighlighted: boolean }> = ({ ite
 
 const GalleryFooter: React.FC = () => (
   <div className="mt-12 text-center">
-    <Link to="/gallery">
+    <Link to="/menu">
       <button 
         onClick={() => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
-        className="px-8 py-4 text-lg font-bold font-navigation baloo-regular rounded-full cursor-pointer bg-white text-[#000000] shadow-[0_6px_0_rgb(186,183,201)] hover:shadow-[0_4px_0px_rgb(186,183,201)] hover:translate-y-1 transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2"
+        className="px-8 py-4 text-lg font-bold font-navigation baloo-regular rounded-3xl bg-white text-[#000000] cursor-pointer border-[#bab7c9] border-b-4 active:border-b-1 shadow-lg hover:bg-white/80 hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-200 transform"
       >
         <span className="flex items-center justify-center">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-2">

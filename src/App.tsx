@@ -62,7 +62,7 @@ function App() {
             </main>
           } />
           <Route path="/jobs" element={<Suspense fallback={<div>Loading...</div>}><JobsPage /></Suspense>} />
-          <Route path="/gallery" element={<Suspense fallback={<div>Loading...</div>}><GalleryPage /></Suspense>} />
+          <Route path="/menu" element={<Suspense fallback={<div>Loading...</div>}><GalleryPage /></Suspense>} />
           <Route path="/about" element={<Suspense fallback={<div>Loading...</div>}><AboutPage /></Suspense>} />
           <Route path="/contact" element={<Suspense fallback={<div>Loading...</div>}><ContactPage /></Suspense>} />
           <Route path="/reviews" element={

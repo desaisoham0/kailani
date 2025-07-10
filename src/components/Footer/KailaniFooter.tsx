@@ -90,9 +90,9 @@ const KailaniFooter: React.FC<KailaniFooterProps> = ({ restaurantName }) => {
                 </Link>
               </li>
               <li>
-                <Link to="/gallery" className="text-white hover:text-yellow-400 text-lg font-medium flex items-center group">
+                <Link to="/menu" className="text-white hover:text-yellow-400 text-lg font-medium flex items-center group">
                   <span className="w-1.5 h-1.5 bg-white rounded-full mr-2 group-hover:scale-125 transition-transform"></span>
-                  Food Gallery
+                  Menu
                 </Link>
               </li>
               <li>
