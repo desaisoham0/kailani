@@ -1,9 +1,9 @@
 import { db } from './config';
-import { 
-  doc, 
-  onSnapshot, 
+import {
+  doc,
+  onSnapshot,
   Timestamp,
-  type Unsubscribe
+  type Unsubscribe,
 } from 'firebase/firestore';
 
 export interface HoursDay {
@@ -67,17 +67,17 @@ class CachedHoursService {
       this.unsubscribeFn = onSnapshot(
         hoursDocRef,
         {
-          includeMetadataChanges: true
+          includeMetadataChanges: true,
         },
-        (docSnapshot) => {
+        docSnapshot => {
           this.handleDocumentUpdate(docSnapshot);
         },
-        (error) => {
+        error => {
           console.error('❌ Hours listener error:', error);
           this.notifyListeners({
             type: 'error',
             error,
-            stats: this.getStats()
+            stats: this.getStats(),
           });
         }
       );
@@ -88,7 +88,7 @@ class CachedHoursService {
       this.notifyListeners({
         type: 'error',
         error: error as Error,
-        stats: this.getStats()
+        stats: this.getStats(),
       });
     }
   }
@@ -96,11 +96,13 @@ class CachedHoursService {
   /**
    * Handle document updates from Firestore
    */
-  private handleDocumentUpdate(docSnapshot: import('firebase/firestore').DocumentSnapshot): void {
+  private handleDocumentUpdate(
+    docSnapshot: import('firebase/firestore').DocumentSnapshot
+  ): void {
     const source = docSnapshot.metadata.fromCache ? 'local cache' : 'server';
-    
+
     // Previously tracked reads here
-    
+
     console.log(`📡 Received hours update from ${source}`);
 
     if (docSnapshot.exists()) {
@@ -111,18 +113,18 @@ class CachedHoursService {
       if (!this.hasInitialData) {
         this.hasInitialData = true;
         console.log(`✅ Initial hours data loaded from ${source}`);
-        
+
         this.notifyListeners({
           type: 'initial_load',
           hoursData: data,
-          stats: this.getStats()
+          stats: this.getStats(),
         });
       } else {
         console.log(`✏️ Hours data updated from ${source}`);
         this.notifyListeners({
           type: 'modified',
           hoursData: data,
-          stats: this.getStats()
+          stats: this.getStats(),
         });
       }
     } else {
@@ -145,7 +147,7 @@ class CachedHoursService {
         { day: 'Friday', isOpen: true, hours: '11:30 AM - 9:00 PM' },
         { day: 'Saturday', isOpen: true, hours: '11:30 AM - 9:00 PM' },
         { day: 'Sunday', isOpen: true, hours: '11:30 AM - 9:00 PM' },
-      ]
+      ],
     };
 
     this.hoursData = defaultHours;
@@ -155,7 +157,7 @@ class CachedHoursService {
     this.notifyListeners({
       type: 'initial_load',
       hoursData: defaultHours,
-      stats: this.getStats()
+      stats: this.getStats(),
     });
   }
 
@@ -170,7 +172,7 @@ class CachedHoursService {
       callback({
         type: 'initial_load',
         hoursData: this.hoursData,
-        stats: this.getStats()
+        stats: this.getStats(),
       });
     }
 
@@ -205,10 +207,18 @@ class CachedHoursService {
    */
   getTodaysHours(): HoursDay | null {
     if (!this.hoursData) return null;
-    
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    const days = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
     const today = days[new Date().getDay()];
-    
+
     return this.hoursData.days.find(day => day.day === today) || null;
   }
 
@@ -222,7 +232,7 @@ class CachedHoursService {
     // Simple check - would need more complex logic for actual time checking
     const now = new Date();
     const currentHour = now.getHours();
-    
+
     // Basic assumption: open between 11:30 AM (11.5) and closing time
     // This is a simplified check - real implementation would parse the hours string
     return currentHour >= 11 && currentHour <= 21; // Roughly 11 AM to 9 PM
@@ -235,7 +245,7 @@ class CachedHoursService {
     return {
       lastUpdated: this.lastUpdated,
       isOnline: navigator.onLine,
-      hasInitialData: this.hasInitialData
+      hasInitialData: this.hasInitialData,
     };
   }
 
@@ -250,7 +260,9 @@ class CachedHoursService {
    * Force refresh data (rarely needed due to real-time updates)
    */
   refresh(): void {
-    console.log('🔄 Hours cache refresh requested (real-time listener handles updates automatically)');
+    console.log(
+      '🔄 Hours cache refresh requested (real-time listener handles updates automatically)'
+    );
   }
 
   /**
@@ -262,7 +274,7 @@ class CachedHoursService {
       this.unsubscribeFn = null;
       console.log('🔌 Hours real-time listener disconnected');
     }
-    
+
     this.listeners.clear();
     this.hoursData = null;
     this.hasInitialData = false;

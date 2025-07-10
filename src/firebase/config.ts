@@ -1,9 +1,19 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, type Firestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
-import { validateEnvironment, devLog, handleAsyncError } from '../utils/environment';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import {
+  getFirestore,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+  type Firestore,
+} from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
+import {
+  validateEnvironment,
+  devLog,
+  handleAsyncError,
+} from '../utils/environment';
 
 // Validate environment variables
 try {
@@ -20,7 +30,7 @@ const firebaseConfig = {
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
@@ -34,18 +44,25 @@ let db: Firestore;
 try {
   db = initializeFirestore(app, {
     localCache: persistentLocalCache({
-      tabManager: persistentMultipleTabManager()
-    })
+      tabManager: persistentMultipleTabManager(),
+    }),
   });
-  devLog.log('✅ Firestore initialized with persistent local cache (multi-tab)');
+  devLog.log(
+    '✅ Firestore initialized with persistent local cache (multi-tab)'
+  );
 } catch (error) {
-  devLog.warn('⚠️ Failed to initialize with cache, using default Firestore:', error);
-  
+  devLog.warn(
+    '⚠️ Failed to initialize with cache, using default Firestore:',
+    error
+  );
+
   // If it's an IndexedDB issue, provide helpful message
   if (error instanceof Error && error.message.includes('indexeddb')) {
-    devLog.warn('💡 To resolve cache issues, try clearing browser data (Application > Storage > Clear site data)');
+    devLog.warn(
+      '💡 To resolve cache issues, try clearing browser data (Application > Storage > Clear site data)'
+    );
   }
-  
+
   handleAsyncError(error, 'Firestore cache initialization');
   db = getFirestore(app);
 }

@@ -7,4 +7,6 @@ export interface CacheContextValue {
   error: Error | null;
 }
 
-export const CacheContext = createContext<CacheContextValue | undefined>(undefined);
+export const CacheContext = createContext<CacheContextValue | undefined>(
+  undefined
+);

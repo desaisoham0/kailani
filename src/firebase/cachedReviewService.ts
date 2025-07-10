@@ -1,13 +1,13 @@
 import { db } from './config';
-import { 
-  collection, 
-  onSnapshot, 
-  query, 
+import {
+  collection,
+  onSnapshot,
+  query,
   orderBy,
   Timestamp,
   QuerySnapshot,
   type DocumentChange,
-  type Unsubscribe
+  type Unsubscribe,
 } from 'firebase/firestore';
 
 export interface Review {
@@ -35,7 +35,12 @@ export interface ReviewCacheStats {
 }
 
 // Event types for cache updates
-export type ReviewCacheEventType = 'added' | 'modified' | 'removed' | 'initial_load' | 'error';
+export type ReviewCacheEventType =
+  | 'added'
+  | 'modified'
+  | 'removed'
+  | 'initial_load'
+  | 'error';
 
 export interface ReviewCacheEvent {
   type: ReviewCacheEventType;
@@ -80,17 +85,17 @@ class CachedReviewService {
       this.unsubscribeFn = onSnapshot(
         q,
         {
-          includeMetadataChanges: true
+          includeMetadataChanges: true,
         },
         (snapshot: QuerySnapshot) => {
           this.handleSnapshotUpdate(snapshot);
         },
-        (error) => {
+        error => {
           console.error('❌ Reviews listener error:', error);
           this.notifyListeners({
             type: 'error',
             error,
-            stats: this.getStats()
+            stats: this.getStats(),
           });
         }
       );
@@ -101,7 +106,7 @@ class CachedReviewService {
       this.notifyListeners({
         type: 'error',
         error: error as Error,
-        stats: this.getStats()
+        stats: this.getStats(),
       });
     }
   }
@@ -111,10 +116,12 @@ class CachedReviewService {
    */
   private handleSnapshotUpdate(snapshot: QuerySnapshot): void {
     const source = snapshot.metadata.fromCache ? 'local cache' : 'server';
-    
+
     // Previously tracked reads here
-    
-    console.log(`📡 Received ${snapshot.docChanges().length} review changes from ${source}`);
+
+    console.log(
+      `📡 Received ${snapshot.docChanges().length} review changes from ${source}`
+    );
 
     // Handle initial load
     if (!this.hasInitialData && !snapshot.empty) {
@@ -128,12 +135,14 @@ class CachedReviewService {
       this.hasInitialData = true;
       this.lastUpdated = new Date();
 
-      console.log(`✅ Initial reviews data loaded: ${reviews.length} reviews from ${source}`);
-      
+      console.log(
+        `✅ Initial reviews data loaded: ${reviews.length} reviews from ${source}`
+      );
+
       this.notifyListeners({
         type: 'initial_load',
         reviews,
-        stats: this.getStats()
+        stats: this.getStats(),
       });
 
       return;
@@ -151,7 +160,7 @@ class CachedReviewService {
             this.notifyListeners({
               type: 'added',
               review,
-              stats: this.getStats()
+              stats: this.getStats(),
             });
           }
           break;
@@ -162,7 +171,7 @@ class CachedReviewService {
           this.notifyListeners({
             type: 'modified',
             review,
-            stats: this.getStats()
+            stats: this.getStats(),
           });
           break;
 
@@ -172,7 +181,7 @@ class CachedReviewService {
           this.notifyListeners({
             type: 'removed',
             review,
-            stats: this.getStats()
+            stats: this.getStats(),
           });
           break;
       }
@@ -192,7 +201,7 @@ class CachedReviewService {
       callback({
         type: 'initial_load',
         reviews: this.getAllReviews(),
-        stats: this.getStats()
+        stats: this.getStats(),
       });
     }
 
@@ -219,11 +228,10 @@ class CachedReviewService {
    * Get all reviews from cache
    */
   getAllReviews(): Review[] {
-    return Array.from(this.reviews.values())
-      .sort((a, b) => {
-        if (!a.createdAt || !b.createdAt) return 0;
-        return b.createdAt.toMillis() - a.createdAt.toMillis();
-      });
+    return Array.from(this.reviews.values()).sort((a, b) => {
+      if (!a.createdAt || !b.createdAt) return 0;
+      return b.createdAt.toMillis() - a.createdAt.toMillis();
+    });
   }
 
   /**
@@ -232,27 +240,34 @@ class CachedReviewService {
   getReviewStats(): ReviewStats {
     const reviews = this.getAllReviews();
     const totalReviews = reviews.length;
-    
+
     if (totalReviews === 0) {
       return {
         averageRating: 0,
         totalReviews: 0,
-        ratingsBreakdown: {}
+        ratingsBreakdown: {},
       };
     }
 
-    const ratingsBreakdown: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    const ratingsBreakdown: Record<number, number> = {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+    };
     let totalRating = 0;
 
     reviews.forEach(review => {
       totalRating += review.rating;
-      ratingsBreakdown[review.rating] = (ratingsBreakdown[review.rating] || 0) + 1;
+      ratingsBreakdown[review.rating] =
+        (ratingsBreakdown[review.rating] || 0) + 1;
     });
 
     return {
       averageRating: totalRating / totalReviews,
       totalReviews,
-      ratingsBreakdown
+      ratingsBreakdown,
     };
   }
 
@@ -264,7 +279,7 @@ class CachedReviewService {
       totalReviews: this.reviews.size,
       lastUpdated: this.lastUpdated,
       isOnline: navigator.onLine,
-      hasInitialData: this.hasInitialData
+      hasInitialData: this.hasInitialData,
     };
   }
 
@@ -279,7 +294,9 @@ class CachedReviewService {
    * Force refresh data (rarely needed due to real-time updates)
    */
   refresh(): void {
-    console.log('🔄 Review cache refresh requested (real-time listener handles updates automatically)');
+    console.log(
+      '🔄 Review cache refresh requested (real-time listener handles updates automatically)'
+    );
   }
 
   /**
@@ -291,7 +308,7 @@ class CachedReviewService {
       this.unsubscribeFn = null;
       console.log('🔌 Reviews real-time listener disconnected');
     }
-    
+
     this.listeners.clear();
     this.reviews.clear();
     this.hasInitialData = false;

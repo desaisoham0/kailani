@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { cachedFoodService, type CacheStats } from '../firebase/cachedFoodService';
+import {
+  cachedFoodService,
+  type CacheStats,
+} from '../firebase/cachedFoodService';
 import { CacheContext, type CacheContextValue } from './cache.types';
 import { useCache } from './cache.hooks';
 
@@ -17,7 +20,7 @@ export const CacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
     totalItems: 0,
     lastUpdated: new Date(),
     isOnline: navigator.onLine,
-    hasInitialData: false
+    hasInitialData: false,
   });
   const [error, setError] = useState<Error | null>(null);
 
@@ -25,9 +28,9 @@ export const CacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
     console.log('🏗️ CacheProvider: Initializing cache context');
 
     // Subscribe to cache events to monitor readiness
-    const unsubscribe = cachedFoodService.subscribe((event) => {
+    const unsubscribe = cachedFoodService.subscribe(event => {
       setStats(event.stats);
-      
+
       switch (event.type) {
         case 'initial_load':
           setIsReady(true);
@@ -63,13 +66,11 @@ export const CacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
   const value: CacheContextValue = {
     isReady,
     stats,
-    error
+    error,
   };
 
   return (
-    <CacheContext.Provider value={value}>
-      {children}
-    </CacheContext.Provider>
+    <CacheContext.Provider value={value}>{children}</CacheContext.Provider>
   );
 };
 
@@ -78,23 +79,19 @@ export const CacheProvider: React.FC<CacheProviderProps> = ({ children }) => {
  */
 export const CacheStatus: React.FC = () => {
   const { isReady, stats, error } = useCache();
-  
+
   if (process.env.NODE_ENV === 'production') {
     return null;
   }
 
   return (
-    <div className="fixed bottom-4 right-4 bg-black bg-opacity-80 text-white text-xs p-2 rounded-lg font-mono z-50 max-w-xs">
-      <div className="font-bold mb-1">🗂️ Cache Status</div>
+    <div className="bg-opacity-80 fixed right-4 bottom-4 z-50 max-w-xs rounded-lg bg-black p-2 font-mono text-xs text-white">
+      <div className="mb-1 font-bold">🗂️ Cache Status</div>
       <div>Ready: {isReady ? '✅' : '⏳'}</div>
       <div>Items: {stats.totalItems}</div>
       <div>Online: {stats.isOnline ? '🌐' : '📱'}</div>
       <div>Updated: {stats.lastUpdated.toLocaleTimeString()}</div>
-      {error && (
-        <div className="text-red-300 mt-1">
-          Error: {error.message}
-        </div>
-      )}
+      {error && <div className="mt-1 text-red-300">Error: {error.message}</div>}
     </div>
   );
 };

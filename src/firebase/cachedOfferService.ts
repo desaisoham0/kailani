@@ -1,13 +1,13 @@
 import { db } from './config';
-import { 
-  collection, 
-  onSnapshot, 
-  query, 
+import {
+  collection,
+  onSnapshot,
+  query,
   orderBy,
   Timestamp,
   QuerySnapshot,
   type DocumentChange,
-  type Unsubscribe
+  type Unsubscribe,
 } from 'firebase/firestore';
 
 export interface Offer {
@@ -32,7 +32,12 @@ export interface OfferCacheStats {
 }
 
 // Event types for cache updates
-export type OfferCacheEventType = 'added' | 'modified' | 'removed' | 'initial_load' | 'error';
+export type OfferCacheEventType =
+  | 'added'
+  | 'modified'
+  | 'removed'
+  | 'initial_load'
+  | 'error';
 
 export interface OfferCacheEvent {
   type: OfferCacheEventType;
@@ -77,17 +82,17 @@ class CachedOfferService {
       this.unsubscribeFn = onSnapshot(
         q,
         {
-          includeMetadataChanges: true
+          includeMetadataChanges: true,
         },
         (snapshot: QuerySnapshot) => {
           this.handleSnapshotUpdate(snapshot);
         },
-        (error) => {
+        error => {
           console.error('❌ Offers listener error:', error);
           this.notifyListeners({
             type: 'error',
             error,
-            stats: this.getStats()
+            stats: this.getStats(),
           });
         }
       );
@@ -98,7 +103,7 @@ class CachedOfferService {
       this.notifyListeners({
         type: 'error',
         error: error as Error,
-        stats: this.getStats()
+        stats: this.getStats(),
       });
     }
   }
@@ -108,10 +113,12 @@ class CachedOfferService {
    */
   private handleSnapshotUpdate(snapshot: QuerySnapshot): void {
     const source = snapshot.metadata.fromCache ? 'local cache' : 'server';
-    
+
     // Previously tracked reads here
-    
-    console.log(`📡 Received ${snapshot.docChanges().length} offer changes from ${source}`);
+
+    console.log(
+      `📡 Received ${snapshot.docChanges().length} offer changes from ${source}`
+    );
 
     // Handle initial load
     if (!this.hasInitialData && !snapshot.empty) {
@@ -125,12 +132,14 @@ class CachedOfferService {
       this.hasInitialData = true;
       this.lastUpdated = new Date();
 
-      console.log(`✅ Initial offers data loaded: ${offers.length} offers from ${source}`);
-      
+      console.log(
+        `✅ Initial offers data loaded: ${offers.length} offers from ${source}`
+      );
+
       this.notifyListeners({
         type: 'initial_load',
         offers,
-        stats: this.getStats()
+        stats: this.getStats(),
       });
 
       return;
@@ -148,7 +157,7 @@ class CachedOfferService {
             this.notifyListeners({
               type: 'added',
               offer,
-              stats: this.getStats()
+              stats: this.getStats(),
             });
           }
           break;
@@ -159,7 +168,7 @@ class CachedOfferService {
           this.notifyListeners({
             type: 'modified',
             offer,
-            stats: this.getStats()
+            stats: this.getStats(),
           });
           break;
 
@@ -169,7 +178,7 @@ class CachedOfferService {
           this.notifyListeners({
             type: 'removed',
             offer,
-            stats: this.getStats()
+            stats: this.getStats(),
           });
           break;
       }
@@ -189,7 +198,7 @@ class CachedOfferService {
       callback({
         type: 'initial_load',
         offers: this.getAllOffers(),
-        stats: this.getStats()
+        stats: this.getStats(),
       });
     }
 
@@ -216,11 +225,10 @@ class CachedOfferService {
    * Get all offers from cache
    */
   getAllOffers(): Offer[] {
-    return Array.from(this.offers.values())
-      .sort((a, b) => {
-        if (!a.createdAt || !b.createdAt) return 0;
-        return b.createdAt.toMillis() - a.createdAt.toMillis();
-      });
+    return Array.from(this.offers.values()).sort((a, b) => {
+      if (!a.createdAt || !b.createdAt) return 0;
+      return b.createdAt.toMillis() - a.createdAt.toMillis();
+    });
   }
 
   /**
@@ -249,14 +257,14 @@ class CachedOfferService {
   getStats(): OfferCacheStats {
     const currentOffers = this.getCurrentOffers();
     const upcomingOffers = this.getUpcomingOffers();
-    
+
     return {
       totalOffers: this.offers.size,
       currentOffers: currentOffers.length,
       upcomingOffers: upcomingOffers.length,
       lastUpdated: this.lastUpdated,
       isOnline: navigator.onLine,
-      hasInitialData: this.hasInitialData
+      hasInitialData: this.hasInitialData,
     };
   }
 
@@ -271,7 +279,9 @@ class CachedOfferService {
    * Force refresh data (rarely needed due to real-time updates)
    */
   refresh(): void {
-    console.log('🔄 Offer cache refresh requested (real-time listener handles updates automatically)');
+    console.log(
+      '🔄 Offer cache refresh requested (real-time listener handles updates automatically)'
+    );
   }
 
   /**
@@ -283,7 +293,7 @@ class CachedOfferService {
       this.unsubscribeFn = null;
       console.log('🔌 Offers real-time listener disconnected');
     }
-    
+
     this.listeners.clear();
     this.offers.clear();
     this.hasInitialData = false;

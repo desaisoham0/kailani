@@ -1,19 +1,24 @@
 import { db, storage } from './config';
-import { 
-  collection, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  doc, 
-  getDocs, 
-  query, 
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
   where,
   serverTimestamp,
   orderBy,
   getDoc,
-  Timestamp
+  Timestamp,
 } from 'firebase/firestore';
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject,
+} from 'firebase/storage';
 
 export interface FoodItem {
   id?: string;
@@ -30,21 +35,27 @@ export interface FoodItem {
 const foodItemsCollection = collection(db, 'food-items');
 
 // Add a new food item
-export const addFoodItem = async (foodItem: Omit<FoodItem, 'id' | 'createdAt' | 'updatedAt'>, imageFile: File | null) => {
+export const addFoodItem = async (
+  foodItem: Omit<FoodItem, 'id' | 'createdAt' | 'updatedAt'>,
+  imageFile: File | null
+) => {
   try {
     let imageUrl = '';
-    
+
     // If there's an image file, upload it to Firebase Storage first
     if (imageFile) {
-      const storageRef = ref(storage, `food-items/${Date.now()}_${imageFile.name}`);
+      const storageRef = ref(
+        storage,
+        `food-items/${Date.now()}_${imageFile.name}`
+      );
       const uploadTask = uploadBytesResumable(storageRef, imageFile);
-      
+
       // Wait for the upload to complete
       await new Promise<void>((resolve, reject) => {
         uploadTask.on(
           'state_changed',
           () => {},
-          (error) => reject(error),
+          error => reject(error),
           async () => {
             imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
             resolve();
@@ -52,40 +63,40 @@ export const addFoodItem = async (foodItem: Omit<FoodItem, 'id' | 'createdAt' | 
         );
       });
     }
-    
+
     // Add document to Firestore
     const docRef = await addDoc(foodItemsCollection, {
       ...foodItem,
       imageUrl,
       createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
+      updatedAt: serverTimestamp(),
     });
-    
+
     // Previously tracked write operation
-    
+
     return { id: docRef.id, ...foodItem, imageUrl };
   } catch (error) {
-    console.error("Error adding food item: ", error);
+    console.error('Error adding food item: ', error);
     throw error;
   }
 };
 
 // Update a food item
 export const updateFoodItem = async (
-  id: string, 
-  foodItemData: Partial<FoodItem>, 
+  id: string,
+  foodItemData: Partial<FoodItem>,
   imageFile: File | null
 ) => {
   try {
     const foodItemRef = doc(db, 'food-items', id);
     const foodItemDoc = await getDoc(foodItemRef);
-    
+
     if (!foodItemDoc.exists()) {
       throw new Error('Food item not found');
     }
-    
+
     const updatedData = { ...foodItemData, updatedAt: serverTimestamp() };
-    
+
     // If there's a new image file, upload it and update the URL
     if (imageFile) {
       // Delete old image if it exists
@@ -95,20 +106,23 @@ export const updateFoodItem = async (
           const oldImageRef = ref(storage, currentData.imageUrl);
           await deleteObject(oldImageRef);
         } catch (error) {
-          console.warn("Old image might not exist:", error);
+          console.warn('Old image might not exist:', error);
         }
       }
-      
+
       // Upload new image
-      const storageRef = ref(storage, `food-items/${Date.now()}_${imageFile.name}`);
+      const storageRef = ref(
+        storage,
+        `food-items/${Date.now()}_${imageFile.name}`
+      );
       const uploadTask = uploadBytesResumable(storageRef, imageFile);
-      
+
       // Wait for the upload to complete
       await new Promise<void>((resolve, reject) => {
         uploadTask.on(
           'state_changed',
           () => {},
-          (error) => reject(error),
+          error => reject(error),
           async () => {
             const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
             updatedData.imageUrl = imageUrl;
@@ -117,15 +131,19 @@ export const updateFoodItem = async (
         );
       });
     }
-    
+
     // Update document in Firestore
     await updateDoc(foodItemRef, updatedData);
-    
+
     // Previously tracked write operation
-    
-    return { id, ...foodItemData, ...(imageFile ? { imageUrl: updatedData.imageUrl } : {}) };
+
+    return {
+      id,
+      ...foodItemData,
+      ...(imageFile ? { imageUrl: updatedData.imageUrl } : {}),
+    };
   } catch (error) {
-    console.error("Error updating food item: ", error);
+    console.error('Error updating food item: ', error);
     throw error;
   }
 };
@@ -135,11 +153,11 @@ export const deleteFoodItem = async (id: string) => {
   try {
     const foodItemRef = doc(db, 'food-items', id);
     const foodItemDoc = await getDoc(foodItemRef);
-    
+
     if (!foodItemDoc.exists()) {
       throw new Error('Food item not found');
     }
-    
+
     // Delete image from Storage if it exists
     const foodItemData = foodItemDoc.data();
     if (foodItemData.imageUrl) {
@@ -147,18 +165,18 @@ export const deleteFoodItem = async (id: string) => {
         const imageRef = ref(storage, foodItemData.imageUrl);
         await deleteObject(imageRef);
       } catch (error) {
-        console.warn("Error deleting image:", error);
+        console.warn('Error deleting image:', error);
       }
     }
-    
+
     // Delete document from Firestore
     await deleteDoc(foodItemRef);
-    
+
     // Previously tracked delete operation
-    
+
     return id;
   } catch (error) {
-    console.error("Error deleting food item: ", error);
+    console.error('Error deleting food item: ', error);
     throw error;
   }
 };
@@ -168,12 +186,12 @@ export const getAllFoodItems = async () => {
   try {
     const q = query(foodItemsCollection, orderBy('createdAt', 'desc'));
     const querySnapshot = await getDocs(q);
-    
+
     return querySnapshot.docs.map(doc => {
       return { id: doc.id, ...doc.data() } as FoodItem;
     });
   } catch (error) {
-    console.error("Error getting food items: ", error);
+    console.error('Error getting food items: ', error);
     throw error;
   }
 };
@@ -182,17 +200,17 @@ export const getAllFoodItems = async () => {
 export const getFavoriteFoodItems = async () => {
   try {
     const q = query(
-      foodItemsCollection, 
+      foodItemsCollection,
       where('favorite', '==', true),
       orderBy('createdAt', 'desc')
     );
     const querySnapshot = await getDocs(q);
-    
+
     return querySnapshot.docs.map(doc => {
       return { id: doc.id, ...doc.data() } as FoodItem;
     });
   } catch (error) {
-    console.error("Error getting favorite food items: ", error);
+    console.error('Error getting favorite food items: ', error);
     throw error;
   }
 };
@@ -201,12 +219,12 @@ export const getFavoriteFoodItems = async () => {
 export const getFoodItemsByCategory = async (category: string) => {
   try {
     const q = query(
-      foodItemsCollection, 
+      foodItemsCollection,
       where('category', '==', category),
       orderBy('createdAt', 'desc')
     );
     const querySnapshot = await getDocs(q);
-    
+
     return querySnapshot.docs.map(doc => {
       return { id: doc.id, ...doc.data() } as FoodItem;
     });

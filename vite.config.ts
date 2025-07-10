@@ -9,8 +9,37 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+      manifest: {
+        name: 'Kailani Hawaiian Restaurant',
+        short_name: 'Kailani',
+        description: 'Hawaiian Shave Ice & Ramen Restaurant in New Milford, NJ',
+        theme_color: '#e83838',
+        background_color: '#19b4bd',
+        display: 'standalone',
+        icons: [
+          {
+            src: 'Kailani_logo.png',
+            sizes: '192x192',
+            type: 'image/png'
+          }
+        ]
+      },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg,ttf,woff,woff2}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
+              }
+            }
+          }
+        ]
       }
     })
   ],
@@ -28,6 +57,8 @@ export default defineConfig({
     }
   },
   build: {
+    target: 'es2020',
+    minify: 'esbuild',
     commonjsOptions: {
       transformMixedEsModules: true
     },
@@ -43,14 +74,22 @@ export default defineConfig({
           // Separate router
           router: ['react-router-dom'],
           // Separate animation library
-          animation: ['framer-motion']
+          animation: ['framer-motion'],
+          // Separate UI libraries
+          fontawesome: ['@fortawesome/react-fontawesome', '@fortawesome/fontawesome-svg-core', '@fortawesome/free-brands-svg-icons']
         }
       }
     },
     // Increase chunk size warning limit to 1MB
     chunkSizeWarningLimit: 1000,
     // Enable source maps for production debugging
-    sourcemap: true
+    sourcemap: true,
+    // Optimize CSS
+    cssCodeSplit: true,
+    // Optimize for modern browsers
+    reportCompressedSize: false,
+    // Faster builds
+    write: true
   },
   server: {
     // Add your Ngrok host to the allowed hosts

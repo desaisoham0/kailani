@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
-import { cachedHoursService, type HoursData, type HoursDay, type HoursCacheEvent, type HoursCacheStats } from '../firebase/cachedHoursService';
+import {
+  cachedHoursService,
+  type HoursData,
+  type HoursDay,
+  type HoursCacheEvent,
+  type HoursCacheStats,
+} from '../firebase/cachedHoursService';
 import { devLog } from '../utils/environment';
 
 export interface UseCachedHoursResult {
@@ -23,12 +29,12 @@ export default function useCachedHours(): UseCachedHoursResult {
   const [stats, setStats] = useState<HoursCacheStats>({
     lastUpdated: new Date(),
     isOnline: navigator.onLine,
-    hasInitialData: false
+    hasInitialData: false,
   });
 
   useEffect(() => {
     devLog.log('🪝 useCachedHours: Setting up cache subscription');
-    
+
     // Define the handler inside useEffect to avoid dependency issues
     const handleCacheEvent = (event: HoursCacheEvent) => {
       setStats(event.stats);
@@ -64,7 +70,7 @@ export default function useCachedHours(): UseCachedHoursResult {
           break;
       }
     };
-    
+
     // Subscribe to cache events
     const unsubscribe = cachedHoursService.subscribe(handleCacheEvent);
 
@@ -89,7 +95,7 @@ export default function useCachedHours(): UseCachedHoursResult {
     const handleOnlineStatusChange = () => {
       setStats(prevStats => ({
         ...prevStats,
-        isOnline: navigator.onLine
+        isOnline: navigator.onLine,
       }));
     };
 
@@ -117,6 +123,6 @@ export default function useCachedHours(): UseCachedHoursResult {
     isLoading,
     error,
     stats,
-    refresh
+    refresh,
   };
 }

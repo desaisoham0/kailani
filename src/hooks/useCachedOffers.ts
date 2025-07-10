@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react';
-import { cachedOfferService, type Offer, type OfferCacheEvent, type OfferCacheStats } from '../firebase/cachedOfferService';
+import {
+  cachedOfferService,
+  type Offer,
+  type OfferCacheEvent,
+  type OfferCacheStats,
+} from '../firebase/cachedOfferService';
 
 export interface UseCachedOffersResult {
   allOffers: Offer[];
@@ -25,12 +30,12 @@ export default function useCachedOffers(): UseCachedOffersResult {
     upcomingOffers: 0,
     lastUpdated: new Date(),
     isOnline: navigator.onLine,
-    hasInitialData: false
+    hasInitialData: false,
   });
 
   useEffect(() => {
     console.log('🪝 useCachedOffers: Setting up cache subscription');
-    
+
     // Define the handler inside useEffect to avoid dependency issues
     const handleCacheEvent = (event: OfferCacheEvent) => {
       setStats(event.stats);
@@ -41,7 +46,9 @@ export default function useCachedOffers(): UseCachedOffersResult {
             setAllOffers(event.offers);
             setIsLoading(false);
             setError(null);
-            console.log(`🎯 Offers Hook: Initial load complete with ${event.offers.length} offers`);
+            console.log(
+              `🎯 Offers Hook: Initial load complete with ${event.offers.length} offers`
+            );
           }
           break;
 
@@ -66,7 +73,7 @@ export default function useCachedOffers(): UseCachedOffersResult {
           break;
       }
     };
-    
+
     // Subscribe to cache events
     const unsubscribe = cachedOfferService.subscribe(handleCacheEvent);
 
@@ -76,7 +83,9 @@ export default function useCachedOffers(): UseCachedOffersResult {
       setAllOffers(cachedOffers);
       setIsLoading(false);
       setStats(cachedOfferService.getStats());
-      console.log(`⚡ Offers Hook: Using existing cache data (${cachedOffers.length} offers)`);
+      console.log(
+        `⚡ Offers Hook: Using existing cache data (${cachedOffers.length} offers)`
+      );
     }
 
     // Cleanup subscription on unmount
@@ -91,7 +100,7 @@ export default function useCachedOffers(): UseCachedOffersResult {
     const handleOnlineStatusChange = () => {
       setStats(prevStats => ({
         ...prevStats,
-        isOnline: navigator.onLine
+        isOnline: navigator.onLine,
       }));
     };
 
@@ -119,6 +128,6 @@ export default function useCachedOffers(): UseCachedOffersResult {
     isLoading,
     error,
     stats,
-    refresh
+    refresh,
   };
 }

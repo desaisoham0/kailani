@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Timestamp } from 'firebase/firestore';
-import { 
-  getAllReviews, 
+import {
+  getAllReviews,
   deleteReview,
   getReviewStats,
   updateReviewStats,
-  type Review
+  type Review,
 } from '../../firebase/reviewService';
 
 interface AdminReviewsProps {
@@ -32,7 +32,7 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
       // Get reviews
       const items = await getAllReviews();
       setReviews(items);
-      
+
       // Get saved stats
       const stats = await getReviewStats();
       setTotalReviews(stats.totalReviews);
@@ -44,13 +44,13 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
       setLoading(false);
     }
   };
-  
+
   // Function to update stats
   const handleUpdateStats = async () => {
     try {
       await updateReviewStats({
         totalReviews: totalReviews,
-        averageRating: averageRating
+        averageRating: averageRating,
       });
       setStatsUpdated(true);
       setTimeout(() => setStatsUpdated(false), 3000);
@@ -68,7 +68,7 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
       await deleteReview(id);
       const updatedReviews = reviews.filter(review => review.id !== id);
       setReviews(updatedReviews);
-      
+
       // We don't update the stats here automatically
       // Stats are now manually set by the admin
     } catch (err) {
@@ -81,7 +81,7 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
 
   const formatDate = (timestamp: Timestamp | null | undefined) => {
     if (!timestamp) return 'N/A';
-    
+
     try {
       const date = timestamp.toDate();
       return date.toLocaleDateString('en-US', {
@@ -96,8 +96,8 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-16">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      <div className="flex items-center justify-center py-16">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
         <span className="ml-3">Loading reviews...</span>
       </div>
     );
@@ -105,11 +105,20 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-800 rounded-md p-4 mb-6">
+      <div className="mb-6 rounded-md border border-red-200 bg-red-50 p-4 text-red-800">
         <div className="flex">
           <div className="flex-shrink-0">
-            <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            <svg
+              className="h-5 w-5 text-red-400"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clipRule="evenodd"
+              />
             </svg>
           </div>
           <div className="ml-3">
@@ -122,19 +131,22 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
 
   return (
     <div>
-      <div className="mb-6 bg-white shadow overflow-hidden sm:rounded-lg">
+      <div className="mb-6 overflow-hidden bg-white shadow sm:rounded-lg">
         <div className="px-4 py-5 sm:px-6">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
             Reviews Statistics
           </h3>
-          <p className="max-w-2xl mt-1 text-sm text-gray-500">
+          <p className="mt-1 max-w-2xl text-sm text-gray-500">
             Overview of customer reviews
           </p>
         </div>
         <div className="border-t border-gray-200 px-4 py-5">
           <div className="mt-1 sm:mt-0">
             <div className="mb-4">
-              <label htmlFor="totalReviews" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="totalReviews"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Total reviews
               </label>
               <div className="mt-1 flex rounded-md shadow-sm">
@@ -143,15 +155,18 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
                   name="totalReviews"
                   id="totalReviews"
                   value={totalReviews}
-                  onChange={(e) => setTotalReviews(parseInt(e.target.value) || 0)}
+                  onChange={e => setTotalReviews(parseInt(e.target.value) || 0)}
                   min="0"
-                  className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
+                  className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
               </div>
             </div>
-            
+
             <div className="mb-4">
-              <label htmlFor="averageRating" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="averageRating"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Average rating (out of 5)
               </label>
               <div className="mt-1 flex rounded-md shadow-sm">
@@ -160,17 +175,19 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
                   name="averageRating"
                   id="averageRating"
                   value={averageRating}
-                  onChange={(e) => setAverageRating(parseFloat(e.target.value) || 0)}
+                  onChange={e =>
+                    setAverageRating(parseFloat(e.target.value) || 0)
+                  }
                   min="0"
                   max="5"
                   step="0.1"
-                  className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-sm border-gray-300"
+                  className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
               </div>
               <div className="mt-2 flex">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <svg 
-                    key={star} 
+                {[1, 2, 3, 4, 5].map(star => (
+                  <svg
+                    key={star}
                     className={`h-5 w-5 ${star <= Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-300'}`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
@@ -181,16 +198,18 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
                 ))}
               </div>
             </div>
-            
+
             <div className="mb-4">
               <button
                 onClick={handleUpdateStats}
-                className="inline-flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 shadow-[0_6px_0_rgb(29,78,216)] hover:shadow-[0_3px_0_rgb(29,78,216)] hover:translate-y-1 transition-all duration-200 cursor-pointer"
+                className="inline-flex cursor-pointer justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-[0_6px_0_rgb(29,78,216)] transition-all duration-200 hover:translate-y-1 hover:bg-blue-700 hover:shadow-[0_3px_0_rgb(29,78,216)] focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:bg-blue-400"
               >
                 Save Stats
               </button>
               {statsUpdated && (
-                <span className="ml-3 text-sm text-green-600">Stats updated successfully!</span>
+                <span className="ml-3 text-sm text-green-600">
+                  Stats updated successfully!
+                </span>
               )}
             </div>
           </div>
@@ -198,47 +217,89 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
       </div>
 
       {reviews.length === 0 ? (
-        <div className="text-center py-10">
-          <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        <div className="py-10 text-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="mx-auto h-12 w-12 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+            />
           </svg>
           <h3 className="mt-2 text-sm font-medium text-gray-900">No reviews</h3>
-          <p className="mt-1 text-sm text-gray-500">Get started by adding a new review.</p>
+          <p className="mt-1 text-sm text-gray-500">
+            Get started by adding a new review.
+          </p>
         </div>
       ) : (
-        <div className="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+        <div className="ring-opacity-5 overflow-x-auto shadow ring-1 ring-black md:rounded-lg">
           <div className="inline-block min-w-full align-middle">
             <table className="min-w-full divide-y divide-gray-300">
               <thead className="bg-gray-50">
                 <tr>
-                  <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Author</th>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Rating</th>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Source</th>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date</th>
-                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Review Text</th>
-                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                  <th
+                    scope="col"
+                    className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                  >
+                    Author
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                  >
+                    Rating
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                  >
+                    Source
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                  >
+                    Date
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                  >
+                    Review Text
+                  </th>
+                  <th scope="col" className="relative py-3.5 pr-4 pl-3 sm:pr-6">
                     <span className="sr-only">Actions</span>
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {reviews.map((review) => (
+                {reviews.map(review => (
                   <tr key={review.id} className="hover:bg-gray-50">
-                    <td className="py-4 pl-4 pr-3 text-sm sm:pl-6">
+                    <td className="py-4 pr-3 pl-4 text-sm sm:pl-6">
                       <div className="flex items-center">
-                        <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                          <span className="text-gray-500 font-medium">{review.author.charAt(0)}</span>
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200">
+                          <span className="font-medium text-gray-500">
+                            {review.author.charAt(0)}
+                          </span>
                         </div>
                         <div className="ml-4">
-                          <div className="font-medium text-gray-900">{review.author}</div>
+                          <div className="font-medium text-gray-900">
+                            {review.author}
+                          </div>
                         </div>
                       </div>
                     </td>
                     <td className="px-3 py-4 text-sm text-gray-500">
                       <div className="flex">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <svg 
-                            key={star} 
+                        {[1, 2, 3, 4, 5].map(star => (
+                          <svg
+                            key={star}
                             className={`h-5 w-5 ${star <= review.rating ? 'text-yellow-400' : 'text-gray-300'}`}
                             xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 20 20"
@@ -250,21 +311,21 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
                       </div>
                     </td>
                     <td className="px-3 py-4 text-sm text-gray-500">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize bg-blue-100 text-blue-800">
+                      <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 capitalize">
                         {review.source}
                       </span>
                     </td>
                     <td className="px-3 py-4 text-sm text-gray-500">
                       {formatDate(review.date)}
                     </td>
-                    <td className="px-3 py-4 text-sm text-gray-500 max-w-xs truncate">
+                    <td className="max-w-xs truncate px-3 py-4 text-sm text-gray-500">
                       {review.text}
                     </td>
-                    <td className="px-3 py-4 text-sm text-gray-500 text-right">
+                    <td className="px-3 py-4 text-right text-sm text-gray-500">
                       <div className="flex justify-end space-x-3">
                         <button
                           onClick={() => onEditReview(review.id!)}
-                          className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                          className="cursor-pointer text-indigo-600 hover:text-indigo-900"
                         >
                           Edit
                         </button>
@@ -273,11 +334,13 @@ export default function AdminReviews({ onEditReview }: AdminReviewsProps) {
                           disabled={deleteInProgress === review.id}
                           className={`${
                             deleteInProgress === review.id
-                              ? 'text-gray-400 cursor-not-allowed'
-                              : 'text-red-600 hover:text-red-900 cursor-pointer'
+                              ? 'cursor-not-allowed text-gray-400'
+                              : 'cursor-pointer text-red-600 hover:text-red-900'
                           }`}
                         >
-                          {deleteInProgress === review.id ? 'Deleting...' : 'Delete'}
+                          {deleteInProgress === review.id
+                            ? 'Deleting...'
+                            : 'Delete'}
                         </button>
                       </div>
                     </td>

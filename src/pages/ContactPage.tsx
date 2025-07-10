@@ -9,46 +9,61 @@ interface OpeningHours {
 }
 
 const ContactPage: React.FC = React.memo(() => {
-  const [activeTab, setActiveTab] = useState<'contact' | 'location' | 'hours'>('hours');
+  const [activeTab, setActiveTab] = useState<'contact' | 'location' | 'hours'>(
+    'hours'
+  );
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     subject: '',
-    message: ''
+    message: '',
   });
   const [activeField, setActiveField] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [formError, setFormError] = useState('');
   const [todaysDay, setTodaysDay] = useState<string>('');
-  
+
   // Use cached hours hook
   const { hoursData, isLoading: hoursLoading } = useCachedHours();
-  
+
   // Get today's day and handle URL params
   useEffect(() => {
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const days = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
     const today = new Date().getDay();
     const params = new URLSearchParams(location.search);
     const tabParam = params.get('tab');
 
-    if (tabParam === 'hours' || tabParam === 'location' || tabParam === 'contact') {
+    if (
+      tabParam === 'hours' ||
+      tabParam === 'location' ||
+      tabParam === 'contact'
+    ) {
       setActiveTab(tabParam);
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
-    
+
     setTodaysDay(days[today]);
   }, []);
 
   // Format hours data for display
-  const openingHours: OpeningHours[] = hoursData?.days.map(day => ({
-    day: day.day,
-    hours: day.isOpen ? day.hours : 'Closed',
-    isToday: day.day === todaysDay
-  })) || [];
+  const openingHours: OpeningHours[] =
+    hoursData?.days.map(day => ({
+      day: day.day,
+      hours: day.isOpen ? day.hours : 'Closed',
+      isToday: day.day === todaysDay,
+    })) || [];
 
   const handleFocus = (field: string) => {
     setActiveField(field);
@@ -58,11 +73,15 @@ const ContactPage: React.FC = React.memo(() => {
     setActiveField(null);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -70,90 +89,102 @@ const ContactPage: React.FC = React.memo(() => {
     e.preventDefault();
     setIsSubmitting(true);
     setFormError('');
-    
+
     try {
       // Create a FormData object for the contact form
       const contactFormData = new FormData();
-      
+
       // Add form type
       contactFormData.append('type', 'contact');
-      
+
       // Add form data to FormData object
       Object.entries(formData).forEach(([key, value]) => {
         contactFormData.append(key, value);
       });
-      
+
       // Submit form using our email service
       await submitForm(contactFormData, 'contact');
-      
+
       // Handle successful submission
       setSubmitSuccess(true);
       setFormData({
         name: '',
         email: '',
         subject: '',
-        message: ''
+        message: '',
       });
     } catch (error) {
       console.error('Error submitting contact form:', error);
       // Display error message to user
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      setFormError(`Failed to send your message: ${errorMessage}. Please try again or contact us directly by phone.`);
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
+      setFormError(
+        `Failed to send your message: ${errorMessage}. Please try again or contact us directly by phone.`
+      );
     } finally {
       setIsSubmitting(false);
     }
-  };  return (
-    <div className="min-h-screen pb-16 w-full overflow-x-hidden bg-[#f0c91f]">
+  };
+  return (
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#f0c91f] pb-16">
       {/* Section 1: Hero Section */}
-      <div className="relative h-64 sm:h-80 md:h-96 overflow-hidden bg-[#19b4bd] w-full">
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 z-10">
-          <h1 className="text-3xl sm:text-4xl md:text-6xl text-white font-bold font-navigation baloo-regular mb-2 drop-shadow-lg">
+      <div className="relative h-64 w-full overflow-hidden bg-[#19b4bd] sm:h-80 md:h-96">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-4 text-center">
+          <h1 className="font-navigation baloo-regular mb-2 text-3xl font-bold text-white drop-shadow-lg sm:text-4xl md:text-6xl">
             Contact Us
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl text-white max-w-xl nunito-sans px-4 drop-shadow">
+          <p className="nunito-sans max-w-xl px-4 text-lg text-white drop-shadow sm:text-xl md:text-2xl">
             We'd love to hear from you!
           </p>
         </div>
-        
+
         {/* Wave decorative element */}
         <div className="absolute bottom-0 left-0 w-full">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 290" className="w-full">
-            <path fill="#f0c91f" fillOpacity="1" d="M0,192L48,176C96,160,192,128,288,133.3C384,139,480,181,576,186.7C672,192,768,160,864,165.3C960,171,1056,213,1152,213.3C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 1440 290"
+            className="w-full"
+          >
+            <path
+              fill="#f0c91f"
+              fillOpacity="1"
+              d="M0,192L48,176C96,160,192,128,288,133.3C384,139,480,181,576,186.7C672,192,768,160,864,165.3C960,171,1056,213,1152,213.3C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+            ></path>
           </svg>
         </div>
       </div>
 
       {/* Section 2: Tabbed Navigation and Content */}
-      <div className="mx-auto px-4 pt-8 -mt-8 relative z-20 w-full">
-        <div className="bg-white rounded-xl shadow-lg p-2 max-w-2xl mx-auto mb-10">
+      <div className="relative z-20 mx-auto -mt-8 w-full px-4 pt-8">
+        <div className="mx-auto mb-10 max-w-2xl rounded-xl bg-white p-2 shadow-lg">
           <div className="flex flex-wrap justify-center">
-            <button 
+            <button
               onClick={() => setActiveTab('hours')}
-              className={`flex-1 min-w-0 px-3 sm:px-4 py-3 md:py-4 rounded-lg text-sm sm:text-lg font-bold transition-all jua-regular flex items-center justify-center cursor-pointer ${
-                activeTab === 'hours' 
-                ? 'bg-gradient-to-r from-cyan-500 to-teal-500 text-white shadow-md' 
-                : 'hover:bg-gray-100 text-gray-600'
+              className={`jua-regular flex min-w-0 flex-1 cursor-pointer items-center justify-center rounded-lg px-3 py-3 text-sm font-bold transition-all sm:px-4 sm:text-lg md:py-4 ${
+                activeTab === 'hours'
+                  ? 'bg-gradient-to-r from-cyan-500 to-teal-500 text-white shadow-md'
+                  : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
               Hours
             </button>
-            <button 
+            <button
               onClick={() => setActiveTab('contact')}
-              className={`flex-1 min-w-0 px-3 sm:px-4 py-3 md:py-4 rounded-lg text-sm sm:text-lg font-bold transition-all flex items-center justify-center cursor-pointer ${
-                activeTab === 'contact' 
-                ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-md' 
-                : 'hover:bg-gray-100 text-gray-600'
+              className={`flex min-w-0 flex-1 cursor-pointer items-center justify-center rounded-lg px-3 py-3 text-sm font-bold transition-all sm:px-4 sm:text-lg md:py-4 ${
+                activeTab === 'contact'
+                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-md'
+                  : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
               <span className="hidden sm:inline">Message Us</span>
               <span className="sm:hidden">Message</span>
             </button>
-            <button 
+            <button
               onClick={() => setActiveTab('location')}
-              className={`flex-1 min-w-0 px-3 sm:px-4 py-3 md:py-4 rounded-lg text-sm sm:text-lg font-bold transition-all jua-regular flex items-center justify-center cursor-pointer ${
-                activeTab === 'location' 
-                ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md' 
-                : 'hover:bg-gray-100 text-gray-600'
+              className={`jua-regular flex min-w-0 flex-1 cursor-pointer items-center justify-center rounded-lg px-3 py-3 text-sm font-bold transition-all sm:px-4 sm:text-lg md:py-4 ${
+                activeTab === 'location'
+                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md'
+                  : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
               <span className="hidden sm:inline">Find Us</span>
@@ -162,63 +193,95 @@ const ContactPage: React.FC = React.memo(() => {
           </div>
         </div>
       </div>
-      
+
       {/* Content sections */}
-      <div className="mx-auto px-4 w-full overflow-x-hidden">
+      <div className="mx-auto w-full overflow-x-hidden px-4">
         {/* Contact Form Section */}
         {activeTab === 'contact' && (
-          <div className="max-w-4xl mx-auto w-full overflow-x-hidden"
-          >
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden w-full max-w-full">
-              <div className="md:flex w-full">
-                <div className="md:w-1/2 p-6 sm:p-8 md:p-12 relative min-w-0">
+          <div className="mx-auto w-full max-w-4xl overflow-x-hidden">
+            <div className="w-full max-w-full overflow-hidden rounded-2xl bg-white shadow-lg">
+              <div className="w-full md:flex">
+                <div className="relative min-w-0 p-6 sm:p-8 md:w-1/2 md:p-12">
                   {/* Decorative elements */}
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
-                  
+                  <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
+
                   {submitSuccess ? (
-                    <div className="h-full flex flex-col items-center justify-center">
-                      <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mb-6 animate-pulse">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <div className="flex h-full flex-col items-center justify-center">
+                      <div className="mb-6 flex h-20 w-20 animate-pulse items-center justify-center rounded-full bg-green-100">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-12 w-12 text-green-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
                         </svg>
                       </div>
-                      <h2 className="text-3xl font-bold text-gray-800 mb-4 jua-regular text-center">Thank You!</h2>
-                      <p className="text-gray-600 nunito-sans text-center">
-                        We've received your message and will get back to you soon.
+                      <h2 className="jua-regular mb-4 text-center text-3xl font-bold text-gray-800">
+                        Thank You!
+                      </h2>
+                      <p className="nunito-sans text-center text-gray-600">
+                        We've received your message and will get back to you
+                        soon.
                       </p>
-                      <button 
+                      <button
                         onClick={() => setSubmitSuccess(false)}
-                        className="mt-8 px-8 py-3 bg-indigo-600 text-white font-bold rounded-full transition-all duration-300 hover:bg-indigo-700"
+                        className="mt-8 rounded-full bg-indigo-600 px-8 py-3 font-bold text-white transition-all duration-300 hover:bg-indigo-700"
                       >
                         Send Another Message
                       </button>
                     </div>
                   ) : (
                     <>
-                      <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 jua-regular text-indigo-800">Get in Touch</h2>
-                      <p className="text-gray-600 mb-8 nunito-sans">
-                        Questions, comments, or just want to say aloha? We'd love to hear from you!
+                      <h2 className="jua-regular mb-6 text-xl font-bold text-indigo-800 sm:text-2xl md:text-3xl">
+                        Get in Touch
+                      </h2>
+                      <p className="nunito-sans mb-8 text-gray-600">
+                        Questions, comments, or just want to say aloha? We'd
+                        love to hear from you!
                       </p>
-                      
+
                       <form onSubmit={handleSubmit}>
                         {formError && (
-                          <div className="bg-red-50 border-2 border-red-100 text-red-700 px-4 py-3 rounded-lg mb-6 relative">
+                          <div className="relative mb-6 rounded-lg border-2 border-red-100 bg-red-50 px-4 py-3 text-red-700">
                             <div className="flex">
                               <div className="flex-shrink-0">
-                                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+                                <svg
+                                  className="h-5 w-5 text-red-400"
+                                  viewBox="0 0 20 20"
+                                  fill="currentColor"
+                                  aria-hidden="true"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+                                    clipRule="evenodd"
+                                  />
                                 </svg>
                               </div>
                               <div className="ml-3">
-                                <p className="text-sm text-red-700">{formError}</p>
+                                <p className="text-sm text-red-700">
+                                  {formError}
+                                </p>
                               </div>
                             </div>
                           </div>
                         )}
-                        
+
                         <div className="mb-4">
-                          <div className={`bg-gray-50 rounded-lg p-2 transition-all ${activeField === 'name' ? 'shadow-md ring-2 ring-indigo-300' : 'hover:bg-gray-100'}`}>
-                            <label htmlFor="name" className="block text-gray-700 mb-1 nunito-sans font-semibold">
+                          <div
+                            className={`rounded-lg bg-gray-50 p-2 transition-all ${activeField === 'name' ? 'shadow-md ring-2 ring-indigo-300' : 'hover:bg-gray-100'}`}
+                          >
+                            <label
+                              htmlFor="name"
+                              className="nunito-sans mb-1 block font-semibold text-gray-700"
+                            >
                               Name
                             </label>
                             <input
@@ -229,7 +292,7 @@ const ContactPage: React.FC = React.memo(() => {
                               onChange={handleInputChange}
                               onFocus={() => handleFocus('name')}
                               onBlur={handleBlur}
-                              className="w-full bg-transparent focus:outline-none p-2 nunito-sans"
+                              className="nunito-sans w-full bg-transparent p-2 focus:outline-none"
                               placeholder="Your name"
                               required
                             />
@@ -237,8 +300,13 @@ const ContactPage: React.FC = React.memo(() => {
                         </div>
 
                         <div className="mb-4">
-                          <div className={`bg-gray-50 rounded-lg p-2 transition-all ${activeField === 'email' ? 'shadow-md ring-2 ring-indigo-300' : 'hover:bg-gray-100'}`}>
-                            <label htmlFor="email" className="block text-gray-700 mb-1 nunito-sans font-semibold">
+                          <div
+                            className={`rounded-lg bg-gray-50 p-2 transition-all ${activeField === 'email' ? 'shadow-md ring-2 ring-indigo-300' : 'hover:bg-gray-100'}`}
+                          >
+                            <label
+                              htmlFor="email"
+                              className="nunito-sans mb-1 block font-semibold text-gray-700"
+                            >
                               Email
                             </label>
                             <input
@@ -249,7 +317,7 @@ const ContactPage: React.FC = React.memo(() => {
                               onChange={handleInputChange}
                               onFocus={() => handleFocus('email')}
                               onBlur={handleBlur}
-                              className="w-full bg-transparent focus:outline-none p-2 nunito-sans"
+                              className="nunito-sans w-full bg-transparent p-2 focus:outline-none"
                               placeholder="Your email address"
                               required
                             />
@@ -257,8 +325,13 @@ const ContactPage: React.FC = React.memo(() => {
                         </div>
 
                         <div className="mb-4">
-                          <div className={`bg-gray-50 rounded-lg p-2 transition-all ${activeField === 'subject' ? 'shadow-md ring-2 ring-indigo-300' : 'hover:bg-gray-100'}`}>
-                            <label htmlFor="subject" className="block text-gray-700 mb-1 nunito-sans font-semibold">
+                          <div
+                            className={`rounded-lg bg-gray-50 p-2 transition-all ${activeField === 'subject' ? 'shadow-md ring-2 ring-indigo-300' : 'hover:bg-gray-100'}`}
+                          >
+                            <label
+                              htmlFor="subject"
+                              className="nunito-sans mb-1 block font-semibold text-gray-700"
+                            >
                               Subject
                             </label>
                             <input
@@ -269,7 +342,7 @@ const ContactPage: React.FC = React.memo(() => {
                               onChange={handleInputChange}
                               onFocus={() => handleFocus('subject')}
                               onBlur={handleBlur}
-                              className="w-full bg-transparent focus:outline-none p-2 nunito-sans"
+                              className="nunito-sans w-full bg-transparent p-2 focus:outline-none"
                               placeholder="What's this about?"
                               required
                             />
@@ -277,8 +350,13 @@ const ContactPage: React.FC = React.memo(() => {
                         </div>
 
                         <div className="mb-6">
-                          <div className={`bg-gray-50 rounded-lg p-2 transition-all ${activeField === 'message' ? 'shadow-md ring-2 ring-indigo-300' : 'hover:bg-gray-100'}`}>
-                            <label htmlFor="message" className="block text-gray-700 mb-1 nunito-sans font-semibold">
+                          <div
+                            className={`rounded-lg bg-gray-50 p-2 transition-all ${activeField === 'message' ? 'shadow-md ring-2 ring-indigo-300' : 'hover:bg-gray-100'}`}
+                          >
+                            <label
+                              htmlFor="message"
+                              className="nunito-sans mb-1 block font-semibold text-gray-700"
+                            >
                               Message
                             </label>
                             <textarea
@@ -289,7 +367,7 @@ const ContactPage: React.FC = React.memo(() => {
                               onChange={handleInputChange}
                               onFocus={() => handleFocus('message')}
                               onBlur={handleBlur}
-                              className="w-full bg-transparent focus:outline-none p-2 nunito-sans"
+                              className="nunito-sans w-full bg-transparent p-2 focus:outline-none"
                               placeholder="Your message"
                               required
                             ></textarea>
@@ -299,21 +377,48 @@ const ContactPage: React.FC = React.memo(() => {
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg flex items-center justify-center cursor-pointer"
+                          className="flex w-full transform cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-800 px-6 py-3 font-bold text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
                         >
                           {isSubmitting ? (
                             <>
-                              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              <svg
+                                className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                ></circle>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
                               </svg>
                               Sending...
                             </>
                           ) : (
                             <>
                               Send Message
-                              <svg className="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                              <svg
+                                className="ml-2 h-5 w-5"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                />
                               </svg>
                             </>
                           )}
@@ -322,58 +427,125 @@ const ContactPage: React.FC = React.memo(() => {
                     </>
                   )}
                 </div>
-                <div className="md:w-1/2 bg-indigo-50 p-6 sm:p-8 md:p-12 flex flex-col justify-center min-w-0">
-                  <div className="w-48 sm:w-64 h-48 sm:h-64 mx-auto mb-6 flex items-center justify-center">
-                    <div className="relative w-full h-full">
+                <div className="flex min-w-0 flex-col justify-center bg-indigo-50 p-6 sm:p-8 md:w-1/2 md:p-12">
+                  <div className="mx-auto mb-6 flex h-48 w-48 items-center justify-center sm:h-64 sm:w-64">
+                    <div className="relative h-full w-full">
                       {/* Tailwind CSS decorative elements */}
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-36 h-36 bg-indigo-500 rounded-full opacity-10 animate-pulse" style={{ animationDuration: '3s' }}></div>
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-cyan-500 rounded-full opacity-10 animate-pulse" style={{ animationDuration: '4s' }}></div>
-                      <div className="absolute top-1/4 right-1/4 w-16 h-16 bg-indigo-600 rounded-full opacity-20"></div>
-                      <div className="absolute bottom-1/4 left-1/3 w-12 h-12 bg-teal-400 rounded-full opacity-20"></div>
-                      
+                      <div
+                        className="absolute top-1/2 left-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-indigo-500 opacity-10"
+                        style={{ animationDuration: '3s' }}
+                      ></div>
+                      <div
+                        className="absolute top-1/2 left-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-cyan-500 opacity-10"
+                        style={{ animationDuration: '4s' }}
+                      ></div>
+                      <div className="absolute top-1/4 right-1/4 h-16 w-16 rounded-full bg-indigo-600 opacity-20"></div>
+                      <div className="absolute bottom-1/4 left-1/3 h-12 w-12 rounded-full bg-teal-400 opacity-20"></div>
+
                       {/* Envelope icon in the center */}
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      <div className="absolute top-1/2 left-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full bg-indigo-100 shadow-lg">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-10 w-10 text-indigo-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                          />
                         </svg>
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Direct contact info */}
-                  <div className="space-y-4 mt-4">
+                  <div className="mt-4 space-y-4">
                     <div className="flex items-center">
-                      <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mr-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-indigo-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                          />
                         </svg>
                       </div>
                       <div>
-                        <h3 className="font-bold text-gray-700 jua-regular">Phone</h3>
-                        <p className="text-gray-600 nunito-sans">(201) 402-9600</p>
+                        <h3 className="jua-regular font-bold text-gray-700">
+                          Phone
+                        </h3>
+                        <p className="nunito-sans text-gray-600">
+                          (201) 402-9600
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center">
-                      <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mr-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-amber-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                          />
                         </svg>
                       </div>
                       <div>
-                        <h3 className="font-bold text-gray-700 jua-regular">Email</h3>
-                        <p className="text-gray-600 nunito-sans">kailanishaveicenj@gmail.com</p>
+                        <h3 className="jua-regular font-bold text-gray-700">
+                          Email
+                        </h3>
+                        <p className="nunito-sans text-gray-600">
+                          kailanishaveicenj@gmail.com
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center">
-                      <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center mr-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-teal-100">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-teal-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
                         </svg>
                       </div>
                       <div>
-                        <h3 className="font-bold text-gray-700 jua-regular">Address</h3>
-                        <p className="text-gray-600 nunito-sans">840 River Rd, New Milford, NJ</p>
+                        <h3 className="jua-regular font-bold text-gray-700">
+                          Address
+                        </h3>
+                        <p className="nunito-sans text-gray-600">
+                          840 River Rd, New Milford, NJ
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -382,105 +554,198 @@ const ContactPage: React.FC = React.memo(() => {
             </div>
           </div>
         )}
-        
+
         {/* Location Section */}
         {activeTab === 'location' && (
-          <div className="max-w-4xl mx-auto w-full overflow-x-hidden"
-          >
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden w-full max-w-full">
-              <div className="md:flex w-full">
-                <div className="md:w-1/2 p-6 sm:p-8 md:p-12 order-2 md:order-1 min-w-0">
-                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 jua-regular text-amber-600">Visit Us</h2>
-                  <p className="text-gray-600 mb-8 nunito-sans">
-                    We're conveniently located in the heart of Honolulu, just minutes from Waikiki Beach. 
-                    Come experience the authentic taste of Hawaii in our warm and welcoming restaurant!
+          <div className="mx-auto w-full max-w-4xl overflow-x-hidden">
+            <div className="w-full max-w-full overflow-hidden rounded-2xl bg-white shadow-lg">
+              <div className="w-full md:flex">
+                <div className="order-2 min-w-0 p-6 sm:p-8 md:order-1 md:w-1/2 md:p-12">
+                  <h2 className="jua-regular mb-6 text-xl font-bold text-amber-600 sm:text-2xl md:text-3xl">
+                    Visit Us
+                  </h2>
+                  <p className="nunito-sans mb-8 text-gray-600">
+                    We're conveniently located in the heart of Honolulu, just
+                    minutes from Waikiki Beach. Come experience the authentic
+                    taste of Hawaii in our warm and welcoming restaurant!
                   </p>
-                  
+
                   <div className="space-y-6">
                     <div className="flex items-start">
-                      <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mr-4 mt-1 flex-shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <div className="mt-1 mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-amber-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
                         </svg>
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-bold text-gray-700 jua-regular text-lg sm:text-xl">Our Location</h3>
-                        <p className="text-gray-600 nunito-sans mb-2">840 River Rd</p>
-                        <p className="text-gray-600 nunito-sans mb-2">New Milford, NJ 07646</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start">
-                      <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mr-4 mt-1 flex-shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="font-bold text-gray-700 jua-regular text-lg sm:text-xl">Parking Information</h3>
-                        <p className="text-gray-600 nunito-sans mb-2">
-                          Free parking available in our restaurant lot. 
-                          Additional street parking and public parking garage available within a block.
+                        <h3 className="jua-regular text-lg font-bold text-gray-700 sm:text-xl">
+                          Our Location
+                        </h3>
+                        <p className="nunito-sans mb-2 text-gray-600">
+                          840 River Rd
+                        </p>
+                        <p className="nunito-sans mb-2 text-gray-600">
+                          New Milford, NJ 07646
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-start">
-                      <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mr-4 mt-1 flex-shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <div className="mt-1 mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-purple-100">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-purple-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
                         </svg>
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-bold text-gray-700 jua-regular text-lg sm:text-xl">Hours Today</h3>
-                        <p className="text-gray-600 nunito-sans mb-2">
-                          {todaysDay === 'Monday' ? 'Closed' : 
-                           (todaysDay === 'Friday' || todaysDay === 'Saturday' || todaysDay === 'Sunday') ? 
-                           '11:30 AM - 9:00 PM' : '11:30 AM - 8:00 PM'}
+                        <h3 className="jua-regular text-lg font-bold text-gray-700 sm:text-xl">
+                          Parking Information
+                        </h3>
+                        <p className="nunito-sans mb-2 text-gray-600">
+                          Free parking available in our restaurant lot.
+                          Additional street parking and public parking garage
+                          available within a block.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start">
+                      <div className="mt-1 mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6 text-green-600"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="jua-regular text-lg font-bold text-gray-700 sm:text-xl">
+                          Hours Today
+                        </h3>
+                        <p className="nunito-sans mb-2 text-gray-600">
+                          {todaysDay === 'Monday'
+                            ? 'Closed'
+                            : todaysDay === 'Friday' ||
+                                todaysDay === 'Saturday' ||
+                                todaysDay === 'Sunday'
+                              ? '11:30 AM - 9:00 PM'
+                              : '11:30 AM - 8:00 PM'}
                         </p>
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Get directions button */}
-                  <a 
-                    href="https://maps.app.goo.gl/KWjLfCxkkYvf7qYh8" 
-                    target="_blank" 
+                  <a
+                    href="https://maps.app.goo.gl/KWjLfCxkkYvf7qYh8"
+                    target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center mt-8 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 hover:shadow-lg"
+                    className="mt-8 inline-flex items-center rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-3 font-bold text-white transition-all duration-300 hover:shadow-lg"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="mr-2 h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
                     </svg>
                     Get Directions
                   </a>
                 </div>
-                <div className="md:w-1/2 order-1 md:order-2 h-72 md:h-auto relative bg-gradient-to-br from-amber-50 to-amber-100">
+                <div className="relative order-1 h-72 bg-gradient-to-br from-amber-50 to-amber-100 md:order-2 md:h-auto md:w-1/2">
                   <div className="absolute inset-0 overflow-hidden">
                     {/* Decorative elements using Tailwind CSS */}
-                    <div className="absolute top-1/4 right-1/4 w-40 h-40 bg-amber-200 rounded-full opacity-40"></div>
-                    <div className="absolute bottom-1/4 left-1/4 w-32 h-32 bg-amber-300 rounded-full opacity-30"></div>
-                    <div className="absolute top-1/2 right-1/3 w-16 h-16 bg-amber-400 rounded-full opacity-20"></div>
-                    
+                    <div className="absolute top-1/4 right-1/4 h-40 w-40 rounded-full bg-amber-200 opacity-40"></div>
+                    <div className="absolute bottom-1/4 left-1/4 h-32 w-32 rounded-full bg-amber-300 opacity-30"></div>
+                    <div className="absolute top-1/2 right-1/3 h-16 w-16 rounded-full bg-amber-400 opacity-20"></div>
+
                     {/* Decorative pattern */}
                     <div className="absolute inset-0 opacity-10">
-                      <div className="grid grid-cols-6 h-full">
+                      <div className="grid h-full grid-cols-6">
                         {Array.from({ length: 36 }).map((_, i) => (
-                          <div key={i} className="border border-amber-300"></div>
+                          <div
+                            key={i}
+                            className="border border-amber-300"
+                          ></div>
                         ))}
                       </div>
                     </div>
-                    
+
                     {/* Location pin and decorative elements */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="relative transform transition hover:scale-105 duration-700">
-                        <div className="absolute -inset-4 bg-amber-200 rounded-full opacity-30 animate-pulse" style={{ animationDuration: '3s' }}></div>
-                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg relative z-10">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <div className="relative transform transition duration-700 hover:scale-105">
+                        <div
+                          className="absolute -inset-4 animate-pulse rounded-full bg-amber-200 opacity-30"
+                          style={{ animationDuration: '3s' }}
+                        ></div>
+                        <div className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-10 w-10 text-white"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
                           </svg>
                         </div>
                       </div>
@@ -491,67 +756,65 @@ const ContactPage: React.FC = React.memo(() => {
             </div>
           </div>
         )}
-        
+
         {/* Hours Section */}
         {activeTab === 'hours' && (
-          <div className="max-w-4xl mx-auto px-3 sm:px-4">
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="mx-auto max-w-4xl px-3 sm:px-4">
+            <div className="overflow-hidden rounded-2xl bg-white shadow-lg">
               <div className="relative">
                 {/* Header gradient */}
                 <div className="h-1 bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400"></div>
-                
+
                 {/* Content */}
                 <div className="p-4 sm:p-6 lg:p-10">
                   {/* Title Section */}
-                  <div className="text-center mb-6 sm:mb-8">
-                    <h2 className="text-xl sm:text-2xl lg:text-4xl font-bold text-gray-800 mb-2 sm:mb-3 jua-regular">
+                  <div className="mb-6 text-center sm:mb-8">
+                    <h2 className="jua-regular mb-2 text-xl font-bold text-gray-800 sm:mb-3 sm:text-2xl lg:text-4xl">
                       Opening Hours
                     </h2>
-                    <p className="text-sm sm:text-base text-gray-600 nunito-sans max-w-2xl mx-auto px-2">
+                    <p className="nunito-sans mx-auto max-w-2xl px-2 text-sm text-gray-600 sm:text-base">
                       Come visit us for lunch, dinner, or anytime in between!
                     </p>
                   </div>
 
                   {/* Hours Display */}
-                  <div className="max-w-sm sm:max-w-md mx-auto mb-6 sm:mb-10">
+                  <div className="mx-auto mb-6 max-w-sm sm:mb-10 sm:max-w-md">
                     {hoursLoading ? (
-                      <div className="flex flex-col items-center justify-center py-8 sm:py-12 space-y-3">
-                        <div className="animate-spin rounded-full h-8 w-8 sm:h-10 sm:w-10 border-4 border-teal-200 border-t-teal-500"></div>
-                        <span className="text-teal-600 font-medium text-sm sm:text-base">Loading hours...</span>
+                      <div className="flex flex-col items-center justify-center space-y-3 py-8 sm:py-12">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-teal-200 border-t-teal-500 sm:h-10 sm:w-10"></div>
+                        <span className="text-sm font-medium text-teal-600 sm:text-base">
+                          Loading hours...
+                        </span>
                       </div>
                     ) : (
                       <div className="space-y-1.5 sm:space-y-2">
-                        {openingHours.map((dayInfo) => (
-                          <div 
+                        {openingHours.map(dayInfo => (
+                          <div
                             key={dayInfo.day}
-                            className={`
-                              flex items-center justify-between py-3 sm:py-4 px-3 sm:px-4 rounded-lg sm:rounded-xl transition-all duration-200 hover:shadow-sm
-                              ${dayInfo.isToday 
-                                ? 'bg-gradient-to-r from-teal-50 to-cyan-50 border-2 border-teal-200' 
+                            className={`flex items-center justify-between rounded-lg px-3 py-3 transition-all duration-200 hover:shadow-sm sm:rounded-xl sm:px-4 sm:py-4 ${
+                              dayInfo.isToday
+                                ? 'border-2 border-teal-200 bg-gradient-to-r from-teal-50 to-cyan-50'
                                 : 'bg-gray-50 hover:bg-gray-100'
-                              }
-                            `}
+                            } `}
                           >
-                            <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                            <div className="flex min-w-0 flex-1 items-center space-x-2 sm:space-x-3">
                               {dayInfo.isToday && (
-                                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-teal-500 rounded-full animate-pulse flex-shrink-0"></div>
+                                <div className="h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-teal-500 sm:h-2 sm:w-2"></div>
                               )}
-                              <span className={`
-                                font-semibold jua-regular text-sm sm:text-base truncate
-                                ${dayInfo.isToday ? 'text-teal-700' : 'text-gray-800'}
-                              `}>
+                              <span
+                                className={`jua-regular truncate text-sm font-semibold sm:text-base ${dayInfo.isToday ? 'text-teal-700' : 'text-gray-800'} `}
+                              >
                                 {dayInfo.day}
                               </span>
                               {dayInfo.isToday && (
-                                <span className="px-1.5 py-0.5 sm:px-2 sm:py-1 text-xs font-medium bg-teal-500 text-white rounded-full flex-shrink-0">
+                                <span className="flex-shrink-0 rounded-full bg-teal-500 px-1.5 py-0.5 text-xs font-medium text-white sm:px-2 sm:py-1">
                                   Today
                                 </span>
                               )}
                             </div>
-                            <span className={`
-                              nunito-sans font-medium text-sm sm:text-base ml-2 flex-shrink-0
-                              ${dayInfo.isToday ? 'text-teal-700' : 'text-gray-600'}
-                            `}>
+                            <span
+                              className={`nunito-sans ml-2 flex-shrink-0 text-sm font-medium sm:text-base ${dayInfo.isToday ? 'text-teal-700' : 'text-gray-600'} `}
+                            >
                               {dayInfo.hours}
                             </span>
                           </div>
@@ -562,37 +825,57 @@ const ContactPage: React.FC = React.memo(() => {
 
                   {/* Contact Section */}
                   <div className="border-t border-gray-200 pt-6 sm:pt-8">
-                    <div className="text-center mb-4 sm:mb-6">
-                      <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-1 sm:mb-2 jua-regular">
+                    <div className="mb-4 text-center sm:mb-6">
+                      <h3 className="jua-regular mb-1 text-lg font-bold text-gray-800 sm:mb-2 sm:text-xl lg:text-2xl">
                         Have Questions?
                       </h3>
-                      <p className="text-sm sm:text-base text-gray-600 nunito-sans px-2">
-                        Our friendly staff is here to help with any questions about our hours, menu, or services.
+                      <p className="nunito-sans px-2 text-sm text-gray-600 sm:text-base">
+                        Our friendly staff is here to help with any questions
+                        about our hours, menu, or services.
                       </p>
                     </div>
-                    
-                    <div className="max-w-xs sm:max-w-sm mx-auto">
-                      <div className="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-teal-100">
-                        <div className="text-center mb-3 sm:mb-4">
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+
+                    <div className="mx-auto max-w-xs sm:max-w-sm">
+                      <div className="rounded-xl border border-teal-100 bg-gradient-to-br from-teal-50 to-cyan-50 p-4 sm:rounded-2xl sm:p-6">
+                        <div className="mb-3 text-center sm:mb-4">
+                          <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-teal-100 sm:mb-3 sm:h-12 sm:w-12">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5 text-teal-600 sm:h-6 sm:w-6"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                              />
                             </svg>
                           </div>
-                          <span className="text-teal-800 font-semibold nunito-sans text-sm sm:text-base">Call us anytime</span>
+                          <span className="nunito-sans text-sm font-semibold text-teal-800 sm:text-base">
+                            Call us anytime
+                          </span>
                         </div>
-                        
-                        <a 
-                          href="tel:+1-201-402-9600" 
-                          className="
-                            w-full flex items-center justify-center space-x-2 py-2.5 sm:py-3 px-3 sm:px-4 
-                            bg-gradient-to-r from-teal-500 to-teal-600 text-white font-bold 
-                            rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-105
-                            focus:outline-none focus:ring-4 focus:ring-teal-200 text-sm sm:text-base
-                          "
+
+                        <a
+                          href="tel:+1-201-402-9600"
+                          className="flex w-full items-center justify-center space-x-2 rounded-lg bg-gradient-to-r from-teal-500 to-teal-600 px-3 py-2.5 text-sm font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg focus:ring-4 focus:ring-teal-200 focus:outline-none sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 sm:h-5 sm:w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                            />
                           </svg>
                           <span>(201) 402-9600</span>
                         </a>
@@ -604,84 +887,139 @@ const ContactPage: React.FC = React.memo(() => {
             </div>
           </div>
         )}
-        
+
         {/* Section 3: FAQ Section */}
-        <div className="w-full mt-16 overflow-hidden bg-[#78350F] rounded-t-3xl">
+        <div className="mt-16 w-full overflow-hidden rounded-t-3xl bg-[#78350F]">
           <div className="pt-16"></div>
-          
-          <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold jua-regular text-white mb-4 relative inline-block">
+
+          <div className="mb-12 text-center">
+            <h2 className="jua-regular relative mb-4 inline-block text-2xl font-bold text-white sm:text-3xl">
               Frequently Asked Questions
-              <span className="absolute -bottom-2 left-0 w-full h-2 bg-yellow-100 opacity-50 rounded-full"></span>
+              <span className="absolute -bottom-2 left-0 h-2 w-full rounded-full bg-yellow-100 opacity-50"></span>
             </h2>
-            <p className="text-white nunito-sans max-w-2xl mx-auto px-4">
-              Find answers to our most commonly asked questions. If you don't see what you're looking for, feel free to contact us!
+            <p className="nunito-sans mx-auto max-w-2xl px-4 text-white">
+              Find answers to our most commonly asked questions. If you don't
+              see what you're looking for, feel free to contact us!
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-2 gap-6 w-full max-w-6xl mx-auto px-6 pb-16 bg-[#78350F]">
-            <div className="bg-white/90 backdrop-blur-sm rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 w-full max-w-full">
+
+          <div className="mx-auto grid w-full max-w-6xl gap-6 bg-[#78350F] px-6 pb-16 md:grid-cols-2">
+            <div className="w-full max-w-full transform overflow-hidden rounded-xl bg-white/90 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div className="p-6">
-                <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-4 flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <div className="mb-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-amber-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold mb-3 jua-regular text-gray-800">Do you take reservations?</h3>
-                <p className="text-gray-600 nunito-sans">
-                  Yes, we recommend making reservations, especially for dinner and weekend visits. 
-                  You can reserve a table by phone, email, or through our website.
+                <h3 className="jua-regular mb-3 text-lg font-bold text-gray-800 sm:text-xl">
+                  Do you take reservations?
+                </h3>
+                <p className="nunito-sans text-gray-600">
+                  Yes, we recommend making reservations, especially for dinner
+                  and weekend visits. You can reserve a table by phone, email,
+                  or through our website.
                 </p>
               </div>
             </div>
-            
-            <div className="bg-white/90 backdrop-blur-sm rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 w-full max-w-full">
+
+            <div className="w-full max-w-full transform overflow-hidden rounded-xl bg-white/90 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div className="p-6">
-                <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-4 flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                <div className="mb-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-amber-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
                   </svg>
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold mb-3 jua-regular text-gray-800">Do you offer takeout and delivery?</h3>
-                <p className="text-gray-600 nunito-sans">
-                  Yes, we offer both takeout and delivery options. You can order through our website 
-                  or by calling us directly. We also partner with major food delivery services.
+                <h3 className="jua-regular mb-3 text-lg font-bold text-gray-800 sm:text-xl">
+                  Do you offer takeout and delivery?
+                </h3>
+                <p className="nunito-sans text-gray-600">
+                  Yes, we offer both takeout and delivery options. You can order
+                  through our website or by calling us directly. We also partner
+                  with major food delivery services.
                 </p>
               </div>
             </div>
-            
-            <div className="bg-white/90 backdrop-blur-sm rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 w-full max-w-full">
+
+            <div className="w-full max-w-full transform overflow-hidden rounded-xl bg-white/90 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div className="p-6">
-                <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-4 flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
+                <div className="mb-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-amber-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z"
+                    />
                   </svg>
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold mb-3 jua-regular text-gray-800">Do you accommodate dietary restrictions?</h3>
-                <p className="text-gray-600 nunito-sans">
-                  Absolutely! We offer vegetarian, vegan, and gluten-free options. Please inform your 
-                  server about any allergies or dietary needs, and we'll do our best to accommodate you.
+                <h3 className="jua-regular mb-3 text-lg font-bold text-gray-800 sm:text-xl">
+                  Do you accommodate dietary restrictions?
+                </h3>
+                <p className="nunito-sans text-gray-600">
+                  Absolutely! We offer vegetarian, vegan, and gluten-free
+                  options. Please inform your server about any allergies or
+                  dietary needs, and we'll do our best to accommodate you.
                 </p>
               </div>
             </div>
-            
-            <div className="bg-white/90 backdrop-blur-sm rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 w-full max-w-full">
+
+            <div className="w-full max-w-full transform overflow-hidden rounded-xl bg-white/90 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div className="p-6">
-                <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-4 flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                <div className="mb-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-amber-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
                   </svg>
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold mb-3 jua-regular text-gray-800">Can you host private events?</h3>
-                <p className="text-gray-600 nunito-sans">
-                  Yes, we have a private dining area that can accommodate groups of up to 30 guests. 
-                  It's perfect for birthday celebrations, corporate events, and family gatherings.
+                <h3 className="jua-regular mb-3 text-lg font-bold text-gray-800 sm:text-xl">
+                  Can you host private events?
+                </h3>
+                <p className="nunito-sans text-gray-600">
+                  Yes, we have a private dining area that can accommodate groups
+                  of up to 30 guests. It's perfect for birthday celebrations,
+                  corporate events, and family gatherings.
                 </p>
               </div>
             </div>
           </div>
-          
-
         </div>
       </div>
     </div>

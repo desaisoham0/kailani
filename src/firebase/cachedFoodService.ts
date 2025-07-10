@@ -1,13 +1,13 @@
 import { db } from './config';
-import { 
-  collection, 
-  onSnapshot, 
-  query, 
+import {
+  collection,
+  onSnapshot,
+  query,
   orderBy,
   Timestamp,
   QuerySnapshot,
   type DocumentChange,
-  type Unsubscribe
+  type Unsubscribe,
 } from 'firebase/firestore';
 import { devLog } from '../utils/environment';
 
@@ -30,7 +30,12 @@ export interface CacheStats {
 }
 
 // Event types for cache updates
-export type CacheEventType = 'added' | 'modified' | 'removed' | 'initial_load' | 'error';
+export type CacheEventType =
+  | 'added'
+  | 'modified'
+  | 'removed'
+  | 'initial_load'
+  | 'error';
 
 export interface CacheEvent {
   type: CacheEventType;
@@ -76,17 +81,17 @@ class CachedFoodService {
       this.unsubscribeFn = onSnapshot(
         q,
         {
-          includeMetadataChanges: true
+          includeMetadataChanges: true,
         },
         (snapshot: QuerySnapshot) => {
           this.handleSnapshotUpdate(snapshot);
         },
-        (error) => {
+        error => {
           console.error('❌ Firestore listener error:', error);
           this.notifyListeners({
             type: 'error',
             error,
-            stats: this.getStats()
+            stats: this.getStats(),
           });
         }
       );
@@ -97,7 +102,7 @@ class CachedFoodService {
       this.notifyListeners({
         type: 'error',
         error: error as Error,
-        stats: this.getStats()
+        stats: this.getStats(),
       });
     }
   }
@@ -107,10 +112,12 @@ class CachedFoodService {
    */
   private handleSnapshotUpdate(snapshot: QuerySnapshot): void {
     const source = snapshot.metadata.fromCache ? 'local cache' : 'server';
-    
+
     // Previously tracked reads here
-    
-    console.log(`📡 Received ${snapshot.docChanges().length} changes from ${source}`);
+
+    console.log(
+      `📡 Received ${snapshot.docChanges().length} changes from ${source}`
+    );
 
     // Handle initial load
     if (!this.hasInitialData && !snapshot.empty) {
@@ -124,12 +131,14 @@ class CachedFoodService {
       this.hasInitialData = true;
       this.lastUpdated = new Date();
 
-      console.log(`✅ Initial data loaded: ${items.length} items from ${source}`);
-      
+      console.log(
+        `✅ Initial data loaded: ${items.length} items from ${source}`
+      );
+
       this.notifyListeners({
         type: 'initial_load',
         items,
-        stats: this.getStats()
+        stats: this.getStats(),
       });
 
       return;
@@ -147,7 +156,7 @@ class CachedFoodService {
             this.notifyListeners({
               type: 'added',
               item,
-              stats: this.getStats()
+              stats: this.getStats(),
             });
           }
           break;
@@ -158,7 +167,7 @@ class CachedFoodService {
           this.notifyListeners({
             type: 'modified',
             item,
-            stats: this.getStats()
+            stats: this.getStats(),
           });
           break;
 
@@ -168,7 +177,7 @@ class CachedFoodService {
           this.notifyListeners({
             type: 'removed',
             item,
-            stats: this.getStats()
+            stats: this.getStats(),
           });
           break;
       }
@@ -188,7 +197,7 @@ class CachedFoodService {
       callback({
         type: 'initial_load',
         items: this.getAllItems(),
-        stats: this.getStats()
+        stats: this.getStats(),
       });
     }
 
@@ -215,11 +224,10 @@ class CachedFoodService {
    * Get all food items from cache
    */
   getAllItems(): FoodItem[] {
-    return Array.from(this.foodItems.values())
-      .sort((a, b) => {
-        if (!a.createdAt || !b.createdAt) return 0;
-        return b.createdAt.toMillis() - a.createdAt.toMillis();
-      });
+    return Array.from(this.foodItems.values()).sort((a, b) => {
+      if (!a.createdAt || !b.createdAt) return 0;
+      return b.createdAt.toMillis() - a.createdAt.toMillis();
+    });
   }
 
   /**
@@ -264,7 +272,7 @@ class CachedFoodService {
       totalItems: this.foodItems.size,
       lastUpdated: this.lastUpdated,
       isOnline: navigator.onLine,
-      hasInitialData: this.hasInitialData
+      hasInitialData: this.hasInitialData,
     };
   }
 
@@ -280,7 +288,9 @@ class CachedFoodService {
    * This will not trigger additional reads if using from cache
    */
   refresh(): void {
-    console.log('🔄 Cache refresh requested (real-time listener handles updates automatically)');
+    console.log(
+      '🔄 Cache refresh requested (real-time listener handles updates automatically)'
+    );
   }
 
   /**
@@ -293,7 +303,7 @@ class CachedFoodService {
       this.unsubscribeFn = null;
       console.log('🔌 Real-time listener disconnected');
     }
-    
+
     this.listeners.clear();
     this.foodItems.clear();
     this.hasInitialData = false;

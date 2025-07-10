@@ -1,5 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { cachedFoodService, type FoodItem, type CacheEvent, type CacheStats } from '../firebase/cachedFoodService';
+import {
+  cachedFoodService,
+  type FoodItem,
+  type CacheEvent,
+  type CacheStats,
+} from '../firebase/cachedFoodService';
 
 export interface UseCachedFoodItemsResult {
   foodItems: FoodItem[];
@@ -25,14 +30,14 @@ export default function useCachedFoodItems(): UseCachedFoodItemsResult {
     totalItems: 0,
     lastUpdated: new Date(),
     isOnline: navigator.onLine,
-    hasInitialData: false
+    hasInitialData: false,
   });
 
   // Handle cache events with stable stats to prevent unnecessary re-renders
 
   useEffect(() => {
     console.log('🪝 useCachedFoodItems: Setting up cache subscription');
-    
+
     // Define the handler inside useEffect to avoid dependency issues
     const handleCacheEvent = (event: CacheEvent) => {
       // Only update stats if they've actually changed significantly
@@ -41,7 +46,9 @@ export default function useCachedFoodItems(): UseCachedFoodItemsResult {
         if (
           prevStats.totalItems !== newStats.totalItems ||
           prevStats.hasInitialData !== newStats.hasInitialData ||
-          Math.abs(prevStats.lastUpdated.getTime() - newStats.lastUpdated.getTime()) > 1000 // Only update if more than 1 second difference
+          Math.abs(
+            prevStats.lastUpdated.getTime() - newStats.lastUpdated.getTime()
+          ) > 1000 // Only update if more than 1 second difference
         ) {
           return newStats;
         }
@@ -54,7 +61,9 @@ export default function useCachedFoodItems(): UseCachedFoodItemsResult {
             setFoodItems(event.items);
             setIsLoading(false);
             setError(null);
-            console.log(`🎯 Hook: Initial load complete with ${event.items.length} items`);
+            console.log(
+              `🎯 Hook: Initial load complete with ${event.items.length} items`
+            );
           }
           break;
 
@@ -79,7 +88,7 @@ export default function useCachedFoodItems(): UseCachedFoodItemsResult {
           break;
       }
     };
-    
+
     // Subscribe to cache events
     const unsubscribe = cachedFoodService.subscribe(handleCacheEvent);
 
@@ -104,7 +113,7 @@ export default function useCachedFoodItems(): UseCachedFoodItemsResult {
     const handleOnlineStatusChange = () => {
       setStats(prevStats => ({
         ...prevStats,
-        isOnline: navigator.onLine
+        isOnline: navigator.onLine,
       }));
     };
 
@@ -148,6 +157,6 @@ export default function useCachedFoodItems(): UseCachedFoodItemsResult {
     getItemsByCategory,
     getItemById,
     getAvailableCategories,
-    refresh
+    refresh,
   };
 }

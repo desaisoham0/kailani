@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
-import { cachedReviewService, type Review, type ReviewStats, type ReviewCacheEvent, type ReviewCacheStats } from '../firebase/cachedReviewService';
+import {
+  cachedReviewService,
+  type Review,
+  type ReviewStats,
+  type ReviewCacheEvent,
+  type ReviewCacheStats,
+} from '../firebase/cachedReviewService';
 
 export interface UseCachedReviewsResult {
   reviews: Review[];
@@ -22,12 +28,12 @@ export default function useCachedReviews(): UseCachedReviewsResult {
     totalReviews: 0,
     lastUpdated: new Date(),
     isOnline: navigator.onLine,
-    hasInitialData: false
+    hasInitialData: false,
   });
 
   useEffect(() => {
     console.log('🪝 useCachedReviews: Setting up cache subscription');
-    
+
     // Define the handler inside useEffect to avoid dependency issues
     const handleCacheEvent = (event: ReviewCacheEvent) => {
       setStats(event.stats);
@@ -38,7 +44,9 @@ export default function useCachedReviews(): UseCachedReviewsResult {
             setReviews(event.reviews);
             setIsLoading(false);
             setError(null);
-            console.log(`🎯 Reviews Hook: Initial load complete with ${event.reviews.length} reviews`);
+            console.log(
+              `🎯 Reviews Hook: Initial load complete with ${event.reviews.length} reviews`
+            );
           }
           break;
 
@@ -63,7 +71,7 @@ export default function useCachedReviews(): UseCachedReviewsResult {
           break;
       }
     };
-    
+
     // Subscribe to cache events
     const unsubscribe = cachedReviewService.subscribe(handleCacheEvent);
 
@@ -73,7 +81,9 @@ export default function useCachedReviews(): UseCachedReviewsResult {
       setReviews(cachedReviews);
       setIsLoading(false);
       setStats(cachedReviewService.getStats());
-      console.log(`⚡ Reviews Hook: Using existing cache data (${cachedReviews.length} reviews)`);
+      console.log(
+        `⚡ Reviews Hook: Using existing cache data (${cachedReviews.length} reviews)`
+      );
     }
 
     // Cleanup subscription on unmount
@@ -88,7 +98,7 @@ export default function useCachedReviews(): UseCachedReviewsResult {
     const handleOnlineStatusChange = () => {
       setStats(prevStats => ({
         ...prevStats,
-        isOnline: navigator.onLine
+        isOnline: navigator.onLine,
       }));
     };
 
@@ -114,6 +124,6 @@ export default function useCachedReviews(): UseCachedReviewsResult {
     isLoading,
     error,
     stats,
-    refresh
+    refresh,
   };
 }
