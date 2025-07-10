@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logoImage from '../../assets/Kailani_logo.png';
+import OnlineOrderingLinks from '../OnlineOrdering/OnlineOrderingLinks';
 import '../../styles/fonts.css';
 
 
@@ -9,6 +10,7 @@ type NavigationItem = {
  readonly href: string;
  readonly isExternalLink: boolean;
  readonly ariaLabel?: string;
+ readonly hasDropdown?: boolean;
 };
 
 
@@ -21,7 +23,7 @@ const RESTAURANT_CONFIG = {
 const NAVIGATION_ITEMS: readonly NavigationItem[] = [
  { label: 'Home', href: '/', isExternalLink: false, ariaLabel: 'Go to homepage' },
  { label: 'Menu', href: '/menu', isExternalLink: false, ariaLabel: 'View our menu gallery' },
- { label: 'Order Now', href: RESTAURANT_CONFIG.orderUrl, isExternalLink: true, ariaLabel: 'Order food online (opens in new tab)' },
+ { label: 'Order Now', href: '#', isExternalLink: false, ariaLabel: 'Order food online', hasDropdown: true },
  { label: 'Careers', href: '/jobs', isExternalLink: false, ariaLabel: 'View job opportunities' },
  { label: 'About Us', href: '/about', isExternalLink: false, ariaLabel: 'Learn about us' },
  { label: 'Contact', href: '/contact', isExternalLink: false, ariaLabel: 'Contact information' },
@@ -31,6 +33,27 @@ const NAVIGATION_ITEMS: readonly NavigationItem[] = [
 export const DesktopNavigation = React.memo(() => {
  const location = useLocation();
  const currentPath = location.pathname;
+ const [isModalOpen, setIsModalOpen] = useState(false);
+
+ // Close modal when clicking outside or pressing escape
+ useEffect(() => {
+   const handleKeyDown = (event: KeyboardEvent) => {
+     if (event.key === 'Escape') {
+       setIsModalOpen(false);
+     }
+   };
+
+   if (isModalOpen) {
+     document.addEventListener('keydown', handleKeyDown);
+     // Prevent body scroll when modal is open
+     document.body.style.overflow = 'hidden';
+   }
+
+   return () => {
+     document.removeEventListener('keydown', handleKeyDown);
+     document.body.style.overflow = 'unset';
+   };
+ }, [isModalOpen]);
 
  const BrandLogo = React.memo(({ name }: { name: string }) => {
    const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
@@ -88,6 +111,19 @@ export const DesktopNavigation = React.memo(() => {
      'aria-current': isCurrentPage ? 'page' as const : undefined,
    };
 
+   // Handle modal for "Order Now"
+   if (item.hasDropdown) {
+     return (
+       <button
+         onClick={() => setIsModalOpen(true)}
+         className={`${linkClassName} cursor-pointer`}
+         aria-haspopup="dialog"
+       >
+         {item.label}
+       </button>
+     );
+   }
+
    if (item.isExternalLink) {
      return (
        <a
@@ -131,15 +167,59 @@ export const DesktopNavigation = React.memo(() => {
  NavigationMenu.displayName = 'NavigationMenu';
 
  return (
-   <header 
-     className="sticky top-0 z-30 w-full max-w-full overflow-hidden border-b-2 border-[#ffe0f0] bg-[#e83838] shadow-xl"
-     role="banner"
-   >
-     <div className="flex w-full flex-row items-center justify-between border-b-2 border-[#ffe0f0] px-4 py-3 md:px-6 md:py-4 lg:px-8 lg:py-5 xl:px-12 xl:py-6">
-       <BrandLogo name={RESTAURANT_CONFIG.name} />
-       <NavigationMenu items={NAVIGATION_ITEMS} currentPath={currentPath} />
-     </div>
-   </header>
+   <>
+     <header 
+       className="sticky top-0 z-30 w-full max-w-full overflow-hidden border-b-2 border-[#ffe0f0] bg-[#e83838] shadow-xl"
+       role="banner"
+     >
+       <div className="flex w-full flex-row items-center justify-between border-b-2 border-[#ffe0f0] px-4 py-3 md:px-6 md:py-4 lg:px-8 lg:py-5 xl:px-12 xl:py-6">
+         <BrandLogo name={RESTAURANT_CONFIG.name} />
+         <NavigationMenu items={NAVIGATION_ITEMS} currentPath={currentPath} />
+       </div>
+     </header>
+
+     {/* Modal for Order Now */}
+     {isModalOpen && (
+       <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center">
+         {/* Backdrop */}
+         <div 
+           className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-all duration-300"
+           onClick={() => setIsModalOpen(false)}
+         />
+         
+         {/* Modal Content */}
+         <div className="relative bg-white rounded-t-2xl md:rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[80vh] md:max-h-[90vh] overflow-y-auto animate-slide-up">
+           {/* Modal Header */}
+           <div className="sticky top-0 bg-white border-b border-gray-200 rounded-t-2xl md:rounded-t-2xl z-10">
+             <div className="flex items-center justify-between p-4 md:p-6">
+               <div>
+                 <h2 className="text-xl md:text-2xl font-bold text-gray-800">Order Online</h2>
+                 <p className="text-gray-600 text-sm md:text-base mt-1">Choose your preferred ordering method</p>
+               </div>
+               <button
+                 onClick={() => setIsModalOpen(false)}
+                 className="text-gray-400 hover:text-gray-600 transition-colors p-2 rounded-full hover:bg-gray-100 cursor-pointer"
+                 aria-label="Close modal"
+               >
+                 <svg className="h-5 w-5 md:h-6 md:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                 </svg>
+               </button>
+             </div>
+           </div>
+           
+           {/* Modal Body */}
+           <div className="p-4 md:p-6 pb-6 md:pb-8">
+             <OnlineOrderingLinks 
+               className="mb-0" 
+               isDropdown={true} 
+               onLinkClick={() => setIsModalOpen(false)}
+             />
+           </div>
+         </div>
+       </div>
+     )}
+   </>
  );
 });
 

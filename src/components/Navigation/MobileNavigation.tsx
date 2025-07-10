@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logoImage from '../../assets/Kailani_logo.png';
+import OnlineOrderingLinks from '../OnlineOrdering/OnlineOrderingLinks';
 import '../../styles/fonts.css';
 
 
@@ -37,6 +38,7 @@ const NAVIGATION_ITEMS: readonly NavigationItem[] = [
 
 export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigationProps) => {
  const [isMenuOpen, setIsMenuOpen] = useState(false);
+ const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
  const location = useLocation();
  const menuRef = useRef<HTMLDivElement>(null);
  const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -82,10 +84,14 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
 
  // Handle keyboard navigation
  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-   if (event.key === 'Escape' && isMenuOpen) {
-     closeMenu();
+   if (event.key === 'Escape') {
+     if (isOrderModalOpen) {
+       setIsOrderModalOpen(false);
+     } else if (isMenuOpen) {
+       closeMenu();
+     }
    }
- }, [isMenuOpen, closeMenu]);
+ }, [isMenuOpen, isOrderModalOpen, closeMenu]);
 
  // Cleanup body overflow on unmount
  useEffect(() => {
@@ -99,11 +105,24 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
 
  // Handle escape key
  useEffect(() => {
-   if (isMenuOpen) {
+   if (isMenuOpen || isOrderModalOpen) {
      document.addEventListener('keydown', handleKeyDown);
      return () => document.removeEventListener('keydown', handleKeyDown);
    }
- }, [isMenuOpen, handleKeyDown]);
+ }, [isMenuOpen, isOrderModalOpen, handleKeyDown]);
+
+ // Handle body scroll for order modal
+ useEffect(() => {
+   if (isOrderModalOpen) {
+     document.body.style.overflow = 'hidden';
+   } else {
+     document.body.style.overflow = 'unset';
+   }
+
+   return () => {
+     document.body.style.overflow = 'unset';
+   };
+ }, [isOrderModalOpen]);
 
  // Focus management
  useEffect(() => {
@@ -162,15 +181,14 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
 
 
  const QuickOrderButton = React.memo(() => (
-   <a
-     href={RESTAURANT_CONFIG.orderUrl}
-     target="_blank"
-     rel="noopener noreferrer"
+   <button
+     onClick={() => setIsOrderModalOpen(true)}
      className="baloo-regular flex items-center bg-transparent px-4 py-2 text-lg font-bold border-1 border-[#f7d34f] text-white hover:text-white hover:underline hover:decoration-2 hover:decoration-white hover:underline-offset-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#e83838] border-b-4 active:border-b-1 rounded-2xl shadow-lg hover:bg-yellow-500 hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-200 transform"
-     aria-label="Order food online (opens in new tab)"
+     aria-label="Order food online"
+     aria-haspopup="dialog"
    >
      Order
-   </a>
+   </button>
  ));
  QuickOrderButton.displayName = 'QuickOrderButton';
 
@@ -383,6 +401,47 @@ export const MobileNavigation = React.memo(({ restaurantName }: MobileNavigation
          />
        </div>
      </div>
+
+     {/* Mobile Order Modal */}
+     {isOrderModalOpen && (
+       <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+         {/* Backdrop */}
+         <div 
+           className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-all duration-300"
+           onClick={() => setIsOrderModalOpen(false)}
+         />
+         
+         {/* Modal Content - Mobile-optimized */}
+         <div className="relative bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl w-full max-w-lg mx-4 max-h-[80vh] sm:max-h-[90vh] overflow-y-auto animate-slide-up sm:animate-none">
+           {/* Modal Header */}
+           <div className="sticky top-0 bg-white border-b border-gray-200 rounded-t-2xl sm:rounded-t-2xl z-10">
+             <div className="flex items-center justify-between p-4 sm:p-6">
+               <div>
+                 <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Order Online</h2>
+                 <p className="text-gray-600 text-sm sm:text-base mt-1">Choose your preferred ordering method</p>
+               </div>                 <button
+                   onClick={() => setIsOrderModalOpen(false)}
+                   className="text-gray-400 hover:text-gray-600 transition-colors p-2 rounded-full hover:bg-gray-100 cursor-pointer"
+                   aria-label="Close modal"
+                 >
+                 <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                 </svg>
+               </button>
+             </div>
+           </div>
+           
+           {/* Modal Body */}
+           <div className="p-4 sm:p-6 pb-6 sm:pb-8">
+             <OnlineOrderingLinks 
+               className="mb-0" 
+               isDropdown={true}
+               onLinkClick={() => setIsOrderModalOpen(false)}
+             />
+           </div>
+         </div>
+       </div>
+     )}
    </>
  );
 });
