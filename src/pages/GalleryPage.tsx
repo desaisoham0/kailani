@@ -6,8 +6,8 @@ type FoodCategory = 'Shave Ice' | 'Ramen' | 'Homemade Ice Cream' | 'Soft Serve' 
 
 // ===== CONFIGURATION =====
 const CATEGORY_ORDER_CONFIG: Record<FoodCategory, number> = {
-  'Shave Ice': 1,
   'Ramen': 2,
+  'Shave Ice': 1,
   'Homemade Ice Cream': 3,
   'Soft Serve': 4,
   'Hot Dogs': 5,
@@ -17,7 +17,7 @@ const CATEGORY_ORDER_CONFIG: Record<FoodCategory, number> = {
 const CATEGORY_DISPLAY_NAMES: Record<string, string> = {
   'Ramen': 'Ramen',
   'Shave Ice': 'Shave Ice',
-  'Homemade Ice Cream': 'Ice Cream',
+  'Homemade Ice Cream': 'Homemade Ice Cream',
   'Soft Serve': 'Soft Serve',
   'Hot Dogs': 'Hot Dogs',
   'Musubi': 'Musubi',
@@ -34,7 +34,7 @@ const CATEGORY_BUTTON_STYLES: Record<string, string> = {
 } as const;
 
 const DEFAULT_BUTTON_STYLE = 'bg-white text-gray-900 border-indigo-300 hover:bg-gray-50 focus:bg-gray-50';
-const BUTTON_BASE_CLASSES = 'px-3 py-2 sm:px-4 sm:py-2 md:px-6 md:py-3 text-sm sm:text-base md:text-lg font-bold rounded-full shadow-lg border-b-4 transition-all duration-200 transform hover:shadow-xl active:shadow-md active:translate-y-1 active:border-b-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none';
+const BUTTON_BASE_CLASSES = 'px-3 py-2 text-sm sm:text-base md:text-lg cursor-pointer font-bold rounded-full shadow-lg border-b-4 transition-all duration-200 hover:shadow-xl active:shadow-md active:border-b-2 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed';
 
 // ===== UTILITY FUNCTIONS =====
 const getCategoryOrder = (category: string): number => {
@@ -106,7 +106,7 @@ const GalleryPage: React.FC = () => {
     const allCategories = ['all', ...uniqueCategories];
     
     // Sort categories according to the centralized order system
-    return allCategories.sort((a, b) => {
+    const sortedCategories = allCategories.sort((a, b) => {
       if (a === 'all') return -1; // 'all' always comes first
       if (b === 'all') return 1;
       
@@ -115,6 +115,19 @@ const GalleryPage: React.FC = () => {
       
       return orderA - orderB;
     });
+    
+    // Debug logging to verify sorting
+    console.log('Category sorting order:');
+    sortedCategories.forEach((category, index) => {
+      if (category !== 'all') {
+        const order = getCategoryOrder(category);
+        console.log(`${index}. ${category} (order: ${order})`);
+      } else {
+        console.log(`${index}. ${category} (always first)`);
+      }
+    });
+    
+    return sortedCategories;
   }, [foodItems]);
 
   // Filter food items by active category
@@ -172,8 +185,8 @@ const GalleryPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cyan-500">
-      <div className="container mx-auto px-4 py-8 sm:py-12">
+    <div className="min-h-screen bg-cyan-500 overflow-x-hidden">
+      <div className="container mx-auto px-4 py-8 sm:py-12 max-w-6xl">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 sm:mb-8 text-center text-cyan-900">
           Menu
         </h1>
@@ -206,7 +219,7 @@ const GalleryPage: React.FC = () => {
             </div>
           ) : (
             <div 
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 max-w-7xl mx-auto"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto"
               role="grid"
               aria-label={`${displayItems.length} food items in ${getCategoryDisplayName(activeCategory)} category`}
             >
