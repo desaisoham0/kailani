@@ -268,7 +268,7 @@ const Job: React.FC<JobProps> = ({ onSubmit }) => {
                     htmlFor="experience"
                     className="mb-2 block text-sm font-semibold text-gray-700"
                   >
-                    Your Experience
+                    Years of Experience
                   </label>
                   <input
                     type="text"

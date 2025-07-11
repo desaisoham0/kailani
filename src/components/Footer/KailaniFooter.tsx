@@ -37,18 +37,26 @@ const KailaniFooter: React.FC<KailaniFooterProps> = React.memo(
                   </li>
                   <li>
                     <Link
-                      to="/about"
-                      className="text-sm text-white/90 transition-colors hover:text-yellow-400"
-                    >
-                      About
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
                       to="/menu"
                       className="text-sm text-white/90 transition-colors hover:text-yellow-400"
                     >
                       Menu
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/jobs"
+                      className="text-sm text-white/90 transition-colors hover:text-yellow-400"
+                    >
+                      Careers
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/about"
+                      className="text-sm text-white/90 transition-colors hover:text-yellow-400"
+                    >
+                      About Us
                     </Link>
                   </li>
                   <li>

@@ -152,7 +152,7 @@ export const DesktopNavigation = React.memo(() => {
         return (
           <button
             onClick={() => setIsModalOpen(true)}
-            className={`${linkClassName} cursor-pointer`}
+            className={`${linkClassName} cursor-pointer appearance-none border-none`}
             aria-haspopup="dialog"
           >
             {item.label}

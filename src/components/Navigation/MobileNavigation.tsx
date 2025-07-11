@@ -318,7 +318,7 @@ export const MobileNavigation = React.memo(
                 height="144"
               />
               <div className="space-y-0">
-                <h3 className="baloo-regular text-lg font-bold text-[#f7d34f] drop-shadow-sm sm:text-xl">
+                <h3 className="milkshake-regular text-lg font-bold text-[#f7d34f] drop-shadow-sm sm:text-xl">
                   Hawaiian
                 </h3>
                 <h1
