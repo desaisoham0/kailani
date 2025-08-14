@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import useCachedReviews from '../../hooks/useCachedReviews';
+import React, { useState, useEffect } from 'react';
+import { getAllReviews, getReviewStats, type Review, type ReviewStats } from '../../firebase/reviewService';
+import { Timestamp } from 'firebase/firestore';
 
 // Professional star rating component
 const StarRating = ({ rating }: { rating: number }) => (
@@ -50,13 +51,49 @@ const GoogleIcon = () => (
 );
 
 // Interface for review data
-export interface Review {
-  id: string | number;
-  author: string;
-  rating: number; // 1-5
-  text: string;
-  source: 'google'; // Only using Google reviews
-}
+
+// Custom hook to fetch reviews and stats using direct Firebase service
+const useReviews = () => {
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewStats, setReviewStats] = useState<ReviewStats>({
+    totalReviews: 0,
+    averageRating: 0,
+    lastUpdated: Timestamp.now(),
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchReviewsAndStats = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // Fetch reviews and stats in parallel
+        const [reviewsData, statsData] = await Promise.all([
+          getAllReviews(),
+          getReviewStats(),
+        ]);
+
+        setReviews(reviewsData);
+        setReviewStats(statsData);
+
+        console.log(
+          `🎯 CustomerReviews: Loaded ${reviewsData.length} reviews with average rating ${statsData.averageRating.toFixed(1)}`
+        );
+      } catch (err) {
+        console.error('Error fetching reviews:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load reviews');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchReviewsAndStats();
+  }, []);
+
+  return { reviews, reviewStats, isLoading, error };
+};
 
 interface CustomerReviewsProps {
   reviews?: Review[];
@@ -71,12 +108,12 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Use cached reviews hook
-  const { reviews: cachedReviews, reviewStats, isLoading } = useCachedReviews();
+  // Use direct reviews hook
+  const { reviews: directReviews, reviewStats, isLoading } = useReviews();
 
-  // Use provided reviews or cached reviews
+  // Use provided reviews or direct reviews
   const reviews =
-    propReviews && propReviews.length > 0 ? propReviews : cachedReviews;
+    propReviews && propReviews.length > 0 ? propReviews : directReviews;
   const averageRating = reviewStats.averageRating;
   const totalReviews = reviewStats.totalReviews;
 
@@ -186,7 +223,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
             {/* Pagination dots */}
             {reviews.length > 1 && (
               <div className="mt-6 flex justify-center gap-3">
-                {reviews.map((_, i) => (
+                {reviews.map((_: Review, i: number) => (
                   <button
                     key={i}
                     onClick={() => setCurrentIndex(i)}

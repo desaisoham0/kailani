@@ -1,5 +1,10 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import useCachedFoodItems from '../../hooks/useCachedFoodItems';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
+import { getFavoriteFoodItems, type FoodItem } from '../../firebase/foodService';
 import logo from '../../assets/Kailani_logo.png';
 import { SocialMediaLinks } from '../Navigation/SocialMediaLinks';
 
@@ -252,11 +257,31 @@ const BrandHeader: React.FC = () => (
   </header>
 );
 
-// Data fetching hook using cached service with better error handling
+// Data fetching hook using direct service with error handling
 const useFavoriteFoodItems = () => {
-  const { favoriteItems, isLoading, error: cacheError } = useCachedFoodItems();
+  const [favoriteItems, setFavoriteItems] = useState<FoodItem[]>([]);
   const [products, setProducts] = useState<readonly ProductItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Fetch favorite items from Firebase
+  useEffect(() => {
+    const fetchFavoriteItems = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const items = await getFavoriteFoodItems();
+        setFavoriteItems(items);
+      } catch (err) {
+        console.error('Error fetching favorite items:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load favorite items');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFavoriteItems();
+  }, []);
 
   // Memoize the transformation to prevent unnecessary recalculations
   const transformedProducts = useMemo(() => {
@@ -282,14 +307,13 @@ const useFavoriteFoodItems = () => {
 
   useEffect(() => {
     setProducts(transformedProducts);
-    setError(cacheError?.message || null);
 
     if (transformedProducts.length > 0) {
       console.log(
         `🍕 BestSellers: Updated with ${transformedProducts.length} favorite items (sorted by centralized order system)`
       );
     }
-  }, [transformedProducts, cacheError?.message]);
+  }, [transformedProducts]);
 
   return { products, isLoading, error };
 };

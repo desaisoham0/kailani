@@ -13,7 +13,6 @@ import KailaniFooter from './components/Footer/KailaniFooter';
 import BackToTopButton from './components/UI/BackToTopButton';
 import FloatingOrderButton from './components/UI/FloatingOrderButton';
 import { AuthProvider } from './contexts/AuthContext';
-import { CacheProvider } from './contexts/CacheContext';
 import OffersDisplay from './components/Offers/OffersDisplay';
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -31,9 +30,8 @@ function App() {
   const [restaurantName] = useState('KAILANI');
   return (
     <ErrorBoundary>
-      <CacheProvider>
-        <AuthProvider>
-          <Router>
+      <AuthProvider>
+        <Router>
             <div className="flex min-h-screen w-full max-w-full flex-col overflow-x-hidden">
               {/* Restaurant Header (responsive for both mobile and desktop) */}
               <RestaurantHeader restaurantName={restaurantName} />
@@ -164,7 +162,6 @@ function App() {
             </div>
           </Router>
         </AuthProvider>
-      </CacheProvider>
     </ErrorBoundary>
   );
 }

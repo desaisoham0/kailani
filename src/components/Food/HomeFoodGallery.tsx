@@ -1,14 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import useCachedFoodItems from '../../hooks/useCachedFoodItems';
-
-// Types
-type FoodItem = {
-  id?: string;
-  name: string;
-  imageUrl: string;
-  category: string;
-};
+import { getFavoriteFoodItems, type FoodItem } from '../../firebase/foodService';
 
 type GalleryDisplayProps = {
   title: string;
@@ -29,16 +21,37 @@ const shuffleArray = <T,>(array: T[]): T[] => {
   return newArray;
 };
 
-// React hook that handles data fetching and state using cached service
+// React hook that handles data fetching and state using direct Firebase service
 const useRandomFoodItems = (maxCount: number) => {
-  const { favoriteItems, isLoading, error: cacheError } = useCachedFoodItems();
+  const [favoriteItems, setFavoriteItems] = React.useState<FoodItem[]>([]);
   const [randomItems, setRandomItems] = React.useState<FoodItem[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
   const initializedRef = React.useRef(false);
+
+  // Fetch favorite items from Firebase
+  React.useEffect(() => {
+    const fetchFavoriteItems = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const items = await getFavoriteFoodItems();
+        setFavoriteItems(items);
+      } catch (err) {
+        console.error('Error fetching favorite items:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load favorite items');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFavoriteItems();
+  }, []);
 
   React.useEffect(() => {
     // Filter items with valid images
     const validItems = favoriteItems.filter(
-      item => item.imageUrl && item.imageUrl.trim() !== ''
+      (item: FoodItem) => item.imageUrl && item.imageUrl.trim() !== ''
     );
 
     // Only shuffle once when we first get data, or if we have no items yet
@@ -48,15 +61,15 @@ const useRandomFoodItems = (maxCount: number) => {
       initializedRef.current = true;
 
       console.log(
-        `🏠 HomeFoodGallery: Initialized with ${randomized.length} random items from cache`
+        `🏠 HomeFoodGallery: Initialized with ${randomized.length} random items from direct service`
       );
     }
   }, [favoriteItems, maxCount]);
 
   return {
     items: randomItems,
-    status: isLoading ? 'loading' : cacheError ? 'error' : 'success',
-    error: cacheError?.message || null,
+    status: isLoading ? 'loading' : error ? 'error' : 'success',
+    error: error || null,
   };
 };
 
