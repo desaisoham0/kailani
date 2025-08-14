@@ -23,7 +23,7 @@ const OnlineOrderingLinks: React.FC<OnlineOrderingLinksProps> = ({
     {
       name: 'Uber Eats',
       type: 'delivery',
-      url: '#', // Replace with actual Uber Eats URL
+      url: '#',
       bgColor: 'bg-black',
       hoverColor: 'hover:bg-gray-800',
       description: 'Delivery',
@@ -31,7 +31,7 @@ const OnlineOrderingLinks: React.FC<OnlineOrderingLinksProps> = ({
     {
       name: 'DoorDash',
       type: 'delivery',
-      url: '#', // Replace with actual DoorDash URL
+      url: '#',
       bgColor: 'bg-red-500',
       hoverColor: 'hover:bg-red-600',
       description: 'Delivery',
@@ -39,7 +39,7 @@ const OnlineOrderingLinks: React.FC<OnlineOrderingLinksProps> = ({
     {
       name: 'Grubhub',
       type: 'delivery',
-      url: '#', // Replace with actual Grubhub URL
+      url: '#',
       bgColor: 'bg-orange-500',
       hoverColor: 'hover:bg-orange-600',
       description: 'Delivery',
@@ -47,56 +47,58 @@ const OnlineOrderingLinks: React.FC<OnlineOrderingLinksProps> = ({
   ];
 
   return (
-    <div className={`online-ordering-links ${className}`}>
+    <section className={`online-ordering-links ${className}`}>
       {!isDropdown && (
-        <div className="mb-8 text-center">
-          <h2 className="mb-4 text-3xl font-bold text-gray-800">
+        <header className="mb-8 text-center">
+          <h2 className="mb-2 text-3xl font-bold text-gray-800">
             Order Online
           </h2>
-          <p className="text-lg text-gray-600">
+          <p className="mx-auto max-w-prose text-lg text-gray-600">
             Choose your preferred ordering method
           </p>
-        </div>
+        </header>
       )}
 
-      <div
-        className={`grid gap-4 ${isDropdown ? 'grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'}`}
-      >
-        {orderingOptions.map((option, index) => (
-          <div key={index} className="flex flex-col items-center">
-            <a
-              href={option.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={onLinkClick}
-              className={` ${option.bgColor} ${option.hoverColor} group flex w-full transform cursor-pointer flex-col items-center justify-center rounded-lg px-4 py-3 text-center font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl ${isDropdown ? 'min-h-[80px] text-sm' : 'min-h-[120px]'} `}
-            >
-              <div className="text-center">
-                <div
-                  className={`font-bold ${isDropdown ? 'sm:text-md text-base' : 'text-lg sm:text-xl'}`}
+      <nav aria-label="Online ordering options" className="mx-auto max-w-6xl">
+        <ul
+          role="list"
+          className={`grid gap-4 sm:gap-5 lg:gap-6 ${isDropdown ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}
+        >
+          {orderingOptions.map((option, index) => (
+            <li key={index} className="flex">
+              <a
+                href={option.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={onLinkClick}
+                aria-label={`${option.name} ${option.description}`}
+                className={`${option.bgColor} ${option.hoverColor} group relative flex w-full flex-col items-center justify-center rounded-2xl p-4 text-center font-semibold text-white shadow-sm transition-colors transition-transform duration-200 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-white/90 focus-visible:ring-offset-2 focus-visible:outline-none active:translate-y-0 sm:p-5 ${isDropdown ? 'min-h-20 text-sm' : 'min-h-28'}`}
+              >
+                <span
+                  className={`${isDropdown ? 'text-base sm:text-lg' : 'text-lg sm:text-xl'}`}
                 >
                   {option.name}
-                </div>
-                <div
-                  className={`opacity-90 ${isDropdown ? 'text-sm sm:text-xs' : 'text-base sm:text-sm'}`}
+                </span>
+                <span
+                  className={`opacity-90 ${isDropdown ? 'text-xs sm:text-sm' : 'text-sm sm:text-base'}`}
                 >
                   {option.description}
-                </div>
-              </div>
-            </a>
-          </div>
-        ))}
-      </div>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       {!isDropdown && (
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-500">
+          <p className="mx-auto max-w-prose text-sm leading-relaxed text-gray-500">
             Pickup available through Toast • Delivery available through Uber
             Eats, DoorDash, and Grubhub
           </p>
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

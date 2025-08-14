@@ -153,13 +153,13 @@ const BouncyPillButton: React.FC<BouncyPillButtonProps> = ({
   'aria-label': ariaLabel,
 }) => {
   const defaultStyle =
-    'bg-white text-[#000000] baloo-regular rounded-full shadow-lg hover:bg-gray-100 hover:shadow-xl active:shadow-md border-b-4 active:border-b-2 border-[#a5b4fc] transition-all duration-150 active:translate-y-1 transform';
+    'bg-white text-[#000000] baloo-regular rounded-full shadow-lg hover:bg-gray-100 hover:shadow-xl active:shadow-md border-b-4 active:border-b-2 border-[#a5b4fc] transition duration-200 ease-in-out active:translate-y-1 transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current';
 
   return (
     <button
-      className={`baloo-regular cursor-pointer rounded-full px-6 py-3 text-lg font-bold tracking-wide ${
+      className={`baloo-regular cursor-pointer rounded-full px-6 py-3 text-lg font-medium tracking-wide motion-safe:transition ${
         isActive ? activeStyle : defaultStyle
-      } ${className} focus:outline-none`}
+      } ${className}`}
       onClick={onClick}
       aria-label={ariaLabel}
       role={isActive ? 'tab' : 'button'}
@@ -207,41 +207,21 @@ const ChevronRight: React.FC<{ className?: string }> = ({ className = '' }) => (
 
 const BrandHeader: React.FC = () => (
   <header className="py-0">
-    <div className="container mx-auto flex justify-center">
-      <div className="flex flex-row items-center">
+    <div className="mx-auto flex max-w-screen-xl justify-center px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-row items-center gap-4 sm:gap-6">
         <img
           src={logo}
           alt="Kailani Logo"
-          className="h-36 w-36 flex-shrink-0"
+          className="h-28 w-28 flex-shrink-0 sm:h-32 sm:w-32 md:h-36 md:w-36"
         />
         <div className="space-y-1">
-          <h3 className="milkshake-regular text-lg font-bold text-[#f7d34f] drop-shadow-sm sm:text-xl">
+          <h3 className="milkshake-regular text-lg font-bold tracking-wide text-[#f7d34f] drop-shadow-sm sm:text-xl">
             Hawaiian
           </h3>
-          <h1
-            className="baloo-regular -mt-3 pr-4 text-4xl font-extrabold text-[#f7d34f] sm:text-5xl"
-            style={{
-              fontFamily: 'Baloo, sans-serif',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              letterSpacing: '0.06em',
-              textShadow: '-4px 4px 0px #7F4F00',
-            }}
-          >
+          <h1 className="baloo-regular -mt-3 truncate pr-4 text-4xl font-extrabold tracking-wider text-[#f7d34f] drop-shadow-[-4px_4px_0_#7F4F00] sm:text-5xl">
             SHAVE ICE
           </h1>
-          <h2
-            className="baloo-regular text-2xl font-bold text-white sm:text-3xl"
-            style={{
-              fontFamily: 'Baloo, sans-serif',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              letterSpacing: '0.04em',
-              textShadow: '-2px 2px 0px #e85fa8',
-            }}
-          >
+          <h2 className="baloo-regular truncate text-2xl font-bold tracking-wide text-white drop-shadow-[-2px_2px_0_#e85fa8] sm:text-3xl">
             &amp; Ramen
           </h2>
         </div>
@@ -450,11 +430,11 @@ const BestSellers: React.FC<BestSellersProps> = React.memo(
 
     return (
       <section className="relative w-full max-w-full overflow-hidden border-b-2 border-[#ffe0f0] bg-[#19b4bd] py-16 transition-all duration-500">
-        <div className="relative z-10 container mx-auto max-w-full px-4">
+        <div className="relative z-10 mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
           <BrandHeader />
 
           <div className="mt-6 mb-10 text-center">
-            <h2 className="font-navigation baloo-regular mb-2 text-4xl font-bold text-[#f7d34f]">
+            <h2 className="font-navigation baloo-regular mb-2 text-4xl font-bold tracking-tight text-[#f7d34f] md:text-5xl">
               {title}
             </h2>
           </div>
@@ -490,16 +470,18 @@ BestSellers.displayName = 'BestSellers';
 
 const LoadingDisplay: React.FC<{ title: string }> = ({ title }) => (
   <section className="relative w-full max-w-full overflow-hidden bg-[#19b4bd] py-16">
-    <div className="relative z-10 container mx-auto max-w-full px-4">
+    <div className="relative z-10 mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
       <BrandHeader />
       <div className="mt-6 mb-10 text-center">
-        <h2 className="text-[#003F47 ] font-navigation baloo-regular mb-2 text-4xl font-bold">
+        <h2 className="font-navigation baloo-regular mb-2 text-4xl font-bold tracking-tight text-[#003F47] md:text-5xl">
           {title}
         </h2>
       </div>
       <div className="flex h-64 items-center justify-center">
         <div className="h-16 w-16 animate-spin rounded-full border-t-4 border-b-4 border-blue-500"></div>
-        <p className="ml-4 text-lg text-indigo-800">Loading our favorites...</p>
+        <p className="ml-4 text-lg leading-relaxed text-indigo-800">
+          Loading our favorites...
+        </p>
       </div>
     </div>
   </section>
@@ -510,15 +492,15 @@ const ErrorDisplay: React.FC<{ title: string; error?: string }> = ({
   error,
 }) => (
   <section className="relative w-full max-w-full overflow-hidden bg-[#19b4bd] py-16">
-    <div className="relative z-10 container mx-auto max-w-full px-4">
+    <div className="relative z-10 mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
       <BrandHeader />
       <div className="mt-6 mb-10 text-center">
-        <h2 className="font-navigation baloo-regular mb-2 text-4xl font-bold text-[#003F47]">
+        <h2 className="font-navigation baloo-regular mb-2 text-4xl font-bold tracking-tight text-[#003F47] md:text-5xl">
           {title}
         </h2>
       </div>
-      <div className="mx-auto max-w-xl rounded-lg border border-red-200 bg-red-50 p-6">
-        <p className="text-red-800">
+      <div className="mx-auto max-w-xl rounded-xl border border-red-200 bg-red-50 p-6 shadow-sm">
+        <p className="leading-relaxed text-red-800">
           {error ||
             "We couldn't load our favorites right now. Please check back later!"}
         </p>
@@ -529,15 +511,15 @@ const ErrorDisplay: React.FC<{ title: string; error?: string }> = ({
 
 const EmptyDisplay: React.FC<{ title: string }> = ({ title }) => (
   <section className="relative w-full max-w-full overflow-hidden bg-[#19b4bd] py-16">
-    <div className="relative z-10 container mx-auto max-w-full px-4">
+    <div className="relative z-10 mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
       <BrandHeader />
       <div className="mt-6 mb-10 text-center">
-        <h2 className="font-navigation baloo-regular mb-2 text-4xl font-bold text-[#003F47]">
+        <h2 className="font-navigation baloo-regular mb-2 text-4xl font-bold tracking-tight text-[#003F47] md:text-5xl">
           {title}
         </h2>
       </div>
-      <div className="mx-auto max-w-xl rounded-lg bg-white p-6 shadow-md">
-        <p className="text-gray-600">
+      <div className="mx-auto max-w-xl rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <p className="leading-relaxed text-gray-600">
           No featured items available at the moment. Please check back soon!
         </p>
       </div>
@@ -565,17 +547,17 @@ const ProductCarousel: React.FC<{
 
   return (
     <div
-      className="relative mx-auto max-w-4xl"
+      className="relative mx-auto max-w-screen-lg rounded-xl focus-visible:ring-2 focus-visible:ring-[#003F47] focus-visible:ring-offset-2 focus-visible:outline-none"
       onKeyDown={onKeyDown}
       tabIndex={0}
       role="region"
       aria-label="Product carousel"
       aria-live="polite"
     >
-      <div className="overflow-hidden rounded-3xl bg-white shadow-2xl backdrop-blur-sm">
+      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow">
         <div className="flex flex-col md:flex-row">
           <div className="md:w-1/2">
-            <div className="relative h-64 overflow-hidden rounded-t-3xl md:h-96 md:rounded-l-3xl md:rounded-tr-none">
+            <div className="relative h-64 overflow-hidden rounded-t-2xl md:h-96 md:rounded-l-2xl md:rounded-tr-none">
               <img
                 src={currentProduct.imageUrl}
                 alt={currentProduct.name}
@@ -591,10 +573,10 @@ const ProductCarousel: React.FC<{
                 FAVORITE
               </span>
             </div>
-            <h3 className="font-navigation baloo-regular mb-2 text-2xl font-bold text-indigo-900">
+            <h3 className="font-navigation baloo-regular mb-2 text-2xl font-bold tracking-tight text-indigo-900 md:text-3xl">
               {currentProduct.name}
             </h3>
-            <p className="nunito-sans mb-6 text-indigo-700">
+            <p className="nunito-sans mb-6 leading-relaxed text-indigo-700">
               {currentProduct.description}
             </p>
           </div>
@@ -602,24 +584,24 @@ const ProductCarousel: React.FC<{
       </div>
 
       {showNavigation && (
-        <div className="mt-6 flex items-center justify-center space-x-4">
+        <div className="mt-6 flex items-center justify-center gap-4">
           <button
             onClick={onPrevious}
-            className="baloo-regular transform cursor-pointer rounded-full border-1 border-b-4 border-[#bbfaf5] bg-[#19b4bd] p-4 font-bold text-[#003F47] shadow-lg transition-all duration-150 hover:border-[#8dd9d3] hover:bg-[#0faeb8] hover:shadow-xl focus:outline-none active:translate-y-1 active:border-b-2 active:shadow-md"
+            className="baloo-regular transform cursor-pointer rounded-full border-1 border-b-4 border-[#bbfaf5] bg-[#19b4bd] p-4 font-bold text-[#003F47] shadow-lg transition duration-200 ease-in-out hover:border-[#8dd9d3] hover:bg-[#0faeb8] hover:shadow-xl focus-visible:ring-2 focus-visible:ring-[#003F47] focus-visible:ring-offset-2 focus-visible:outline-none active:translate-y-1 active:border-b-2 active:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
             aria-label="Previous product"
             disabled={products.length <= 1}
           >
             <ChevronLeft className="h-6 w-6" />
           </button>
           <div
-            className="bg-opacity-80 baloo-regular rounded-full border-1 border-b-4 border-[#bbfaf5] bg-[#19b4bd] px-6 py-2 text-sm text-[#003F47] backdrop-blur-sm"
+            className="baloo-regular bg-opacity-80 rounded-full border-1 border-b-4 border-[#bbfaf5] bg-[#19b4bd] px-6 py-2 text-sm font-medium text-[#003F47] shadow-sm backdrop-blur-sm"
             aria-label={`Product ${currentIndex + 1} of ${products.length}`}
           >
             {`${currentIndex + 1} / ${products.length}`}
           </div>
           <button
             onClick={onNext}
-            className="baloo-regular transform cursor-pointer rounded-full border-1 border-b-4 border-[#bbfaf5] bg-[#19b4bd] p-4 font-bold text-[#003F47] shadow-lg transition-all duration-150 hover:border-[#8dd9d3] hover:bg-[#0faeb8] hover:shadow-xl focus:outline-none active:translate-y-1 active:border-b-2 active:shadow-md"
+            className="baloo-regular transform cursor-pointer rounded-full border-1 border-b-4 border-[#bbfaf5] bg-[#19b4bd] p-4 font-bold text-[#003F47] shadow-lg transition duration-200 ease-in-out hover:border-[#8dd9d3] hover:bg-[#0faeb8] hover:shadow-xl focus-visible:ring-2 focus-visible:ring-[#003F47] focus-visible:ring-offset-2 focus-visible:outline-none active:translate-y-1 active:border-b-2 active:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
             aria-label="Next product"
             disabled={products.length <= 1}
           >
@@ -638,7 +620,7 @@ const CategorySelector: React.FC<{
 }> = ({ categories, selectedCategory, onCategorySelect }) => (
   <div className="mb-10 flex justify-center">
     <div
-      className="flex flex-wrap justify-center gap-4"
+      className="flex flex-wrap justify-center gap-3 sm:gap-4"
       role="tablist"
       aria-label="Product categories"
     >

@@ -74,7 +74,6 @@ export const MobileNavigation = React.memo(
     const toggleMenuVisibility = useCallback(() => {
       setIsMenuOpen(prevState => {
         const nextMenuState = !prevState;
-        // Prevent body scroll when menu opens
         if (nextMenuState) {
           document.body.style.overflow = 'hidden';
           document.body.style.position = 'fixed';
@@ -96,7 +95,6 @@ export const MobileNavigation = React.memo(
 
     const closeMenu = useCallback(() => {
       setIsMenuOpen(false);
-      // Restore body scroll
       const scrollY = document.body.style.top;
       document.body.style.overflow = '';
       document.body.style.position = '';
@@ -107,7 +105,6 @@ export const MobileNavigation = React.memo(
       }
     }, []);
 
-    // Handle keyboard navigation
     const handleKeyDown = useCallback(
       (event: KeyboardEvent) => {
         if (event.key === 'Escape') {
@@ -121,7 +118,6 @@ export const MobileNavigation = React.memo(
       [isMenuOpen, isOrderModalOpen, closeMenu]
     );
 
-    // Cleanup body overflow on unmount
     useEffect(() => {
       return () => {
         document.body.style.overflow = '';
@@ -131,7 +127,6 @@ export const MobileNavigation = React.memo(
       };
     }, []);
 
-    // Handle escape key
     useEffect(() => {
       if (isMenuOpen || isOrderModalOpen) {
         document.addEventListener('keydown', handleKeyDown);
@@ -139,25 +134,21 @@ export const MobileNavigation = React.memo(
       }
     }, [isMenuOpen, isOrderModalOpen, handleKeyDown]);
 
-    // Handle body scroll for order modal
     useEffect(() => {
       if (isOrderModalOpen) {
         document.body.style.overflow = 'hidden';
       } else {
         document.body.style.overflow = 'unset';
       }
-
       return () => {
         document.body.style.overflow = 'unset';
       };
     }, [isOrderModalOpen]);
 
-    // Focus management
     useEffect(() => {
       if (isMenuOpen && closeButtonRef.current) {
         closeButtonRef.current.focus();
       } else if (!isMenuOpen && closeButtonRef.current) {
-        // Remove focus from close button when menu closes
         closeButtonRef.current.blur();
       }
     }, [isMenuOpen]);
@@ -167,12 +158,10 @@ export const MobileNavigation = React.memo(
         const clickTarget = event.target as HTMLElement;
         const isClickInsideMenu = clickTarget.closest('[data-menu-content]');
         const isClickOnMenuButton = clickTarget.closest('[data-menu-button]');
-
         if (isMenuOpen && !isClickInsideMenu && !isClickOnMenuButton) {
           closeMenu();
         }
       };
-
       if (isMenuOpen) {
         document.addEventListener('mousedown', handleOutsideClick);
         return () =>
@@ -189,15 +178,7 @@ export const MobileNavigation = React.memo(
       >
         <div className="flex min-w-0 items-center justify-center">
           <span
-            className="baloo-regular pt-1 text-4xl font-bold tracking-wide text-[#f7d34f]"
-            style={{
-              fontFamily: 'Baloo, sans-serif',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              letterSpacing: '0.04em',
-              textShadow: '-3px 3px 0px #7F4F00',
-            }}
+            className="baloo-regular overflow-hidden pt-1 text-4xl font-bold tracking-wide text-ellipsis whitespace-nowrap text-[#f7d34f] drop-shadow"
             aria-hidden="true"
           >
             {name}
@@ -210,7 +191,7 @@ export const MobileNavigation = React.memo(
     const QuickOrderButton = React.memo(() => (
       <button
         onClick={() => setIsOrderModalOpen(true)}
-        className="baloo-regular flex transform items-center rounded-2xl border-1 border-b-4 border-[#f7d34f] bg-transparent px-4 py-2 text-lg font-bold text-white shadow-lg transition-all duration-200 hover:bg-yellow-500 hover:text-white hover:underline hover:decoration-white hover:decoration-2 hover:underline-offset-2 hover:shadow-xl focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#e83838] focus:outline-none active:translate-y-1 active:border-b-1 active:shadow-md"
+        className="baloo-regular flex items-center rounded-2xl border border-b-4 border-[#f7d34f] bg-transparent px-4 py-2 text-lg font-bold text-white shadow-lg transition-all duration-200 hover:bg-yellow-500 hover:text-white hover:underline hover:decoration-2 hover:underline-offset-2 hover:shadow-xl focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#e83838] focus-visible:outline-none active:translate-y-0.5"
         aria-label="Order food online"
         aria-haspopup="dialog"
       >
@@ -224,7 +205,7 @@ export const MobileNavigation = React.memo(
         <button
           onClick={onToggle}
           data-menu-button
-          className="flex transform items-center justify-center rounded-full bg-[#f7d34f] p-2 shadow-lg transition-all duration-200 hover:bg-yellow-500 hover:shadow-xl focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#e83838] focus:outline-none active:translate-y-1 active:shadow-md"
+          className="flex items-center justify-center rounded-full bg-[#f7d34f] p-2 shadow-lg transition-all duration-200 hover:bg-yellow-500 hover:shadow-xl focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#e83838] focus-visible:outline-none active:translate-y-0.5"
           aria-label={isOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={isOpen}
           aria-controls="mobile-navigation-menu"
@@ -261,20 +242,14 @@ export const MobileNavigation = React.memo(
         isCurrentPage: boolean;
       }) => {
         const baseClassName =
-          'baloo-regular flex items-center justify-center rounded-3xl border-1 border-[#f0c91f] bg-transparent p-4 text-lg font-semibold text-white shadow-[0_6px_0_rgb(247,217,84)] transition-all duration-300 ease-out hover:border-white hover:bg-[#19b4bd]/30 hover:text-[#f0c91f] hover:underline hover:decoration-2 hover:underline-offset-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#19b4bd]';
-
-        const linkClassName = `${baseClassName} ${
-          isCurrentPage ? 'border-white bg-[#19b4bd]/30 text-[#f0c91f]' : ''
-        }`;
-
+          'baloo-regular flex items-center justify-center rounded-3xl border border-[#f0c91f] bg-transparent p-4 text-lg font-semibold text-white shadow-[0_6px_0_rgb(247,217,84)] transition-all duration-300 ease-out hover:border-white hover:bg-[#19b4bd]/30 hover:text-[#f0c91f] hover:underline hover:decoration-2 hover:underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd]';
+        const linkClassName = `${baseClassName} ${isCurrentPage ? 'border-white bg-[#19b4bd]/30 text-[#f0c91f]' : ''}`;
         const commonProps = {
           className: linkClassName,
-          style: { fontFamily: 'Baloo, sans-serif' },
           'aria-label': item.ariaLabel || item.label,
           'aria-current': isCurrentPage ? ('page' as const) : undefined,
           onClick,
         };
-
         if (item.isExternalLink) {
           return (
             <a
@@ -287,7 +262,6 @@ export const MobileNavigation = React.memo(
             </a>
           );
         }
-
         return (
           <Link to={item.href} {...commonProps}>
             {item.label}
@@ -301,50 +275,28 @@ export const MobileNavigation = React.memo(
       const handleImageError = (
         event: React.SyntheticEvent<HTMLImageElement>
       ) => {
-        console.warn('Menu header logo image failed to load');
         event.currentTarget.style.display = 'none';
       };
-
       return (
-        <header className="py-0" role="banner">
+        <header className="py-0" role="banner" id="mobile-menu-header">
           <div className="container mx-auto flex justify-center">
-            <div className="flex flex-row items-center">
+            <div className="flex flex-row items-center gap-4">
               <img
                 src={logoImage}
                 alt="Kailani restaurant logo"
                 className="h-36 w-36 flex-shrink-0"
                 onError={handleImageError}
-                width="144"
-                height="144"
+                width={144}
+                height={144}
               />
               <div className="space-y-0">
                 <h3 className="milkshake-regular text-lg font-bold text-[#f7d34f] drop-shadow-sm sm:text-xl">
                   Hawaiian
                 </h3>
-                <h1
-                  className="baloo-regular pr-9 text-4xl font-extrabold text-[#f7d34f] sm:text-5xl"
-                  style={{
-                    fontFamily: 'Baloo, sans-serif',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    letterSpacing: '0.06em',
-                    textShadow: '-4px 4px 0px #7F4F00',
-                  }}
-                >
+                <h1 className="baloo-regular overflow-hidden pr-9 text-4xl font-extrabold tracking-wider text-ellipsis whitespace-nowrap text-[#f7d34f] sm:text-5xl">
                   SHAVE ICE
                 </h1>
-                <h2
-                  className="baloo-regular text-2xl font-bold text-white sm:text-3xl"
-                  style={{
-                    fontFamily: 'Baloo, sans-serif',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    letterSpacing: '0.04em',
-                    textShadow: '-2px 2px 0px #e85fa8',
-                  }}
-                >
+                <h2 className="baloo-regular overflow-hidden text-2xl font-bold tracking-wide text-ellipsis whitespace-nowrap text-white sm:text-3xl">
                   &amp; Ramen
                 </h2>
               </div>
@@ -366,19 +318,21 @@ export const MobileNavigation = React.memo(
         currentPath: string;
       }) => (
         <nav
-          className="flex flex-1 flex-col gap-4 px-2 pb-20"
+          className="flex flex-1 flex-col px-2 pb-20"
           role="navigation"
           aria-label="Mobile navigation menu"
         >
-          {items.map(item => (
-            <div key={item.href} className="relative">
-              <NavigationLink
-                item={item}
-                onClick={onItemClick}
-                isCurrentPage={currentPath === item.href}
-              />
-            </div>
-          ))}
+          <ul className="flex flex-col gap-4">
+            {items.map(item => (
+              <li key={item.href} className="list-none">
+                <NavigationLink
+                  item={item}
+                  onClick={onItemClick}
+                  isCurrentPage={currentPath === item.href}
+                />
+              </li>
+            ))}
+          </ul>
         </nav>
       )
     );
@@ -390,10 +344,9 @@ export const MobileNavigation = React.memo(
           className="sticky top-0 z-30 w-full max-w-full overflow-hidden border-b-2 border-[#ffe0f0] bg-[#e83838] shadow-xl"
           role="banner"
         >
-          <div className="flex w-full flex-row items-center justify-between border-b-2 border-[#ffe0f0] px-4 py-3">
+          <div className="mx-auto flex w-full max-w-7xl flex-row items-center justify-between border-b-2 border-[#ffe0f0] px-4 py-3">
             <BrandLogo name={displayName} />
-
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
               <QuickOrderButton />
               <MenuToggleButton
                 isOpen={isMenuOpen}
@@ -405,9 +358,7 @@ export const MobileNavigation = React.memo(
 
         <div
           id="mobile-navigation-menu"
-          className={`fixed inset-0 z-40 w-full max-w-full bg-gradient-to-b from-[#e83838] via-[#19b4bd] to-amber-900 backdrop-blur-md transition-all duration-300 ${
-            isMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'
-          }`}
+          className={`fixed inset-0 z-40 w-full max-w-full bg-gradient-to-b from-[#e83838] via-[#19b4bd] to-amber-900 backdrop-blur-md transition-opacity duration-300 ${isMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'}`}
           aria-hidden={!isMenuOpen}
           role="dialog"
           aria-modal="true"
@@ -417,12 +368,12 @@ export const MobileNavigation = React.memo(
           <div
             ref={menuRef}
             data-menu-content
-            className="relative z-10 flex h-full w-full max-w-full flex-col overflow-x-hidden overflow-y-auto p-6 pt-20"
+            className="relative z-10 flex h-full w-full max-w-full flex-col overflow-x-hidden overflow-y-auto p-6 pt-20 sm:px-8"
           >
             <button
               ref={closeButtonRef}
               onClick={closeMenu}
-              className="absolute top-6 right-6 transform rounded-full border-b-4 bg-[#f0c91f] p-3 text-xl font-bold text-amber-900 shadow-lg transition-all duration-200 hover:bg-yellow-500 hover:text-[#19b4bd] hover:shadow-xl focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#19b4bd] focus:outline-none active:translate-y-1 active:border-b-1 active:shadow-md"
+              className="absolute top-6 right-6 rounded-full border-b-4 bg-[#f0c91f] p-3 text-xl font-bold text-amber-900 shadow-lg transition-all duration-200 hover:bg-yellow-500 hover:text-[#19b4bd] hover:shadow-xl focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none active:translate-y-0.5"
               aria-label="Close menu"
               tabIndex={isMenuOpen ? 0 : -1}
             >
@@ -430,28 +381,24 @@ export const MobileNavigation = React.memo(
                 ×
               </span>
             </button>
-
-            <MenuHeader />
-            <NavigationMenu
-              items={NAVIGATION_ITEMS}
-              onItemClick={closeMenu}
-              currentPath={location.pathname}
-            />
+            <div className="mx-auto w-full max-w-3xl">
+              <MenuHeader />
+              <NavigationMenu
+                items={NAVIGATION_ITEMS}
+                onItemClick={closeMenu}
+                currentPath={location.pathname}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Mobile Order Modal */}
         {isOrderModalOpen && (
           <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
-            {/* Backdrop */}
             <div
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-all duration-300"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
               onClick={() => setIsOrderModalOpen(false)}
             />
-
-            {/* Modal Content - Mobile-optimized */}
-            <div className="animate-slide-up relative mx-4 max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:animate-none sm:rounded-2xl">
-              {/* Modal Header */}
+            <div className="relative mx-4 max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-white shadow-2xl sm:max-h-[90vh] sm:rounded-2xl">
               <div className="sticky top-0 z-10 rounded-t-2xl border-b border-gray-200 bg-white sm:rounded-t-2xl">
                 <div className="flex items-center justify-between p-4 sm:p-6">
                   <div>
@@ -461,10 +408,10 @@ export const MobileNavigation = React.memo(
                     <p className="mt-1 text-sm text-gray-600 sm:text-base">
                       Choose your preferred ordering method
                     </p>
-                  </div>{' '}
+                  </div>
                   <button
                     onClick={() => setIsOrderModalOpen(false)}
-                    className="cursor-pointer rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+                    className="rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 focus-visible:ring-2 focus-visible:ring-gray-700 focus-visible:outline-none"
                     aria-label="Close modal"
                   >
                     <svg
@@ -472,6 +419,7 @@ export const MobileNavigation = React.memo(
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
+                      aria-hidden="true"
                     >
                       <path
                         strokeLinecap="round"
@@ -483,8 +431,6 @@ export const MobileNavigation = React.memo(
                   </button>
                 </div>
               </div>
-
-              {/* Modal Body */}
               <div className="p-4 pb-6 sm:p-6 sm:pb-8">
                 <OnlineOrderingLinks
                   className="mb-0"

@@ -9,28 +9,32 @@ interface KailaniFooterProps {
 const KailaniFooter: React.FC<KailaniFooterProps> = React.memo(
   ({ restaurantName }) => {
     const currentYear = new Date().getFullYear();
-
-    // Ensure restaurantName is provided
     const displayName = restaurantName || 'Kailani';
 
     return (
       <footer
-        className="w-full bg-[#19b4bd] py-6 font-sans text-white"
+        className="w-full bg-[#19b4bd] py-8 font-sans text-white md:py-10"
         role="contentinfo"
         aria-label="Site footer"
       >
-        <div className="mx-auto max-w-6xl px-4">
-          {/* Main content in a single row */}
-          <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-            {/* Quick Links */}
-            <div>
-              <h3 className="mb-3 text-lg font-semibold">Quick Links</h3>
-              <nav>
-                <ul className="space-y-1">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+            <section
+              aria-labelledby="footer-quick-links"
+              className="rounded-2xl border border-white/15 p-5 shadow-sm"
+            >
+              <h3
+                id="footer-quick-links"
+                className="mb-4 text-lg font-semibold"
+              >
+                Quick Links
+              </h3>
+              <nav aria-label="Footer navigation">
+                <ul className="space-y-2">
                   <li>
                     <Link
                       to="/"
-                      className="text-sm text-white/90 transition-colors hover:text-yellow-400"
+                      className="inline-flex items-center rounded-md text-sm text-white/90 underline-offset-4 transition hover:underline focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none"
                     >
                       Home
                     </Link>
@@ -38,7 +42,7 @@ const KailaniFooter: React.FC<KailaniFooterProps> = React.memo(
                   <li>
                     <Link
                       to="/menu"
-                      className="text-sm text-white/90 transition-colors hover:text-yellow-400"
+                      className="inline-flex items-center rounded-md text-sm text-white/90 underline-offset-4 transition hover:underline focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none"
                     >
                       Menu
                     </Link>
@@ -46,7 +50,7 @@ const KailaniFooter: React.FC<KailaniFooterProps> = React.memo(
                   <li>
                     <Link
                       to="/jobs"
-                      className="text-sm text-white/90 transition-colors hover:text-yellow-400"
+                      className="inline-flex items-center rounded-md text-sm text-white/90 underline-offset-4 transition hover:underline focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none"
                     >
                       Careers
                     </Link>
@@ -54,7 +58,7 @@ const KailaniFooter: React.FC<KailaniFooterProps> = React.memo(
                   <li>
                     <Link
                       to="/about"
-                      className="text-sm text-white/90 transition-colors hover:text-yellow-400"
+                      className="inline-flex items-center rounded-md text-sm text-white/90 underline-offset-4 transition hover:underline focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none"
                     >
                       About Us
                     </Link>
@@ -62,24 +66,28 @@ const KailaniFooter: React.FC<KailaniFooterProps> = React.memo(
                   <li>
                     <Link
                       to="/contact"
-                      className="text-sm text-white/90 transition-colors hover:text-yellow-400"
+                      className="inline-flex items-center rounded-md text-sm text-white/90 underline-offset-4 transition hover:underline focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none"
                     >
                       Contact
                     </Link>
                   </li>
                 </ul>
               </nav>
-            </div>
+            </section>
 
-            {/* Contact Info */}
-            <div>
-              <h3 className="mb-3 text-lg font-semibold">Contact</h3>
-              <div className="space-y-1 text-sm text-white/90">
+            <section
+              aria-labelledby="footer-contact"
+              className="rounded-2xl border border-white/15 p-5 shadow-sm"
+            >
+              <h3 id="footer-contact" className="mb-4 text-lg font-semibold">
+                Contact
+              </h3>
+              <address className="space-y-2 text-sm text-white/90 not-italic">
                 <p>840 River Rd, New Milford, NJ</p>
                 <p>
                   <a
                     href="tel:+12014029600"
-                    className="transition-colors hover:text-yellow-400"
+                    className="inline-flex items-center rounded-md underline-offset-4 transition hover:underline focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none"
                   >
                     (201) 402-9600
                   </a>
@@ -87,34 +95,45 @@ const KailaniFooter: React.FC<KailaniFooterProps> = React.memo(
                 <p>
                   <a
                     href="mailto:kailanishaveicenj@gmail.com"
-                    className="transition-colors hover:text-yellow-400"
+                    className="inline-flex items-center rounded-md underline-offset-4 transition hover:underline focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none"
                   >
                     kailanishaveicenj@gmail.com
                   </a>
                 </p>
-              </div>
-            </div>
+              </address>
+            </section>
 
-            {/* Social Media */}
-            <div>
-              <h3 className="mb-3 text-lg font-semibold">Follow Us</h3>
-              <div className="origin-left scale-75">
+            <section
+              aria-labelledby="footer-follow"
+              className="rounded-2xl border border-white/15 p-5 shadow-sm"
+            >
+              <h3 id="footer-follow" className="mb-4 text-lg font-semibold">
+                Follow Us
+              </h3>
+              <div className="origin-left scale-90 transform-gpu sm:scale-95 md:scale-100">
                 <SocialMediaLinks className="justify-start" />
               </div>
-            </div>
+            </section>
           </div>
 
-          {/* Bottom section */}
-          <div className="border-t border-white/20 pt-4">
-            <div className="flex flex-col items-center justify-between gap-2 text-sm text-white/80 sm:flex-row">
-              <p>
+          <div className="mt-8 border-t border-white/20 pt-5">
+            <div className="flex flex-col items-center justify-between gap-3 text-sm text-white/80 sm:flex-row">
+              <p className="text-center sm:text-left">
                 &copy; {currentYear} {displayName}. All Rights Reserved
               </p>
-              <div className="flex gap-4">
-                <button className="transition-colors hover:text-white">
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  className="rounded-2xl px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-white/25 transition ring-inset focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none active:translate-y-px disabled:opacity-50"
+                  aria-label="Privacy policy"
+                >
                   Privacy
                 </button>
-                <button className="transition-colors hover:text-white">
+                <button
+                  type="button"
+                  className="rounded-2xl px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-white/25 transition ring-inset focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none active:translate-y-px disabled:opacity-50"
+                  aria-label="Terms and conditions"
+                >
                   Terms
                 </button>
               </div>

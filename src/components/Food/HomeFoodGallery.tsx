@@ -81,14 +81,16 @@ const useRandomFoodItems = (maxCount: number) => {
 // UI Components
 const LoadingDisplay: React.FC<GalleryDisplayProps> = ({ title, subtitle }) => (
   <section className="relative w-full max-w-full overflow-hidden border-b-2 border-[#ffe0f0] bg-[#f0c91f] py-16">
-    <div className="relative z-10 container mx-auto max-w-full px-4">
+    <div className="relative z-10 container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="mb-12 text-center">
-        <h2 className="baloo-regular mb-2 text-5xl font-bold tracking-tight text-[#7d3701] md:text-5xl">
-          {title}
-        </h2>
-        <p className="text-md baloo-regular mx-auto mb-2 max-w-2xl text-[#b25e00] md:text-xl">
-          {subtitle}
-        </p>
+        <header className="mb-10 text-center">
+          <h2 className="baloo-regular mb-2 text-4xl font-bold tracking-tight text-[#7d3701] md:text-5xl">
+            {title}
+          </h2>
+          <p className="text-md baloo-regular mx-auto max-w-2xl text-[#b25e00] md:text-xl">
+            {subtitle}
+          </p>
+        </header>
       </div>
       <div className="flex h-64 items-center justify-center">
         <div className="h-16 w-16 animate-spin rounded-full border-t-4 border-b-4 border-yellow-500"></div>
@@ -100,18 +102,18 @@ const LoadingDisplay: React.FC<GalleryDisplayProps> = ({ title, subtitle }) => (
 
 const ErrorDisplay: React.FC<GalleryDisplayProps> = ({ title, subtitle }) => (
   <section className="relative w-full max-w-full overflow-hidden border-b-2 border-[#ffe0f0] bg-[#f0c91f] py-16">
-    <div className="relative z-10 container mx-auto max-w-full px-4">
-      <div className="mb-12 text-center">
-        <h2 className="baloo-regular mb-2 text-5xl font-bold tracking-tight text-[#7d3701] md:text-5xl">
+    <div className="relative z-10 container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <header className="mb-10 text-center">
+        <h2 className="baloo-regular mb-2 text-4xl font-bold tracking-tight text-[#7d3701] md:text-5xl">
           {title}
         </h2>
-        <p className="text-md baloo-regular font-regular mx-auto mb-2 max-w-2xl text-[#b25e00] md:text-xl">
+        <p className="text-md baloo-regular mx-auto max-w-2xl text-[#b25e00] md:text-xl">
           {subtitle}
         </p>
-      </div>
-      <div className="mx-auto max-w-xl rounded-lg border border-yellow-200 bg-yellow-50 p-6">
+      </header>
+      <div className="mx-auto max-w-xl rounded-2xl border border-yellow-200 bg-yellow-50 p-6 shadow-sm">
         <p className="text-amber-800">
-          We couldn't load our gallery right now. Please check back later!
+          We couldn’t load the gallery. Please try again later.
         </p>
       </div>
     </div>
@@ -120,18 +122,18 @@ const ErrorDisplay: React.FC<GalleryDisplayProps> = ({ title, subtitle }) => (
 
 const EmptyDisplay: React.FC<GalleryDisplayProps> = ({ title, subtitle }) => (
   <section className="relative w-full max-w-full overflow-hidden border-b-2 border-[#ffe0f0] bg-[#f0c91f] py-16">
-    <div className="relative z-10 container mx-auto max-w-full px-4">
-      <div className="mb-12 text-center">
-        <h2 className="baloo-regular mb-2 text-5xl font-bold tracking-tight text-[#7d3701] md:text-5xl">
+    <div className="relative z-10 container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <header className="mb-10 text-center">
+        <h2 className="baloo-regular mb-2 text-4xl font-bold tracking-tight text-[#7d3701] md:text-5xl">
           {title}
         </h2>
-        <p className="text-md baloo-regular font-regular mx-auto mb-2 max-w-2xl text-[#b25e00] md:text-xl">
+        <p className="text-md baloo-regular mx-auto max-w-2xl text-[#b25e00] md:text-xl">
           {subtitle}
         </p>
-      </div>
-      <div className="mx-auto max-w-xl rounded-lg bg-white p-6 shadow-md">
-        <p className="text-gray-600">
-          No gallery images available at the moment. Please check back soon!
+      </header>
+      <div className="mx-auto max-w-xl rounded-2xl bg-white p-6 shadow-sm">
+        <p className="text-gray-700">
+          No gallery images available right now. Check back soon.
         </p>
       </div>
     </div>

@@ -106,15 +106,7 @@ export const DesktopNavigation = React.memo(() => {
           height="80"
         />
         <span
-          className="baloo-regular px-0.5 text-2xl font-bold tracking-wide text-[#f7d34f] md:text-3xl lg:text-4xl xl:text-5xl"
-          style={{
-            fontFamily: 'Baloo, sans-serif',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            letterSpacing: '0.04em',
-            textShadow: '-4px 4px 0px #7F4F00',
-          }}
+          className="baloo-regular truncate px-0.5 text-2xl font-bold tracking-wider text-[#f7d34f] drop-shadow-[-4px_4px_0_#7F4F00] md:text-3xl lg:text-4xl xl:text-5xl"
           aria-hidden="true"
         >
           {name}
@@ -133,12 +125,10 @@ export const DesktopNavigation = React.memo(() => {
       isCurrentPage: boolean;
     }) => {
       const baseClassName =
-        'baloo-regular relative flex items-center bg-transparent px-2 py-2 text-sm font-semibold transition-all duration-300 ease-out hover:text-white hover:underline hover:decoration-2 hover:decoration-white hover:underline-offset-2 md:px-3 md:py-3 md:text-base lg:px-4 lg:py-3 lg:text-lg xl:px-5 xl:py-4 xl:text-xl focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#e83838]';
+        'baloo-regular group relative inline-flex items-center rounded-md bg-transparent px-2 py-2 text-sm font-semibold transition-all duration-300 ease-out md:px-3 md:py-3 md:text-base lg:px-4 lg:py-3 lg:text-lg xl:px-5 xl:py-4 xl:text-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#e83838]';
 
       const linkClassName = `${baseClassName} ${
-        isCurrentPage
-          ? 'text-white underline decoration-2 decoration-white underline-offset-2'
-          : 'text-[#f7d34f]'
+        isCurrentPage ? 'text-white' : 'text-[#f7d34f] hover:text-white'
       }`;
 
       const commonProps = {
@@ -152,10 +142,20 @@ export const DesktopNavigation = React.memo(() => {
         return (
           <button
             onClick={() => setIsModalOpen(true)}
-            className={`${linkClassName} cursor-pointer appearance-none border-none`}
+            className={`${linkClassName} cursor-pointer appearance-none border-none ring-1 ring-white/20 ring-inset hover:bg-white/5 hover:ring-white/40`}
             aria-haspopup="dialog"
           >
-            {item.label}
+            <span className="relative">
+              {item.label}
+              <span
+                className={`pointer-events-none absolute inset-x-0 -bottom-1 h-0.5 origin-left transform bg-white transition-transform duration-300 ease-out ${
+                  isCurrentPage
+                    ? 'scale-x-100'
+                    : 'scale-x-0 group-hover:scale-x-100'
+                }`}
+                aria-hidden="true"
+              />
+            </span>
           </button>
         );
       }
@@ -168,14 +168,34 @@ export const DesktopNavigation = React.memo(() => {
             rel="noopener noreferrer"
             {...commonProps}
           >
-            {item.label}
+            <span className="relative">
+              {item.label}
+              <span
+                className={`pointer-events-none absolute inset-x-0 -bottom-1 h-0.5 origin-left transform bg-white transition-transform duration-300 ease-out ${
+                  isCurrentPage
+                    ? 'scale-x-100'
+                    : 'scale-x-0 group-hover:scale-x-100'
+                }`}
+                aria-hidden="true"
+              />
+            </span>
           </a>
         );
       }
 
       return (
         <Link to={item.href} {...commonProps}>
-          {item.label}
+          <span className="relative">
+            {item.label}
+            <span
+              className={`pointer-events-none absolute inset-x-0 -bottom-1 h-0.5 origin-left transform bg-white transition-transform duration-300 ease-out ${
+                isCurrentPage
+                  ? 'scale-x-100'
+                  : 'scale-x-0 group-hover:scale-x-100'
+              }`}
+              aria-hidden="true"
+            />
+          </span>
         </Link>
       );
     }
@@ -210,10 +230,10 @@ export const DesktopNavigation = React.memo(() => {
   return (
     <>
       <header
-        className="sticky top-0 z-30 w-full max-w-full overflow-hidden border-b-2 border-[#ffe0f0] bg-[#e83838] shadow-xl"
+        className="sticky top-0 z-50 w-full max-w-full overflow-hidden border-b border-[#ffe0f0]/60 bg-[#e83838] shadow-xl backdrop-blur supports-[backdrop-filter]:bg-[#e83838]"
         role="banner"
       >
-        <div className="flex w-full flex-row items-center justify-between border-b-2 border-[#ffe0f0] px-4 py-3 md:px-6 md:py-4 lg:px-8 lg:py-5 xl:px-12 xl:py-6">
+        <div className="mx-auto flex w-full max-w-7xl flex-row items-center justify-between px-4 py-3 sm:px-6 md:py-4 lg:px-8 lg:py-5 xl:px-12 xl:py-6">
           <BrandLogo name={RESTAURANT_CONFIG.name} />
           <NavigationMenu items={NAVIGATION_ITEMS} currentPath={currentPath} />
         </div>
@@ -229,7 +249,7 @@ export const DesktopNavigation = React.memo(() => {
           />
 
           {/* Modal Content */}
-          <div className="animate-slide-up relative mx-4 max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-white shadow-2xl md:max-h-[90vh] md:rounded-2xl">
+          <div className="relative mx-4 max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-white shadow-2xl transition-all duration-300 md:max-h-[90vh] md:rounded-2xl">
             {/* Modal Header */}
             <div className="sticky top-0 z-10 rounded-t-2xl border-b border-gray-200 bg-white md:rounded-t-2xl">
               <div className="flex items-center justify-between p-4 md:p-6">

@@ -7,9 +7,11 @@ import {
 } from '../../firebase/reviewService';
 import { Timestamp } from 'firebase/firestore';
 
-// Professional star rating component
 const StarRating = ({ rating }: { rating: number }) => (
-  <div className="flex items-center gap-1">
+  <div
+    className="flex items-center gap-1"
+    aria-label={`Rating ${rating} out of 5`}
+  >
     {[...Array(5)].map((_, i) => (
       <svg
         key={i}
@@ -25,15 +27,16 @@ const StarRating = ({ rating }: { rating: number }) => (
   </div>
 );
 
-// Google Review Icon
 const GoogleIcon = () => (
-  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md">
+  <div
+    className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md"
+    aria-hidden="true"
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       width="16"
       height="16"
-      aria-hidden="true"
     >
       <path
         fill="#4285F4"
@@ -55,9 +58,6 @@ const GoogleIcon = () => (
   </div>
 );
 
-// Interface for review data
-
-// Custom hook to fetch reviews and stats using direct Firebase service
 const useReviews = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [reviewStats, setReviewStats] = useState<ReviewStats>({
@@ -66,38 +66,29 @@ const useReviews = () => {
     lastUpdated: Timestamp.now(),
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchReviewsAndStats = async () => {
       try {
         setIsLoading(true);
         setError(null);
-
-        // Fetch reviews and stats in parallel
         const [reviewsData, statsData] = await Promise.all([
           getAllReviews(),
           getReviewStats(),
         ]);
-
         setReviews(reviewsData);
         setReviewStats(statsData);
-
-        console.log(
-          `🎯 CustomerReviews: Loaded ${reviewsData.length} reviews with average rating ${statsData.averageRating.toFixed(1)}`
-        );
       } catch (err) {
-        console.error('Error fetching reviews:', err);
         setError(err instanceof Error ? err.message : 'Failed to load reviews');
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchReviewsAndStats();
   }, []);
 
-  return { reviews, reviewStats, isLoading, error };
+  return { reviews, reviewStats, isLoading };
 };
 
 interface CustomerReviewsProps {
@@ -112,17 +103,12 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
   subtitle = 'What Our Customers Say',
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Use direct reviews hook
   const { reviews: directReviews, reviewStats, isLoading } = useReviews();
-
-  // Use provided reviews or direct reviews
   const reviews =
     propReviews && propReviews.length > 0 ? propReviews : directReviews;
   const averageRating = reviewStats.averageRating;
   const totalReviews = reviewStats.totalReviews;
 
-  // Handle navigation
   const goToNextReview = () => {
     setCurrentIndex(prevIndex => (prevIndex + 1) % reviews.length);
   };
@@ -137,9 +123,9 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
     return (
       <section className="bg-[#78350F] px-4 py-16">
         <div className="mx-auto max-w-6xl">
-          <div className="text-center">
-            <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-amber-200"></div>
-            <p className="mt-4 font-sans text-amber-100">Loading reviews...</p>
+          <div className="text-center" role="status" aria-live="polite">
+            <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-amber-200" />
+            <p className="mt-4 font-sans text-amber-100">Loading reviews</p>
           </div>
         </div>
       </section>
@@ -150,105 +136,109 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
     return null;
   }
 
+  const active = reviews[currentIndex];
+
   return (
     <section className="border-b-2 border-[#ffe0f0] bg-[#78350F] px-4 py-16">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-10 text-center">
+        <header className="mb-10 text-center">
           <h2 className="baloo-regular mb-3 text-3xl font-semibold tracking-wide text-[#F5E1A4] md:text-4xl">
             {title}
           </h2>
           <p className="baloo-regular text-xl tracking-wide text-[#FFFFF0]">
             {subtitle}
           </p>
-
           <div className="mx-auto mt-6 inline-flex items-center justify-center rounded-xl bg-amber-900/40 px-6 py-3">
-            <p className="baloo-regular mr-3 text-3xl font-bold text-[#FFFFFF]">
+            <p
+              className="baloo-regular mr-3 text-3xl font-bold text-[#FFFFFF]"
+              aria-label="Average rating"
+            >
               {averageRating.toFixed(1)}
             </p>
             <StarRating rating={Math.round(averageRating)} />
-            <p className="baloo-regular ml-3 text-sm text-[#FFFFFF]">
+            <p
+              className="baloo-regular ml-3 text-sm text-[#FFFFFF]"
+              aria-label="Total reviews"
+            >
               ({totalReviews} reviews)
             </p>
           </div>
-        </div>
+        </header>
 
-        {reviews.length > 0 && (
-          <div className="mb-12">
-            {/* Review Card */}
-            <div className="relative rounded-2xl bg-white p-8 shadow-lg">
-              <blockquote className="grid gap-8 md:grid-cols-[auto_1fr]">
-                <div className="flex flex-shrink-0 flex-col items-center">
-                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-amber-100 shadow-md">
-                    <span
-                      className="text-2xl font-semibold text-amber-800"
-                      aria-hidden="true"
-                    >
-                      {reviews[currentIndex].author.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="mt-4 flex flex-col items-center gap-2">
-                    <GoogleIcon />
-                    <StarRating rating={reviews[currentIndex].rating} />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="mb-3 flex flex-wrap items-center gap-3">
-                    <cite className="baloo-regular text-xl font-semibold text-amber-900 not-italic">
-                      {reviews[currentIndex].author}
-                    </cite>
-                  </div>
-                  <p className="font-sans text-base leading-relaxed text-[#000000]">
-                    "{reviews[currentIndex].text}"
-                  </p>
-                </div>
-              </blockquote>
-
-              {/* Navigation buttons */}
-              {reviews.length > 1 && (
-                <div className="mt-8 flex justify-between">
-                  <button
-                    onClick={goToPrevReview}
-                    className="font-navigation baloo-regular cursor-pointer rounded-full bg-amber-100 px-4 py-2 text-base font-bold text-amber-900 shadow-[0_6px_0_rgb(217,180,114)] transition-all duration-200 hover:translate-y-1 hover:scale-105 hover:shadow-[0_4px_0px_rgb(217,180,114)] active:scale-95"
-                    aria-label="Previous review"
+        <div className="mb-12">
+          <div className="relative rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 md:p-8">
+            <figure className="grid items-start gap-6 md:grid-cols-[auto_1fr] md:gap-8">
+              <div className="flex flex-shrink-0 flex-col items-center">
+                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-amber-100 shadow-md">
+                  <span
+                    className="text-2xl font-semibold text-amber-800"
+                    aria-hidden="true"
                   >
-                    Previous
-                  </button>
-                  <button
-                    onClick={goToNextReview}
-                    className="font-navigation baloo-regular cursor-pointer rounded-full bg-amber-100 px-4 py-2 text-base font-bold text-amber-900 shadow-[0_6px_0_rgb(217,180,114)] transition-all duration-200 hover:translate-y-1 hover:scale-105 hover:shadow-[0_4px_0px_rgb(217,180,114)] active:scale-95"
-                    aria-label="Next review"
-                  >
-                    Next
-                  </button>
+                    {active.author.charAt(0).toUpperCase()}
+                  </span>
                 </div>
-              )}
-            </div>
+                <div className="mt-4 flex flex-col items-center gap-2">
+                  <GoogleIcon />
+                  <span className="sr-only">Google review</span>
+                  <StarRating rating={active.rating} />
+                </div>
+              </div>
 
-            {/* Pagination dots */}
+              <div id="review-panel" aria-live="polite">
+                <figcaption className="mb-3 flex flex-wrap items-center gap-3">
+                  <span className="baloo-regular text-xl font-semibold text-amber-900">
+                    {active.author}
+                  </span>
+                </figcaption>
+                <p className="font-sans text-base leading-relaxed text-[#000000]">
+                  {active.text}
+                </p>
+              </div>
+            </figure>
+
             {reviews.length > 1 && (
-              <div className="mt-6 flex justify-center gap-3">
-                {reviews.map((_: Review, i: number) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentIndex(i)}
-                    className={`h-3 w-3 rounded-full transition-colors focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:outline-none ${
-                      i === currentIndex
-                        ? 'bg-amber-200'
-                        : 'bg-amber-600 hover:bg-amber-500'
-                    }`}
-                    aria-label={`View review ${i + 1}`}
-                    aria-current={i === currentIndex ? 'true' : 'false'}
-                  />
-                ))}
+              <div className="mt-8 flex items-center justify-between">
+                <button
+                  onClick={goToPrevReview}
+                  className="baloo-regular cursor-pointer rounded-2xl bg-amber-100 px-4 py-2 text-base font-bold text-amber-900 shadow-[0_6px_0_rgb(217,180,114)] ring-1 ring-transparent transition hover:ring-amber-200 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-95"
+                  aria-label="Previous review"
+                  aria-controls="review-panel"
+                >
+                  Previous
+                </button>
+                <button
+                  onClick={goToNextReview}
+                  className="baloo-regular cursor-pointer rounded-2xl bg-amber-100 px-4 py-2 text-base font-bold text-amber-900 shadow-[0_6px_0_rgb(217,180,114)] ring-1 ring-transparent transition hover:ring-amber-200 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-95"
+                  aria-label="Next review"
+                  aria-controls="review-panel"
+                >
+                  Next
+                </button>
               </div>
             )}
           </div>
-        )}
 
-        {/* Call to action */}
+          {reviews.length > 1 && (
+            <div className="mt-6 flex justify-center gap-3">
+              {reviews.map((_: Review, i: number) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentIndex(i)}
+                  className={`h-3 w-3 rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:outline-none ${
+                    i === currentIndex
+                      ? 'bg-amber-200'
+                      : 'bg-amber-600 hover:bg-amber-500'
+                  }`}
+                  aria-label={`View review ${i + 1}`}
+                  aria-current={i === currentIndex ? 'true' : 'false'}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
         <div className="text-center">
-          <div className="inline-block rounded-2xl bg-white p-6 shadow-lg">
+          <div className="inline-block rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
             <div className="baloo-regular mb-3 text-xl font-bold text-amber-800">
               Share your experience!
             </div>
@@ -262,7 +252,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
                   '_blank'
                 )
               }
-              className="font-navigation baloo-regular mt-2 cursor-pointer rounded-full bg-green-500 px-8 py-4 text-base font-bold text-white shadow-[0_6px_0_rgb(5,150,105)] transition-all duration-200 hover:translate-y-1 hover:scale-105 hover:shadow-[0_4px_0px_rgb(5,150,105)] active:scale-95"
+              className="font-navigation baloo-regular mt-2 inline-flex cursor-pointer items-center justify-center rounded-2xl bg-green-500 px-8 py-4 text-base font-bold text-white shadow-[0_6px_0_rgb(5,150,105)] ring-1 ring-transparent transition hover:ring-green-400 focus-visible:ring-2 focus-visible:ring-green-300 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-95"
               aria-label="Leave us a Google review"
             >
               <span className="flex items-center">
