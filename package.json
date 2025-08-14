@@ -65,5 +65,12 @@
     "vite": "^6.3.5",
     "vite-plugin-pwa": "^1.0.0",
     "vitest": "^3.2.4"
+  },
+  "overrides": {
+    "@vercel/node": {
+      "esbuild": "^0.25.0",
+      "path-to-regexp": "^8.0.0",
+      "undici": "^7.0.0"
+    }
   }
 }
