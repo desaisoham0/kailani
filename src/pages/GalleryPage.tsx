@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import useCachedFoodItems from '../hooks/useCachedFoodItems';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { getAllFoodItems, type FoodItem } from '../firebase/foodService';
 
 // ===== TYPES =====
 type FoodCategory =
@@ -73,6 +73,39 @@ const sanitizeAltText = (name: string, category: string): string => {
   return `${cleanName} - ${cleanCategory}`;
 };
 
+// Custom hook to fetch food items using direct Firebase service
+const useFoodItems = () => {
+  const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const fetchFoodItems = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const items = await getAllFoodItems();
+        setFoodItems(items);
+
+        console.log(
+          `📸 GalleryPage: Loaded ${items.length} food items from direct service`
+        );
+      } catch (err) {
+        console.error('Error fetching food items:', err);
+        setError(
+          err instanceof Error ? err : new Error('Failed to load food items')
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFoodItems();
+  }, []);
+
+  return { foodItems, isLoading, error };
+};
+
 // About Our Food component
 const AboutOurFood: React.FC = () => {
   return (
@@ -109,27 +142,29 @@ const GalleryPage: React.FC = () => {
   const {
     foodItems: allFoodItems,
     isLoading,
-    error: cacheError,
-  } = useCachedFoodItems();
+    error: directError,
+  } = useFoodItems();
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
 
   // Filter to only include items with valid images
   const foodItems = useMemo(() => {
-    return allFoodItems.filter(item => isValidImageUrl(item.imageUrl));
+    return allFoodItems.filter((item: FoodItem) =>
+      isValidImageUrl(item.imageUrl)
+    );
   }, [allFoodItems]);
 
-  const error = cacheError?.message || null;
+  const error = directError?.message || null;
 
   // Get all available categories from food items and sort them using centralized system
   const categories = useMemo(() => {
     const uniqueCategories = [
-      ...new Set(foodItems.map(item => item.category)),
+      ...new Set(foodItems.map((item: FoodItem) => item.category)),
     ].filter(Boolean);
     const allCategories = ['all', ...uniqueCategories];
 
     // Sort categories according to the centralized order system
-    const sortedCategories = allCategories.sort((a, b) => {
+    const sortedCategories = allCategories.sort((a: string, b: string) => {
       if (a === 'all') return -1; // 'all' always comes first
       if (b === 'all') return 1;
 
@@ -141,7 +176,7 @@ const GalleryPage: React.FC = () => {
 
     // Debug logging to verify sorting
     console.log('Category sorting order:');
-    sortedCategories.forEach((category, index) => {
+    sortedCategories.forEach((category: string, index: number) => {
       if (category !== 'all') {
         const order = getCategoryOrder(category);
         console.log(`${index}. ${category} (order: ${order})`);
@@ -156,7 +191,9 @@ const GalleryPage: React.FC = () => {
   // Filter food items by active category
   const displayItems = useMemo(() => {
     if (activeCategory === 'all') return foodItems;
-    return foodItems.filter(item => item.category === activeCategory);
+    return foodItems.filter(
+      (item: FoodItem) => item.category === activeCategory
+    );
   }, [foodItems, activeCategory]);
 
   const handleCategoryChange = useCallback((category: string) => {
@@ -235,7 +272,7 @@ const GalleryPage: React.FC = () => {
         {/* Category Filters */}
         <nav aria-label="Food category filters" className="mb-8 sm:mb-10">
           <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-2 sm:gap-3">
-            {categories.map(category => (
+            {categories.map((category: string) => (
               <button
                 key={category}
                 onClick={() => handleCategoryChange(category)}
@@ -268,14 +305,14 @@ const GalleryPage: React.FC = () => {
               role="grid"
               aria-label={`${displayItems.length} food items in ${getCategoryDisplayName(activeCategory)} category`}
             >
-              {displayItems.map(item => (
+              {displayItems.map((item: FoodItem) => (
                 <article
                   key={item.id}
                   className="overflow-hidden rounded-xl bg-white shadow-lg transition-all duration-300 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:scale-[1.02] hover:shadow-xl"
                   role="gridcell"
                 >
                   <div className="relative aspect-square overflow-hidden bg-gray-100">
-                    {failedImages.has(item.id) ? (
+                    {failedImages.has(item.id || '') ? (
                       <div className="flex h-full w-full items-center justify-center bg-gray-100">
                         <div className="p-4 text-center text-gray-500">
                           <svg
@@ -298,7 +335,7 @@ const GalleryPage: React.FC = () => {
                         alt={sanitizeAltText(item.name, item.category)}
                         className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                         loading="lazy"
-                        onError={() => handleImageError(item.id)}
+                        onError={() => handleImageError(item.id || '')}
                       />
                     )}
                     {item.favorite && (

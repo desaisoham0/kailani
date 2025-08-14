@@ -1,10 +1,8 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-} from 'react';
-import { getFavoriteFoodItems, type FoodItem } from '../../firebase/foodService';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import {
+  getFavoriteFoodItems,
+  type FoodItem,
+} from '../../firebase/foodService';
 import logo from '../../assets/Kailani_logo.png';
 import { SocialMediaLinks } from '../Navigation/SocialMediaLinks';
 
@@ -274,7 +272,9 @@ const useFavoriteFoodItems = () => {
         setFavoriteItems(items);
       } catch (err) {
         console.error('Error fetching favorite items:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load favorite items');
+        setError(
+          err instanceof Error ? err.message : 'Failed to load favorite items'
+        );
       } finally {
         setIsLoading(false);
       }

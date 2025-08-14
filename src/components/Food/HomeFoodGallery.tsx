@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getFavoriteFoodItems, type FoodItem } from '../../firebase/foodService';
+import {
+  getFavoriteFoodItems,
+  type FoodItem,
+} from '../../firebase/foodService';
 
 type GalleryDisplayProps = {
   title: string;
@@ -39,7 +42,9 @@ const useRandomFoodItems = (maxCount: number) => {
         setFavoriteItems(items);
       } catch (err) {
         console.error('Error fetching favorite items:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load favorite items');
+        setError(
+          err instanceof Error ? err.message : 'Failed to load favorite items'
+        );
       } finally {
         setIsLoading(false);
       }

@@ -1,12 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import { submitForm } from '../services/emailService';
-import useCachedHours from '../hooks/useCachedHours';
+import {
+  getHoursOfOperation,
+  type HoursOfOperation,
+  type DayHours,
+} from '../firebase/hoursService';
 
 interface OpeningHours {
   day: string;
   hours: string;
   isToday: boolean;
 }
+
+// Custom hook to fetch hours using direct Firebase service
+const useHours = () => {
+  const [hoursData, setHoursData] = useState<HoursOfOperation | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchHours = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const hours = await getHoursOfOperation();
+        setHoursData(hours);
+
+        console.log(
+          `🕒 ContactPage: Loaded hours for ${hours.days.length} days`
+        );
+      } catch (err) {
+        console.error('Error fetching hours:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load hours');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchHours();
+  }, []);
+
+  return { hoursData, isLoading, error };
+};
 
 const ContactPage: React.FC = React.memo(() => {
   const [activeTab, setActiveTab] = useState<'contact' | 'location' | 'hours'>(
@@ -24,8 +59,8 @@ const ContactPage: React.FC = React.memo(() => {
   const [formError, setFormError] = useState('');
   const [todaysDay, setTodaysDay] = useState<string>('');
 
-  // Use cached hours hook
-  const { hoursData, isLoading: hoursLoading } = useCachedHours();
+  // Use direct hours hook
+  const { hoursData, isLoading: hoursLoading } = useHours();
 
   // Get today's day and handle URL params
   useEffect(() => {
@@ -59,7 +94,7 @@ const ContactPage: React.FC = React.memo(() => {
 
   // Format hours data for display
   const openingHours: OpeningHours[] =
-    hoursData?.days.map(day => ({
+    hoursData?.days.map((day: DayHours) => ({
       day: day.day,
       hours: day.isOpen ? day.hours : 'Closed',
       isToday: day.day === todaysDay,

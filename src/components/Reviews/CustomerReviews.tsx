@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getAllReviews, getReviewStats, type Review, type ReviewStats } from '../../firebase/reviewService';
+import {
+  getAllReviews,
+  getReviewStats,
+  type Review,
+  type ReviewStats,
+} from '../../firebase/reviewService';
 import { Timestamp } from 'firebase/firestore';
 
 // Professional star rating component
