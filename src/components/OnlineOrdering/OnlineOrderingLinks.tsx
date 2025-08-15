@@ -49,11 +49,11 @@ const OnlineOrderingLinks: React.FC<OnlineOrderingLinksProps> = ({
   return (
     <section className={`online-ordering-links ${className}`}>
       {!isDropdown && (
-        <header className="mb-8 text-center">
-          <h2 className="mb-2 text-3xl font-bold text-gray-800">
+        <header className="mb-8 text-center md:mb-10">
+          <h2 className="mb-2 text-3xl font-bold text-gray-800 sm:text-4xl">
             Order Online
           </h2>
-          <p className="mx-auto max-w-prose text-lg text-gray-600">
+          <p className="mx-auto max-w-prose text-base text-gray-600 sm:text-lg">
             Choose your preferred ordering method
           </p>
         </header>
@@ -62,7 +62,7 @@ const OnlineOrderingLinks: React.FC<OnlineOrderingLinksProps> = ({
       <nav aria-label="Online ordering options" className="mx-auto max-w-6xl">
         <ul
           role="list"
-          className={`grid gap-4 sm:gap-5 lg:gap-6 ${isDropdown ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}
+          className={`grid auto-rows-fr items-stretch gap-4 sm:gap-5 lg:gap-6 ${isDropdown ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'}`}
         >
           {orderingOptions.map((option, index) => (
             <li key={index} className="flex">
@@ -72,10 +72,10 @@ const OnlineOrderingLinks: React.FC<OnlineOrderingLinksProps> = ({
                 rel="noopener noreferrer"
                 onClick={onLinkClick}
                 aria-label={`${option.name} ${option.description}`}
-                className={`${option.bgColor} ${option.hoverColor} group relative flex w-full flex-col items-center justify-center rounded-2xl p-4 text-center font-semibold text-white shadow-sm transition-colors transition-transform duration-200 hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-white/90 focus-visible:ring-offset-2 focus-visible:outline-none active:translate-y-0 sm:p-5 ${isDropdown ? 'min-h-20 text-sm' : 'min-h-28'}`}
+                className={`${option.bgColor} ${option.hoverColor} group relative flex w-full cursor-pointer flex-col items-center justify-center rounded-2xl px-4 py-3 text-center font-semibold text-white shadow-sm ring-1 ring-white/10 transition duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:ring-white/90 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:outline-none active:translate-y-0 active:shadow-sm sm:px-5 sm:py-4 ${isDropdown ? 'min-h-20 text-sm' : 'min-h-28'}`}
               >
                 <span
-                  className={`${isDropdown ? 'text-base sm:text-lg' : 'text-lg sm:text-xl'}`}
+                  className={`${isDropdown ? 'text-base sm:text-lg' : 'text-lg sm:text-xl'} leading-tight`}
                 >
                   {option.name}
                 </span>
@@ -91,7 +91,7 @@ const OnlineOrderingLinks: React.FC<OnlineOrderingLinksProps> = ({
       </nav>
 
       {!isDropdown && (
-        <div className="mt-8 text-center">
+        <div className="mt-8 text-center md:mt-10">
           <p className="mx-auto max-w-prose text-sm leading-relaxed text-gray-500">
             Pickup available through Toast • Delivery available through Uber
             Eats, DoorDash, and Grubhub
