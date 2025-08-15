@@ -68,7 +68,7 @@ export async function submitForm(
         try {
           // Convert file to base64
           const base64data = await fileToBase64(resumeFile);
-          formDataObj.resumeData = base64data;
+          formDataObj.resume = base64data;
           formDataObj.resumeFilename = resumeFile.name;
           console.log(
             `Resume ${resumeFile.name} (${Math.round(resumeFile.size / 1024)}KB) converted to base64 successfully`

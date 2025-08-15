@@ -73,18 +73,18 @@ export default async function handler(req, res) {
     delete formData.type;
     
     // We'll handle resume as a base64 string if it's included
-    let resumeData = null;
+    let resumeFile = null;
     // Define resumeAttachment at the function scope so it's available throughout
     let resumeAttachment = null;
-    if (body.resumeData) {
+    if (body.resume) {
       try {
-        resumeData = {
+        resumeFile = {
           filename: body.resumeFilename || 'resume.pdf',
-          content: Buffer.from(body.resumeData, 'base64')
+          content: Buffer.from(body.resume, 'base64')
         };
-        console.log(`Resume processed: ${body.resumeFilename}, ${Math.round(body.resumeData.length/1.37/1024)}KB`);
+        console.log(`Resume processed: ${body.resumeFilename}, ${Math.round(body.resume.length/1.37/1024)}KB`);
         // Remove these from formData to keep it clean
-        delete formData.resumeData;
+        delete formData.resume;
         delete formData.resumeFilename;
       } catch (error) {
         console.error('Error processing resume data:', error);
@@ -164,14 +164,14 @@ export default async function handler(req, res) {
       `;
       
       // Handle resume attachment if present
-      if (resumeData) {
+      if (resumeFile) {
         // We have resume data sent as base64
-        emailText += `\nResume: ${resumeData.filename} (attached)`;
-        emailHtml += `<p><strong>Resume:</strong> ${resumeData.filename} (attached)</p>`;
-        
+        emailText += `\nResume: ${resumeFile.filename} (attached)`;
+        emailHtml += `<p><strong>Resume:</strong> ${resumeFile.filename} (attached)</p>`;
+
         resumeAttachment = {
-          filename: resumeData.filename,
-          content: resumeData.content
+          filename: resumeFile.filename,
+          content: resumeFile.content
         };
       }
     } 

@@ -54,7 +54,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     // Parse the request body
-    const { type, ...formData } = req.body;
+    const { type, resume, resumeFilename, ...formData } = req.body;
 
     // Basic validation
     if (!type) {
@@ -128,15 +128,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       `;
       
       // Handle resume attachment if present
-      if (req.body.resume) {
+      if (resume) {
         // For now, we just note that a resume was included
         // In a real implementation with Vercel, you would:
         // 1. Store the file in a storage service like AWS S3
         // 2. Include a link to the file in the email
-        
-        emailText += '\nResume was attached to the application.';
-        emailHtml += '<p><strong>Resume:</strong> Included in submission</p>';
-        
+
+        const filename = resumeFilename || 'Resume';
+        emailText += `\nResume: ${filename} (attached)`;
+        emailHtml += `<p><strong>Resume:</strong> ${filename} (attached)</p>`;
+
         // Note: To fully implement file upload handling, you would need:
         // 1. A storage service (AWS S3, Google Cloud Storage, etc.)
         // 2. Proper multipart form handling library
