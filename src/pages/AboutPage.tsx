@@ -10,11 +10,7 @@ const AboutPage: React.FC = React.memo(() => {
 
   return (
     <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#f0c91f]">
-      {/* Hero Banner with teal background and SVG */}
-      <div
-        className="relative h-80 w-full overflow-hidden rounded-b-3xl shadow-md md:h-96"
-        style={{ backgroundColor: '#19b4bd' }}
-      >
+      <section className="relative h-80 w-full overflow-hidden rounded-b-3xl bg-[#19b4bd] shadow-md md:h-96">
         <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center text-white">
           <div className="mb-6 flex justify-center">
             <div className="relative">
@@ -23,7 +19,10 @@ const AboutPage: React.FC = React.memo(() => {
                 alt="Kailani Family"
                 className="h-48 w-72 rounded-2xl border-4 border-white/20 object-cover shadow-lg transition-transform duration-300 hover:scale-105 md:h-52 md:w-80"
               />
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-transparent"></div>
+              <div
+                className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/20 to-transparent"
+                aria-hidden="true"
+              />
             </div>
           </div>
           <h1 className="baloo-regular mb-2 max-w-full text-3xl font-bold drop-shadow-lg sm:text-4xl md:text-6xl">
@@ -33,65 +32,90 @@ const AboutPage: React.FC = React.memo(() => {
             The journey, passion, and people behind Kailani
           </p>
         </div>
-      </div>
+      </section>
 
-      {/* Tab Navigation */}
-      <div className="w-full max-w-full overflow-x-hidden bg-[#f0c91f] px-4 pt-8 pb-4 sm:px-6 lg:px-8">
+      <main className="w-full max-w-full overflow-x-hidden bg-[#f0c91f] px-4 pt-8 pb-4 sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-4xl">
-          <div className="mb-8 flex w-full justify-center">
-            <div className="flex max-w-full flex-wrap justify-center space-x-1 rounded-xl bg-gray-100 p-2 sm:space-x-2">
+          <nav
+            aria-label="About tabs"
+            className="mb-8 flex w-full justify-center"
+          >
+            <div
+              role="tablist"
+              aria-orientation="horizontal"
+              className="flex max-w-full flex-wrap justify-center gap-2 rounded-2xl bg-gray-100 p-2"
+            >
               <button
+                role="tab"
+                id="tab-story"
+                aria-controls="panel-story"
+                aria-selected={activeTab === 'story'}
+                tabIndex={activeTab === 'story' ? 0 : -1}
                 onClick={() => setActiveTab('story')}
-                className={`baloo-regular min-w-0 cursor-pointer rounded-lg px-3 py-3 text-sm font-bold sm:px-6 sm:text-base ${
+                className={`baloo-regular cursor-pointer rounded-2xl px-4 py-3 text-sm font-bold shadow-sm transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:px-6 sm:text-base ${
                   activeTab === 'story'
-                    ? 'bg-amber-500 text-white shadow-md'
-                    : 'text-[#000000] hover:bg-gray-200'
+                    ? 'bg-amber-500 text-white ring-amber-700'
+                    : 'text-[#000000] hover:bg-gray-200 focus-visible:ring-gray-900'
                 }`}
               >
                 Our Story
               </button>
               <button
+                role="tab"
+                id="tab-team"
+                aria-controls="panel-team"
+                aria-selected={activeTab === 'team'}
+                tabIndex={activeTab === 'team' ? 0 : -1}
                 onClick={() => setActiveTab('team')}
-                className={`baloo-regular min-w-0 cursor-pointer rounded-lg px-3 py-3 text-sm font-bold sm:px-6 sm:text-base ${
+                className={`baloo-regular cursor-pointer rounded-2xl px-4 py-3 text-sm font-bold shadow-sm transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:px-6 sm:text-base ${
                   activeTab === 'team'
-                    ? 'bg-cyan-500 text-white shadow-md'
-                    : 'text-[#000000] hover:bg-gray-200'
+                    ? 'bg-cyan-500 text-white ring-cyan-700'
+                    : 'text-[#000000] hover:bg-gray-200 focus-visible:ring-gray-900'
                 }`}
               >
                 Our Team
               </button>
               <button
+                role="tab"
+                id="tab-values"
+                aria-controls="panel-values"
+                aria-selected={activeTab === 'values'}
+                tabIndex={activeTab === 'values' ? 0 : -1}
                 onClick={() => setActiveTab('values')}
-                className={`baloo-regular min-w-0 cursor-pointer rounded-lg px-3 py-3 text-sm font-bold sm:px-6 sm:text-base ${
+                className={`baloo-regular cursor-pointer rounded-2xl px-4 py-3 text-sm font-bold shadow-sm transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none sm:px-6 sm:text-base ${
                   activeTab === 'values'
-                    ? 'bg-purple-500 text-white shadow-md'
-                    : 'text-[#000000] hover:bg-gray-200'
+                    ? 'bg-purple-500 text-white ring-purple-700'
+                    : 'text-[#000000] hover:bg-gray-200 focus-visible:ring-gray-900'
                 }`}
               >
                 Our Values
               </button>
             </div>
-          </div>
+          </nav>
 
-          {/* Content sections */}
-          <div className="mx-auto w-full max-w-4xl overflow-x-hidden pb-16">
-            {/* Our Story Section */}
+          <section className="mx-auto w-full max-w-4xl overflow-x-hidden pb-16">
             {activeTab === 'story' && (
-              <div className="w-full">
-                <div className="mb-12 flex w-full flex-col items-center gap-8 md:flex-row">
-                  <div className="w-full md:w-1/2">
-                    <div className="flex justify-center">
-                      <img
-                        src={bigIslandYus}
-                        alt="Big Island Yus"
-                        className="h-64 w-64 rounded-full border-4 border-white object-cover shadow-xl transition-transform duration-300 hover:scale-105 md:h-80 md:w-80"
-                      />
-                    </div>
+              <section
+                id="panel-story"
+                role="tabpanel"
+                aria-labelledby="tab-story"
+                className="w-full"
+              >
+                <div className="mb-12 grid w-full grid-cols-1 items-center gap-8 md:grid-cols-2">
+                  <div className="flex w-full justify-center">
+                    <img
+                      src={bigIslandYus}
+                      alt="Big Island Yus"
+                      className="h-64 w-64 rounded-full border-4 border-white object-cover shadow-xl transition-transform duration-300 hover:scale-105 md:h-80 md:w-80"
+                    />
                   </div>
-                  <div className="w-full min-w-0 md:w-1/2">
+                  <div className="w-full min-w-0">
                     <h2 className="baloo-regular relative mb-4 inline-block pb-2 text-2xl font-bold text-[#002B5B] sm:text-3xl">
                       How It All Began
-                      <span className="absolute bottom-0 left-0 h-2 w-full rounded bg-amber-100"></span>
+                      <span
+                        className="absolute bottom-0 left-0 h-2 w-full rounded bg-amber-100"
+                        aria-hidden="true"
+                      />
                     </h2>
                     <p className="mb-4 text-[#000000]">
                       Kailani was born from a deep love of Hawaiian and Pacific
@@ -104,11 +128,11 @@ const AboutPage: React.FC = React.memo(() => {
                       the country, Chef Kai decided to bring the flavors of home
                       to the mainland with a modern twist.
                     </p>
-                    <div className="rounded-xl border-l-4 border-cyan-500 bg-cyan-50 p-4">
+                    <div className="rounded-2xl border-l-4 border-cyan-500 bg-cyan-50 p-4">
                       <p className="text-gray-700 italic">
-                        "Food is a universal language that brings people
+                        Food is a universal language that brings people
                         together. At Kailani, we want to share the aloha spirit
-                        through our dishes."
+                        through our dishes.
                       </p>
                       <p className="mt-2 font-bold text-gray-800">
                         — Chef Miriam, Founder
@@ -117,45 +141,48 @@ const AboutPage: React.FC = React.memo(() => {
                   </div>
                 </div>
 
-                {/* Timeline */}
                 <div className="my-16 w-full max-w-full overflow-x-hidden">
                   <h2 className="baloo-regular relative mb-8 inline-block pb-2 text-center text-2xl font-bold text-[#002B5B] sm:text-3xl">
                     Our Journey
-                    <span className="absolute bottom-0 left-0 h-2 w-full rounded bg-amber-100"></span>
+                    <span
+                      className="absolute bottom-0 left-0 h-2 w-full rounded bg-amber-100"
+                      aria-hidden="true"
+                    />
                   </h2>
                   <div className="relative w-full">
-                    {/* Line */}
-                    <div className="absolute left-1/2 z-0 h-full w-1 -translate-x-1/2 transform bg-amber-100"></div>
-
-                    {/* Timeline items */}
+                    <div
+                      className="absolute left-1/2 z-0 h-full w-px -translate-x-1/2 bg-amber-100"
+                      aria-hidden="true"
+                    />
                     <div className="grid w-full grid-cols-1 gap-8 md:grid-cols-2">
-                      {/* 2015 */}
                       <div className="relative md:col-start-2">
-                        {/* Dot */}
-                        <div className="absolute top-6 -left-[42px] z-10 hidden h-5 w-5 rounded-full border-4 border-amber-100 bg-amber-500 md:block"></div>
-                        <div className="rounded-xl border-l-4 border-amber-500 bg-amber-50 p-6 shadow-md hover:shadow-lg">
+                        <div
+                          className="absolute top-6 -left-10 z-10 hidden h-5 w-5 rounded-full border-4 border-amber-100 bg-amber-500 md:block"
+                          aria-hidden="true"
+                        />
+                        <article className="rounded-2xl border border-amber-200 bg-amber-50 p-6 shadow-sm transition hover:shadow-md">
                           <h3 className="baloo-regular mb-1 text-xl font-bold text-amber-600">
                             2015
                           </h3>
                           <h4 className="baloo-regular mb-2 text-lg font-bold text-gray-800">
                             First Pop-up
                           </h4>
-                          <p className="text-[#333333">
+                          <p className="text-[#333333]">
                             Kailani started as a weekend pop-up at local
                             farmers' markets, serving Hawaiian-inspired street
                             food.
                           </p>
-                        </div>
+                        </article>
                       </div>
 
-                      {/* Empty space for layout */}
-                      <div className="hidden md:block"></div>
+                      <div className="hidden md:block" aria-hidden="true" />
 
-                      {/* 2017 */}
                       <div className="relative md:col-start-1 md:text-right">
-                        {/* Dot */}
-                        <div className="absolute top-6 -right-[42px] z-10 hidden h-5 w-5 rounded-full border-4 border-amber-100 bg-cyan-500 md:block"></div>
-                        <div className="rounded-xl border-r-4 border-cyan-500 bg-cyan-50 p-6 shadow-md hover:shadow-lg">
+                        <div
+                          className="absolute top-6 -right-10 z-10 hidden h-5 w-5 rounded-full border-4 border-amber-100 bg-cyan-500 md:block"
+                          aria-hidden="true"
+                        />
+                        <article className="rounded-2xl border border-cyan-200 bg-cyan-50 p-6 shadow-sm transition hover:shadow-md">
                           <h3 className="baloo-regular mb-1 text-xl font-bold text-cyan-600">
                             2017
                           </h3>
@@ -166,14 +193,15 @@ const AboutPage: React.FC = React.memo(() => {
                             After gaining popularity, we expanded with our first
                             food truck, "Kailani On Wheels".
                           </p>
-                        </div>
+                        </article>
                       </div>
 
-                      {/* 2020 */}
                       <div className="relative md:col-start-2">
-                        {/* Dot */}
-                        <div className="absolute top-6 -left-[42px] z-10 hidden h-5 w-5 rounded-full border-4 border-amber-100 bg-purple-500 md:block"></div>
-                        <div className="rounded-xl border-l-4 border-purple-500 bg-purple-50 p-6 shadow-md hover:shadow-lg">
+                        <div
+                          className="absolute top-6 -left-10 z-10 hidden h-5 w-5 rounded-full border-4 border-amber-100 bg-purple-500 md:block"
+                          aria-hidden="true"
+                        />
+                        <article className="rounded-2xl border border-purple-200 bg-purple-50 p-6 shadow-sm transition hover:shadow-md">
                           <h3 className="baloo-regular mb-1 text-xl font-bold text-purple-600">
                             2020
                           </h3>
@@ -185,17 +213,17 @@ const AboutPage: React.FC = React.memo(() => {
                             meal kit delivery service, bringing Hawaiian flavors
                             to homes.
                           </p>
-                        </div>
+                        </article>
                       </div>
 
-                      {/* Empty space for layout */}
-                      <div className="hidden md:block"></div>
+                      <div className="hidden md:block" aria-hidden="true" />
 
-                      {/* 2022 */}
                       <div className="relative md:col-start-1 md:text-right">
-                        {/* Dot */}
-                        <div className="absolute top-6 -right-[42px] z-10 hidden h-5 w-5 rounded-full border-4 border-amber-100 bg-green-500 md:block"></div>
-                        <div className="rounded-xl border-r-4 border-green-500 bg-green-50 p-6 shadow-md hover:shadow-lg">
+                        <div
+                          className="absolute top-6 -right-10 z-10 hidden h-5 w-5 rounded-full border-4 border-amber-100 bg-green-500 md:block"
+                          aria-hidden="true"
+                        />
+                        <article className="rounded-2xl border border-green-200 bg-green-50 p-6 shadow-sm transition hover:shadow-md">
                           <h3 className="baloo-regular mb-1 text-xl font-bold text-green-600">
                             2022
                           </h3>
@@ -207,13 +235,12 @@ const AboutPage: React.FC = React.memo(() => {
                             location, bringing the full Kailani experience to
                             life.
                           </p>
-                        </div>
+                        </article>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Join Us CTA */}
                 <div className="rounded-2xl bg-[#78350F] p-8 text-center shadow-lg">
                   <h3 className="baloo-regular mb-4 text-2xl font-bold text-[#F5E1A4]">
                     Come Be Part of Our Story!
@@ -226,22 +253,30 @@ const AboutPage: React.FC = React.memo(() => {
                     href="https://maps.app.goo.gl/KWjLfCxkkYvf7qYh8"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-navigation baloo-regular cursor-pointer rounded-xl bg-white px-6 py-3 text-lg font-bold text-[#000000] shadow-[0_6px_0_rgb(186,183,201)] transition-all duration-200 hover:translate-y-1 hover:scale-105 hover:shadow-[0_4px_0px_rgb(186,183,201)] focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 focus:outline-none active:scale-95"
+                    aria-label="Open directions to Kailani in a new tab"
+                    className="baloo-regular cursor-pointer rounded-2xl bg-white px-6 py-3 text-lg font-bold text-[#000000] shadow-[0_6px_0_rgb(186,183,201)] transition hover:translate-y-1 hover:scale-105 hover:shadow-[0_4px_0px_rgb(186,183,201)] focus-visible:ring-2 focus-visible:ring-pink-300 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-95"
                   >
                     Visit Us Today
                   </a>
                 </div>
-              </div>
+              </section>
             )}
 
-            {/* Our Team Section */}
             {activeTab === 'team' && (
-              <div className="w-full max-w-full overflow-x-hidden">
-                <div className="mb-12 flex w-full flex-col items-center gap-8 md:flex-row">
-                  <div className="w-full min-w-0 md:w-1/2">
+              <section
+                id="panel-team"
+                role="tabpanel"
+                aria-labelledby="tab-team"
+                className="w-full max-w-full overflow-x-hidden"
+              >
+                <div className="mb-12 grid w-full grid-cols-1 items-center gap-8 md:grid-cols-2">
+                  <div className="w-full min-w-0">
                     <h2 className="baloo-regular relative mb-4 inline-block pb-2 text-2xl font-bold sm:text-3xl">
                       Meet Our Ohana
-                      <span className="absolute bottom-0 left-0 h-2 w-full rounded bg-cyan-200"></span>
+                      <span
+                        className="absolute bottom-0 left-0 h-2 w-full rounded bg-cyan-200"
+                        aria-hidden="true"
+                      />
                     </h2>
                     <p className="mb-4 text-[#002B5B]">
                       At Kailani, we're more than just colleagues – we're a
@@ -254,42 +289,56 @@ const AboutPage: React.FC = React.memo(() => {
                       plays a crucial role in creating the warm, welcoming
                       experience that defines Kailani.
                     </p>
-                    <div className="mb-2 flex items-center gap-2">
-                      <div className="h-5 w-5 flex-shrink-0 rounded-full bg-cyan-500"></div>
-                      <p className="font-bold text-gray-800">5+ Team Members</p>
-                    </div>
-                    <div className="mb-2 flex items-center gap-2">
-                      <div className="h-5 w-5 flex-shrink-0 rounded-full bg-amber-500"></div>
-                      <p className="font-bold text-gray-800">
-                        5+ Nationalities
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="h-5 w-5 flex-shrink-0 rounded-full bg-purple-500"></div>
-                      <p className="font-bold text-gray-800">
-                        100% Passionate About Food
-                      </p>
-                    </div>
+                    <ul className="space-y-2">
+                      <li className="flex items-center gap-2">
+                        <span
+                          className="h-5 w-5 flex-shrink-0 rounded-full bg-cyan-500"
+                          aria-hidden="true"
+                        />
+                        <span className="font-bold text-gray-800">
+                          5+ Team Members
+                        </span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span
+                          className="h-5 w-5 flex-shrink-0 rounded-full bg-amber-500"
+                          aria-hidden="true"
+                        />
+                        <span className="font-bold text-gray-800">
+                          5+ Nationalities
+                        </span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span
+                          className="h-5 w-5 flex-shrink-0 rounded-full bg-purple-500"
+                          aria-hidden="true"
+                        />
+                        <span className="font-bold text-gray-800">
+                          100% Passionate About Food
+                        </span>
+                      </li>
+                    </ul>
                   </div>
-                  <div className="w-full md:w-1/2">
+                  <div className="w-full">
                     <img
                       src={aboutTeam}
-                      alt="Our Team"
+                      alt="Illustration of our team"
                       className="mx-auto w-full max-w-sm"
                     />
                   </div>
                 </div>
 
-                {/* Team cards */}
                 <div className="my-16 w-full max-w-full overflow-x-hidden">
                   <h2 className="baloo-regular relative mb-8 inline-block pb-2 text-center text-2xl font-bold sm:text-3xl">
                     Key Team Members
-                    <span className="absolute bottom-0 left-0 h-2 w-full rounded bg-cyan-200"></span>
+                    <span
+                      className="absolute bottom-0 left-0 h-2 w-full rounded bg-cyan-200"
+                      aria-hidden="true"
+                    />
                   </h2>
                   <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-3">
-                    {/* Chef Kai */}
-                    <div className="overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-xl">
-                      <div className="h-3 bg-amber-500"></div>
+                    <article className="overflow-hidden rounded-2xl border border-amber-200 bg-white shadow-sm transition hover:shadow-md">
+                      <div className="h-3 bg-amber-500" aria-hidden="true" />
                       <div className="p-6">
                         <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-amber-100">
                           <svg
@@ -298,6 +347,7 @@ const AboutPage: React.FC = React.memo(() => {
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
+                            aria-hidden="true"
                           >
                             <path
                               strokeLinecap="round"
@@ -318,11 +368,10 @@ const AboutPage: React.FC = React.memo(() => {
                           island flavors with a modern twist to every dish.
                         </p>
                       </div>
-                    </div>
+                    </article>
 
-                    {/* Leilani */}
-                    <div className="overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-xl">
-                      <div className="h-3 bg-cyan-500"></div>
+                    <article className="overflow-hidden rounded-2xl border border-cyan-200 bg-white shadow-sm transition hover:shadow-md">
+                      <div className="h-3 bg-cyan-500" aria-hidden="true" />
                       <div className="p-6">
                         <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-cyan-100">
                           <svg
@@ -331,6 +380,7 @@ const AboutPage: React.FC = React.memo(() => {
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
+                            aria-hidden="true"
                           >
                             <path
                               strokeLinecap="round"
@@ -351,11 +401,10 @@ const AboutPage: React.FC = React.memo(() => {
                           guest feels the warmth of Hawaiian hospitality.
                         </p>
                       </div>
-                    </div>
+                    </article>
 
-                    {/* Chef Mike */}
-                    <div className="overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-xl">
-                      <div className="h-3 bg-purple-500"></div>
+                    <article className="overflow-hidden rounded-2xl border border-purple-200 bg-white shadow-sm transition hover:shadow-md">
+                      <div className="h-3 bg-purple-500" aria-hidden="true" />
                       <div className="p-6">
                         <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-purple-100">
                           <svg
@@ -364,6 +413,7 @@ const AboutPage: React.FC = React.memo(() => {
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
+                            aria-hidden="true"
                           >
                             <path
                               strokeLinecap="round"
@@ -384,11 +434,10 @@ const AboutPage: React.FC = React.memo(() => {
                           with bold flavors to create unique dishes.
                         </p>
                       </div>
-                    </div>
+                    </article>
                   </div>
                 </div>
 
-                {/* Join Our Team CTA */}
                 <div className="rounded-2xl bg-[#78350F] p-8 text-center shadow-lg">
                   <h3 className="baloo-regular mb-4 text-2xl font-bold text-[#F5E1A4]">
                     Join Our Ohana!
@@ -399,22 +448,30 @@ const AboutPage: React.FC = React.memo(() => {
                   </p>
                   <Link
                     to="/jobs"
-                    className="font-navigation baloo-regular cursor-pointer rounded-xl bg-white px-6 py-3 text-lg font-bold text-[#000000] shadow-[0_6px_0_rgb(186,183,201)] transition-all duration-200 hover:translate-y-1 hover:scale-105 hover:shadow-[0_4px_0px_rgb(186,183,201)] focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 focus:outline-none active:scale-95"
+                    aria-label="View open positions"
+                    className="baloo-regular cursor-pointer rounded-2xl bg-white px-6 py-3 text-lg font-bold text-[#000000] shadow-[0_6px_0_rgb(186,183,201)] transition hover:translate-y-1 hover:scale-105 hover:shadow-[0_4px_0px_rgb(186,183,201)] focus-visible:ring-2 focus-visible:ring-pink-300 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-95"
                   >
                     View Open Positions
                   </Link>
                 </div>
-              </div>
+              </section>
             )}
 
-            {/* Our Values Section */}
             {activeTab === 'values' && (
-              <div className="w-full max-w-full overflow-x-hidden">
-                <div className="mb-12 flex w-full flex-col items-center gap-8 md:flex-row">
-                  <div className="w-full min-w-0 md:w-1/2">
+              <section
+                id="panel-values"
+                role="tabpanel"
+                aria-labelledby="tab-values"
+                className="w-full max-w-full overflow-x-hidden"
+              >
+                <div className="mb-12 grid w-full grid-cols-1 items-center gap-8 md:grid-cols-2">
+                  <div className="w-full min-w-0">
                     <h2 className="baloo-regular relative mb-4 inline-block pb-2 text-2xl font-bold sm:text-3xl">
                       What We Stand For
-                      <span className="absolute bottom-0 left-0 h-2 w-full rounded bg-purple-200"></span>
+                      <span
+                        className="absolute bottom-0 left-0 h-2 w-full rounded bg-purple-200"
+                        aria-hidden="true"
+                      />
                     </h2>
                     <p className="mb-4 text-gray-700">
                       At Kailani, our values are inspired by the Hawaiian
@@ -425,8 +482,6 @@ const AboutPage: React.FC = React.memo(() => {
                       These principles guide every decision we make, from
                       sourcing ingredients to serving our customers.
                     </p>
-
-                    {/* Value pills */}
                     <div className="mb-4 flex flex-wrap">
                       <span className="m-1 rounded-full bg-green-100 px-4 py-2 font-bold text-green-700">
                         Aloha Spirit
@@ -442,7 +497,7 @@ const AboutPage: React.FC = React.memo(() => {
                       </span>
                     </div>
                   </div>
-                  <div className="w-full md:w-1/2">
+                  <div className="w-full">
                     <div className="flex justify-center">
                       <img
                         src={fullKailaniLogo}
@@ -453,16 +508,20 @@ const AboutPage: React.FC = React.memo(() => {
                   </div>
                 </div>
 
-                {/* Values details */}
                 <div className="my-16 w-full max-w-full overflow-x-hidden">
                   <h2 className="baloo-regular relative mb-8 inline-block pb-2 text-center text-2xl font-bold sm:text-3xl">
                     Our Core Values
-                    <span className="absolute bottom-0 left-0 h-2 w-full rounded bg-purple-200"></span>
+                    <span
+                      className="absolute bottom-0 left-0 h-2 w-full rounded bg-purple-200"
+                      aria-hidden="true"
+                    />
                   </h2>
                   <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2">
-                    {/* Aloha Spirit */}
-                    <div className="overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-xl">
-                      <div className="h-3 bg-gradient-to-r from-green-400 to-green-600"></div>
+                    <article className="overflow-hidden rounded-2xl border border-green-200 bg-white shadow-sm transition hover:shadow-md">
+                      <div
+                        className="h-3 bg-gradient-to-r from-green-400 to-green-600"
+                        aria-hidden="true"
+                      />
                       <div className="p-6">
                         <div className="mb-4 flex items-center">
                           <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
@@ -472,6 +531,7 @@ const AboutPage: React.FC = React.memo(() => {
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
+                              aria-hidden="true"
                             >
                               <path
                                 strokeLinecap="round"
@@ -490,19 +550,22 @@ const AboutPage: React.FC = React.memo(() => {
                           family, sharing the warmth and hospitality that Hawaii
                           is known for.
                         </p>
-
-                        {/* Progress bar */}
                         <div className="mt-4">
                           <div className="h-4 rounded-full bg-gray-200">
-                            <div className="h-full w-full rounded-full bg-green-500"></div>
+                            <div
+                              className="h-full w-full rounded-full bg-green-500"
+                              aria-hidden="true"
+                            />
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </article>
 
-                    {/* Authenticity */}
-                    <div className="overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-xl">
-                      <div className="h-3 bg-gradient-to-r from-blue-400 to-blue-600"></div>
+                    <article className="overflow-hidden rounded-2xl border border-blue-200 bg-white shadow-sm transition hover:shadow-md">
+                      <div
+                        className="h-3 bg-gradient-to-r from-blue-400 to-blue-600"
+                        aria-hidden="true"
+                      />
                       <div className="p-6">
                         <div className="mb-4 flex items-center">
                           <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
@@ -512,6 +575,7 @@ const AboutPage: React.FC = React.memo(() => {
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
+                              aria-hidden="true"
                             >
                               <path
                                 strokeLinecap="round"
@@ -530,19 +594,22 @@ const AboutPage: React.FC = React.memo(() => {
                           techniques while also embracing innovation and
                           creative cooking.
                         </p>
-
-                        {/* Progress bar */}
                         <div className="mt-4">
                           <div className="h-4 rounded-full bg-gray-200">
-                            <div className="h-full w-[95%] rounded-full bg-blue-500"></div>
+                            <div
+                              className="h-full w-[95%] rounded-full bg-blue-500"
+                              aria-hidden="true"
+                            />
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </article>
 
-                    {/* Community */}
-                    <div className="overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-xl">
-                      <div className="h-3 bg-gradient-to-r from-yellow-400 to-yellow-600"></div>
+                    <article className="overflow-hidden rounded-2xl border border-yellow-200 bg-white shadow-sm transition hover:shadow-md">
+                      <div
+                        className="h-3 bg-gradient-to-r from-yellow-400 to-yellow-600"
+                        aria-hidden="true"
+                      />
                       <div className="p-6">
                         <div className="mb-4 flex items-center">
                           <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-yellow-100">
@@ -552,6 +619,7 @@ const AboutPage: React.FC = React.memo(() => {
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
+                              aria-hidden="true"
                             >
                               <path
                                 strokeLinecap="round"
@@ -569,19 +637,22 @@ const AboutPage: React.FC = React.memo(() => {
                           We actively engage with our local community through
                           partnerships, events, and giving back initiatives.
                         </p>
-
-                        {/* Progress bar */}
                         <div className="mt-4">
                           <div className="h-4 rounded-full bg-gray-200">
-                            <div className="h-full w-[90%] rounded-full bg-yellow-500"></div>
+                            <div
+                              className="h-full w-[90%] rounded-full bg-yellow-500"
+                              aria-hidden="true"
+                            />
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </article>
 
-                    {/* Sustainability */}
-                    <div className="overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-xl">
-                      <div className="h-3 bg-gradient-to-r from-pink-400 to-pink-600"></div>
+                    <article className="overflow-hidden rounded-2xl border border-pink-200 bg-white shadow-sm transition hover:shadow-md">
+                      <div
+                        className="h-3 bg-gradient-to-r from-pink-400 to-pink-600"
+                        aria-hidden="true"
+                      />
                       <div className="p-6">
                         <div className="mb-4 flex items-center">
                           <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-pink-100">
@@ -591,6 +662,7 @@ const AboutPage: React.FC = React.memo(() => {
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
+                              aria-hidden="true"
                             >
                               <path
                                 strokeLinecap="round"
@@ -608,19 +680,19 @@ const AboutPage: React.FC = React.memo(() => {
                           We prioritize environmentally conscious practices,
                           from sourcing local ingredients to minimizing waste.
                         </p>
-
-                        {/* Progress bar */}
                         <div className="mt-4">
                           <div className="h-4 rounded-full bg-gray-200">
-                            <div className="h-full w-[85%] rounded-full bg-pink-500"></div>
+                            <div
+                              className="h-full w-[85%] rounded-full bg-pink-500"
+                              aria-hidden="true"
+                            />
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </article>
                   </div>
                 </div>
 
-                {/* Visit Us CTA */}
                 <div className="rounded-2xl bg-[#78350F] p-8 text-center shadow-lg">
                   <h3 className="baloo-regular mb-4 text-2xl font-bold text-[#F5E1A4]">
                     Experience Our Values in Action!
@@ -633,16 +705,17 @@ const AboutPage: React.FC = React.memo(() => {
                     href="https://maps.app.goo.gl/KWjLfCxkkYvf7qYh8"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-navigation baloo-regular cursor-pointer rounded-xl bg-white px-6 py-2 text-lg font-bold text-[#000000] shadow-[0_6px_0_rgb(186,183,201)] transition-all duration-200 hover:translate-y-1 hover:scale-105 hover:shadow-[0_4px_0px_rgb(186,183,201)] focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 focus:outline-none active:scale-95"
+                    aria-label="Find our location on maps in a new tab"
+                    className="baloo-regular cursor-pointer rounded-2xl bg-white px-6 py-2 text-lg font-bold text-[#000000] shadow-[0_6px_0_rgb(186,183,201)] transition hover:translate-y-1 hover:scale-105 hover:shadow-[0_4px_0px_rgb(186,183,201)] focus-visible:ring-2 focus-visible:ring-pink-300 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-95"
                   >
                     Find Us
                   </a>
                 </div>
-              </div>
+              </section>
             )}
-          </div>
+          </section>
         </div>
-      </div>
+      </main>
     </div>
   );
 });

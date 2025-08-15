@@ -26,15 +26,6 @@ interface BestSellersProps {
   readonly title?: string;
 }
 
-interface BouncyPillButtonProps {
-  readonly text: React.ReactNode;
-  readonly isActive?: boolean;
-  readonly activeStyle?: string;
-  readonly onClick: () => void;
-  readonly className?: string;
-  readonly 'aria-label'?: string;
-}
-
 // Firebase adapter functions (isolated)
 const foodDataAdapter = {
   normalizeCategoryName: (category: string): FoodCategory => {
@@ -100,21 +91,21 @@ const getDefaultCategory = (): FoodCategory => {
 const createCategoryButtonStyles = (category: FoodCategory): string => {
   const styleMap: Record<FoodCategory, string> = {
     Ramen:
-      'bg-yellow-400 text-[#000000] border-yellow-600 border-b-4 active:border-b-1 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-200 transform',
+      'baloo-regular bg-yellow-400 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(202,138,4)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(202,138,4)] hover:ring-yellow-500 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(202,138,4)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 select-none touch-manipulation',
     'Shave Ice':
-      'bg-blue-300 text-[#000000] border-indigo-500 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-blue-400 hover:shadow-xl active:scale-95 active:shadow-md active:translate-y-1 transition-all duration-300 transform',
+      'baloo-regular bg-blue-300 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(59,130,246)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(59,130,246)] hover:ring-blue-500 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(59,130,246)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 select-none touch-manipulation',
     'Homemade Ice Cream':
-      'bg-blue-300 text-[#000000] border-indigo-500 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-blue-400 hover:shadow-xl active:scale-95 active:shadow-md active:translate-y-1 transition-all duration-300 transform',
+      'baloo-regular bg-blue-300 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(59,130,246)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(59,130,246)] hover:ring-blue-500 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(59,130,246)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 select-none touch-manipulation',
     'Soft Serve':
-      'bg-blue-300 text-[#000000] border-indigo-500 border-b-4 active:border-b-2 rounded-full shadow-lg hover:bg-blue-400 hover:shadow-xl active:scale-95 active:shadow-md active:translate-y-1 transition-all duration-300 transform',
+      'baloo-regular bg-blue-300 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(59,130,246)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(59,130,246)] hover:ring-blue-500 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(59,130,246)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 select-none touch-manipulation',
     'Hot Dogs':
-      'bg-yellow-400 text-[#000000] border-yellow-600 border-b-4 active:border-b-1 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-200 transform',
+      'baloo-regular bg-yellow-400 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(202,138,4)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(202,138,4)] hover:ring-yellow-500 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(202,138,4)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 select-none touch-manipulation',
     Musubi:
-      'bg-yellow-400 text-[#000000] border-yellow-600 border-b-4 active:border-b-1 rounded-full shadow-lg hover:bg-yellow-500 hover:shadow-xl active:shadow-md active:translate-y-1 transition-all duration-200 transform',
+      'baloo-regular bg-yellow-400 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(202,138,4)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(202,138,4)] hover:ring-yellow-500 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(202,138,4)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 select-none touch-manipulation',
   };
   return (
     styleMap[category] ??
-    'bg-blue-400 border-blue-600 rounded-full shadow-lg hover:bg-blue-500 hover:shadow-xl active:scale-95 active:shadow-md transition-all duration-300 transform'
+    'baloo-regular bg-blue-400 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(96,165,250)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(96,165,250)] hover:ring-blue-500 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(96,165,250)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 select-none touch-manipulation'
   );
 };
 
@@ -144,33 +135,6 @@ const selectDefaultCategory = (
 };
 
 // Reusable UI components
-const BouncyPillButton: React.FC<BouncyPillButtonProps> = ({
-  text,
-  isActive = false,
-  activeStyle = '',
-  onClick,
-  className = '',
-  'aria-label': ariaLabel,
-}) => {
-  const defaultStyle =
-    'bg-white text-[#000000] baloo-regular rounded-full shadow-lg hover:bg-gray-100 hover:shadow-xl active:shadow-md border-b-4 active:border-b-2 border-[#a5b4fc] transition duration-200 ease-in-out active:translate-y-1 transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current';
-
-  return (
-    <button
-      className={`baloo-regular cursor-pointer rounded-full px-6 py-3 text-lg font-medium tracking-wide motion-safe:transition ${
-        isActive ? activeStyle : defaultStyle
-      } ${className}`}
-      onClick={onClick}
-      aria-label={ariaLabel}
-      role={isActive ? 'tab' : 'button'}
-      aria-selected={isActive}
-      tabIndex={0}
-    >
-      {text}
-    </button>
-  );
-};
-
 const ChevronLeft: React.FC<{ className?: string }> = ({ className = '' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -624,16 +588,27 @@ const CategorySelector: React.FC<{
       role="tablist"
       aria-label="Product categories"
     >
-      {categories.map(category => (
-        <BouncyPillButton
-          key={category}
-          text={category}
-          isActive={selectedCategory === category}
-          activeStyle={createCategoryButtonStyles(category)}
-          onClick={() => onCategorySelect(category)}
-          aria-label={`Show ${category} products`}
-        />
-      ))}
+      {categories.map(category => {
+        const isActive = selectedCategory === category;
+        const defaultStyle =
+          'bg-white text-gray-900 baloo-regular rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(165,180,252)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(165,180,252)] hover:ring-[#798be0] active:translate-y-0.5 active:shadow-[0_2px_0_rgb(165,180,252)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-[#a5b4fc] focus-visible:ring-offset-2 select-none touch-manipulation';
+
+        return (
+          <button
+            key={category}
+            className={`baloo-regular cursor-pointer rounded-full px-6 py-3 text-lg font-medium tracking-wide motion-safe:transition ${
+              isActive ? createCategoryButtonStyles(category) : defaultStyle
+            }`}
+            onClick={() => onCategorySelect(category)}
+            aria-label={`Show ${category} products`}
+            role={isActive ? 'tab' : 'button'}
+            aria-selected={isActive}
+            tabIndex={0}
+          >
+            {category}
+          </button>
+        );
+      })}
     </div>
   </div>
 );

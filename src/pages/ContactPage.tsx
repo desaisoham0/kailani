@@ -12,7 +12,6 @@ interface OpeningHours {
   isToday: boolean;
 }
 
-// Custom hook to fetch hours using direct Firebase service
 const useHours = () => {
   const [hoursData, setHoursData] = useState<HoursOfOperation | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,18 +24,12 @@ const useHours = () => {
         setError(null);
         const hours = await getHoursOfOperation();
         setHoursData(hours);
-
-        console.log(
-          `🕒 ContactPage: Loaded hours for ${hours.days.length} days`
-        );
       } catch (err) {
-        console.error('Error fetching hours:', err);
         setError(err instanceof Error ? err.message : 'Failed to load hours');
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchHours();
   }, []);
 
@@ -58,11 +51,8 @@ const ContactPage: React.FC = React.memo(() => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [formError, setFormError] = useState('');
   const [todaysDay, setTodaysDay] = useState<string>('');
-
-  // Use direct hours hook
   const { hoursData, isLoading: hoursLoading } = useHours();
 
-  // Get today's day and handle URL params
   useEffect(() => {
     const days = [
       'Sunday',
@@ -76,23 +66,17 @@ const ContactPage: React.FC = React.memo(() => {
     const today = new Date().getDay();
     const params = new URLSearchParams(location.search);
     const tabParam = params.get('tab');
-
     if (
       tabParam === 'hours' ||
       tabParam === 'location' ||
       tabParam === 'contact'
     ) {
       setActiveTab(tabParam);
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-
     setTodaysDay(days[today]);
   }, []);
 
-  // Format hours data for display
   const openingHours: OpeningHours[] =
     hoursData?.days.map((day: DayHours) => ({
       day: day.day,
@@ -100,13 +84,8 @@ const ContactPage: React.FC = React.memo(() => {
       isToday: day.day === todaysDay,
     })) || [];
 
-  const handleFocus = (field: string) => {
-    setActiveField(field);
-  };
-
-  const handleBlur = () => {
-    setActiveField(null);
-  };
+  const handleFocus = (field: string) => setActiveField(field);
+  const handleBlur = () => setActiveField(null);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -114,43 +93,23 @@ const ContactPage: React.FC = React.memo(() => {
     >
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setFormError('');
-
     try {
-      // Create a FormData object for the contact form
       const contactFormData = new FormData();
-
-      // Add form type
       contactFormData.append('type', 'contact');
-
-      // Add form data to FormData object
-      Object.entries(formData).forEach(([key, value]) => {
-        contactFormData.append(key, value);
-      });
-
-      // Submit form using our email service
+      Object.entries(formData).forEach(([key, value]) =>
+        contactFormData.append(key, value)
+      );
       await submitForm(contactFormData, 'contact');
-
-      // Handle successful submission
       setSubmitSuccess(true);
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
-      });
+      setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
-      console.error('Error submitting contact form:', error);
-      // Display error message to user
       const errorMessage =
         error instanceof Error ? error.message : 'Unknown error';
       setFormError(
@@ -160,9 +119,9 @@ const ContactPage: React.FC = React.memo(() => {
       setIsSubmitting(false);
     }
   };
+
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-[#f0c91f] pb-16">
-      {/* Section 1: Hero Section */}
       <div className="relative h-64 w-full overflow-hidden bg-[#19b4bd] sm:h-80 md:h-96">
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-4 text-center">
           <h1 className="font-navigation baloo-regular mb-2 text-3xl font-bold text-white drop-shadow-lg sm:text-4xl md:text-6xl">
@@ -172,9 +131,7 @@ const ContactPage: React.FC = React.memo(() => {
             We'd love to hear from you!
           </p>
         </div>
-
-        {/* Wave decorative element */}
-        <div className="absolute bottom-0 left-0 w-full">
+        <div className="absolute bottom-0 left-0 w-full" aria-hidden="true">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 1440 290"
@@ -184,42 +141,57 @@ const ContactPage: React.FC = React.memo(() => {
               fill="#f0c91f"
               fillOpacity="1"
               d="M0,192L48,176C96,160,192,128,288,133.3C384,139,480,181,576,186.7C672,192,768,160,864,165.3C960,171,1056,213,1152,213.3C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-            ></path>
+            />
           </svg>
         </div>
       </div>
 
-      {/* Section 2: Tabbed Navigation and Content */}
       <div className="relative z-20 mx-auto -mt-8 w-full px-4 pt-8">
-        <div className="mx-auto mb-10 max-w-2xl rounded-xl bg-white p-2 shadow-lg">
-          <div className="flex flex-wrap justify-center">
+        <div className="mx-auto mb-10 max-w-2xl rounded-2xl bg-white p-2 shadow-lg">
+          <div
+            className="flex flex-wrap justify-center"
+            role="tablist"
+            aria-label="Contact sections"
+          >
             <button
+              type="button"
               onClick={() => setActiveTab('hours')}
-              className={`jua-regular flex min-w-0 flex-1 cursor-pointer items-center justify-center rounded-lg px-3 py-3 text-sm font-bold transition-all sm:px-4 sm:text-lg md:py-4 ${
+              role="tab"
+              aria-selected={activeTab === 'hours'}
+              aria-controls="hours-panel"
+              className={`jua-regular flex min-w-0 flex-1 cursor-pointer items-center justify-center rounded-2xl px-3 py-3 text-sm font-bold transition-all focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none sm:px-4 sm:text-lg md:py-4 ${
                 activeTab === 'hours'
                   ? 'bg-gradient-to-r from-cyan-500 to-teal-500 text-white shadow-md'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
               Hours
             </button>
             <button
+              type="button"
               onClick={() => setActiveTab('contact')}
-              className={`flex min-w-0 flex-1 cursor-pointer items-center justify-center rounded-lg px-3 py-3 text-sm font-bold transition-all sm:px-4 sm:text-lg md:py-4 ${
+              role="tab"
+              aria-selected={activeTab === 'contact'}
+              aria-controls="contact-panel"
+              className={`flex min-w-0 flex-1 cursor-pointer items-center justify-center rounded-2xl px-3 py-3 text-sm font-bold transition-all focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none sm:px-4 sm:text-lg md:py-4 ${
                 activeTab === 'contact'
                   ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-md'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
               <span className="hidden sm:inline">Message Us</span>
               <span className="sm:hidden">Message</span>
             </button>
             <button
+              type="button"
               onClick={() => setActiveTab('location')}
-              className={`jua-regular flex min-w-0 flex-1 cursor-pointer items-center justify-center rounded-lg px-3 py-3 text-sm font-bold transition-all sm:px-4 sm:text-lg md:py-4 ${
+              role="tab"
+              aria-selected={activeTab === 'location'}
+              aria-controls="location-panel"
+              className={`jua-regular flex min-w-0 flex-1 cursor-pointer items-center justify-center rounded-2xl px-3 py-3 text-sm font-bold transition-all focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none sm:px-4 sm:text-lg md:py-4 ${
                 activeTab === 'location'
                   ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
               <span className="hidden sm:inline">Find Us</span>
@@ -229,20 +201,28 @@ const ContactPage: React.FC = React.memo(() => {
         </div>
       </div>
 
-      {/* Content sections */}
       <div className="mx-auto w-full overflow-x-hidden px-4">
-        {/* Contact Form Section */}
         {activeTab === 'contact' && (
-          <div className="mx-auto w-full max-w-4xl overflow-x-hidden">
-            <div className="w-full max-w-full overflow-hidden rounded-2xl bg-white shadow-lg">
+          <div
+            id="contact-panel"
+            role="tabpanel"
+            aria-label="Contact form"
+            className="mx-auto w-full max-w-4xl overflow-x-hidden"
+          >
+            <div className="w-full overflow-hidden rounded-2xl bg-white shadow-lg">
               <div className="w-full md:flex">
                 <div className="relative min-w-0 p-6 sm:p-8 md:w-1/2 md:p-12">
-                  {/* Decorative elements */}
-                  <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
-
+                  <div
+                    className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+                    aria-hidden="true"
+                  />
                   {submitSuccess ? (
-                    <div className="flex h-full flex-col items-center justify-center">
-                      <div className="mb-6 flex h-20 w-20 animate-pulse items-center justify-center rounded-full bg-green-100">
+                    <div
+                      className="flex h-full flex-col items-center justify-center"
+                      role="status"
+                      aria-live="polite"
+                    >
+                      <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="h-12 w-12 text-green-600"
@@ -258,7 +238,7 @@ const ContactPage: React.FC = React.memo(() => {
                           />
                         </svg>
                       </div>
-                      <h2 className="jua-regular mb-4 text-center text-3xl font-bold text-gray-800">
+                      <h2 className="jua-regular mb-2 text-center text-2xl font-bold text-gray-800 sm:text-3xl">
                         Thank You!
                       </h2>
                       <p className="nunito-sans text-center text-gray-600">
@@ -267,24 +247,30 @@ const ContactPage: React.FC = React.memo(() => {
                       </p>
                       <button
                         onClick={() => setSubmitSuccess(false)}
-                        className="mt-8 rounded-full bg-indigo-600 px-8 py-3 font-bold text-white transition-all duration-300 hover:bg-indigo-700"
+                        className="mt-8 inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-6 py-3 font-bold text-white shadow-sm transition-all hover:shadow-md focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
                       >
                         Send Another Message
                       </button>
                     </div>
                   ) : (
                     <>
-                      <h2 className="jua-regular mb-6 text-xl font-bold text-indigo-800 sm:text-2xl md:text-3xl">
+                      <h2 className="jua-regular mb-2 text-xl font-bold text-indigo-800 sm:text-2xl md:text-3xl">
                         Get in Touch
                       </h2>
-                      <p className="nunito-sans mb-8 text-gray-600">
+                      <p className="nunito-sans mb-6 text-gray-600">
                         Questions, comments, or just want to say aloha? We'd
                         love to hear from you!
                       </p>
-
-                      <form onSubmit={handleSubmit}>
+                      <form
+                        onSubmit={handleSubmit}
+                        aria-describedby={formError ? 'form-error' : undefined}
+                      >
                         {formError && (
-                          <div className="relative mb-6 rounded-lg border-2 border-red-100 bg-red-50 px-4 py-3 text-red-700">
+                          <div
+                            id="form-error"
+                            role="alert"
+                            className="relative mb-6 rounded-xl border-2 border-red-100 bg-red-50 px-4 py-3 text-red-700"
+                          >
                             <div className="flex">
                               <div className="flex-shrink-0">
                                 <svg
@@ -300,18 +286,14 @@ const ContactPage: React.FC = React.memo(() => {
                                   />
                                 </svg>
                               </div>
-                              <div className="ml-3">
-                                <p className="text-sm text-red-700">
-                                  {formError}
-                                </p>
-                              </div>
+                              <p className="ml-3 text-sm">{formError}</p>
                             </div>
                           </div>
                         )}
 
                         <div className="mb-4">
                           <div
-                            className={`rounded-lg bg-gray-50 p-2 transition-all ${activeField === 'name' ? 'shadow-md ring-2 ring-indigo-300' : 'hover:bg-gray-100'}`}
+                            className={`rounded-2xl bg-gray-50 p-3 transition-all ${activeField === 'name' ? 'shadow-sm ring-2 ring-indigo-300' : 'hover:bg-gray-100'} focus-within:ring-2 focus-within:ring-indigo-400`}
                           >
                             <label
                               htmlFor="name"
@@ -327,16 +309,25 @@ const ContactPage: React.FC = React.memo(() => {
                               onChange={handleInputChange}
                               onFocus={() => handleFocus('name')}
                               onBlur={handleBlur}
-                              className="nunito-sans w-full bg-transparent p-2 focus:outline-none"
+                              className="nunito-sans w-full bg-transparent p-2 focus-visible:outline-none"
                               placeholder="Your name"
+                              aria-required="true"
+                              aria-invalid={false}
+                              aria-describedby="name-help"
                               required
                             />
+                            <p
+                              id="name-help"
+                              className="mt-1 text-xs text-gray-500"
+                            >
+                              How should we address you
+                            </p>
                           </div>
                         </div>
 
                         <div className="mb-4">
                           <div
-                            className={`rounded-lg bg-gray-50 p-2 transition-all ${activeField === 'email' ? 'shadow-md ring-2 ring-indigo-300' : 'hover:bg-gray-100'}`}
+                            className={`rounded-2xl bg-gray-50 p-3 transition-all ${activeField === 'email' ? 'shadow-sm ring-2 ring-indigo-300' : 'hover:bg-gray-100'} focus-within:ring-2 focus-within:ring-indigo-400`}
                           >
                             <label
                               htmlFor="email"
@@ -352,16 +343,25 @@ const ContactPage: React.FC = React.memo(() => {
                               onChange={handleInputChange}
                               onFocus={() => handleFocus('email')}
                               onBlur={handleBlur}
-                              className="nunito-sans w-full bg-transparent p-2 focus:outline-none"
-                              placeholder="Your email address"
+                              className="nunito-sans w-full bg-transparent p-2 focus-visible:outline-none"
+                              placeholder="your@email.com"
+                              aria-required="true"
+                              aria-invalid={false}
+                              aria-describedby="email-help"
                               required
                             />
+                            <p
+                              id="email-help"
+                              className="mt-1 text-xs text-gray-500"
+                            >
+                              We only use this to reply
+                            </p>
                           </div>
                         </div>
 
                         <div className="mb-4">
                           <div
-                            className={`rounded-lg bg-gray-50 p-2 transition-all ${activeField === 'subject' ? 'shadow-md ring-2 ring-indigo-300' : 'hover:bg-gray-100'}`}
+                            className={`rounded-2xl bg-gray-50 p-3 transition-all ${activeField === 'subject' ? 'shadow-sm ring-2 ring-indigo-300' : 'hover:bg-gray-100'} focus-within:ring-2 focus-within:ring-indigo-400`}
                           >
                             <label
                               htmlFor="subject"
@@ -377,16 +377,25 @@ const ContactPage: React.FC = React.memo(() => {
                               onChange={handleInputChange}
                               onFocus={() => handleFocus('subject')}
                               onBlur={handleBlur}
-                              className="nunito-sans w-full bg-transparent p-2 focus:outline-none"
+                              className="nunito-sans w-full bg-transparent p-2 focus-visible:outline-none"
                               placeholder="What's this about?"
+                              aria-required="true"
+                              aria-invalid={false}
+                              aria-describedby="subject-help"
                               required
                             />
+                            <p
+                              id="subject-help"
+                              className="mt-1 text-xs text-gray-500"
+                            >
+                              A few words is enough
+                            </p>
                           </div>
                         </div>
 
                         <div className="mb-6">
                           <div
-                            className={`rounded-lg bg-gray-50 p-2 transition-all ${activeField === 'message' ? 'shadow-md ring-2 ring-indigo-300' : 'hover:bg-gray-100'}`}
+                            className={`rounded-2xl bg-gray-50 p-3 transition-all ${activeField === 'message' ? 'shadow-sm ring-2 ring-indigo-300' : 'hover:bg-gray-100'} focus-within:ring-2 focus-within:ring-indigo-400`}
                           >
                             <label
                               htmlFor="message"
@@ -402,17 +411,27 @@ const ContactPage: React.FC = React.memo(() => {
                               onChange={handleInputChange}
                               onFocus={() => handleFocus('message')}
                               onBlur={handleBlur}
-                              className="nunito-sans w-full bg-transparent p-2 focus:outline-none"
+                              className="nunito-sans w-full resize-y bg-transparent p-2 focus-visible:outline-none"
                               placeholder="Your message"
+                              aria-required="true"
+                              aria-invalid={false}
+                              aria-describedby="message-help"
                               required
-                            ></textarea>
+                            />
+                            <p
+                              id="message-help"
+                              className="mt-1 text-xs text-gray-500"
+                            >
+                              Include any details that help us assist you
+                            </p>
                           </div>
                         </div>
 
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="flex w-full transform cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-800 px-6 py-3 font-bold text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
+                          aria-busy={isSubmitting}
+                          className="flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-800 px-6 py-3 font-bold text-white shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                         >
                           {isSubmitting ? (
                             <>
@@ -421,6 +440,7 @@ const ContactPage: React.FC = React.memo(() => {
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
+                                aria-hidden="true"
                               >
                                 <circle
                                   className="opacity-25"
@@ -429,12 +449,12 @@ const ContactPage: React.FC = React.memo(() => {
                                   r="10"
                                   stroke="currentColor"
                                   strokeWidth="4"
-                                ></circle>
+                                />
                                 <path
                                   className="opacity-75"
                                   fill="currentColor"
                                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                ></path>
+                                />
                               </svg>
                               Sending...
                             </>
@@ -447,6 +467,7 @@ const ContactPage: React.FC = React.memo(() => {
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 stroke="currentColor"
+                                aria-hidden="true"
                               >
                                 <path
                                   strokeLinecap="round"
@@ -463,21 +484,15 @@ const ContactPage: React.FC = React.memo(() => {
                   )}
                 </div>
                 <div className="flex min-w-0 flex-col justify-center bg-indigo-50 p-6 sm:p-8 md:w-1/2 md:p-12">
-                  <div className="mx-auto mb-6 flex h-48 w-48 items-center justify-center sm:h-64 sm:w-64">
+                  <div
+                    className="mx-auto mb-6 flex h-48 w-48 items-center justify-center sm:h-64 sm:w-64"
+                    aria-hidden="true"
+                  >
                     <div className="relative h-full w-full">
-                      {/* Tailwind CSS decorative elements */}
-                      <div
-                        className="absolute top-1/2 left-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-indigo-500 opacity-10"
-                        style={{ animationDuration: '3s' }}
-                      ></div>
-                      <div
-                        className="absolute top-1/2 left-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 transform animate-pulse rounded-full bg-cyan-500 opacity-10"
-                        style={{ animationDuration: '4s' }}
-                      ></div>
-                      <div className="absolute top-1/4 right-1/4 h-16 w-16 rounded-full bg-indigo-600 opacity-20"></div>
-                      <div className="absolute bottom-1/4 left-1/3 h-12 w-12 rounded-full bg-teal-400 opacity-20"></div>
-
-                      {/* Envelope icon in the center */}
+                      <div className="absolute top-1/2 left-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-indigo-500 opacity-10 [animation-duration:3s] motion-safe:animate-pulse" />
+                      <div className="absolute top-1/2 left-1/2 h-48 w-48 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-cyan-500 opacity-10 [animation-duration:4s] motion-safe:animate-pulse" />
+                      <div className="absolute top-1/4 right-1/4 h-16 w-16 rounded-full bg-indigo-600 opacity-20" />
+                      <div className="absolute bottom-1/4 left-1/3 h-12 w-12 rounded-full bg-teal-400 opacity-20" />
                       <div className="absolute top-1/2 left-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full bg-indigo-100 shadow-lg">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -485,6 +500,7 @@ const ContactPage: React.FC = React.memo(() => {
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
+                          aria-hidden="true"
                         >
                           <path
                             strokeLinecap="round"
@@ -497,7 +513,6 @@ const ContactPage: React.FC = React.memo(() => {
                     </div>
                   </div>
 
-                  {/* Direct contact info */}
                   <div className="mt-4 space-y-4">
                     <div className="flex items-center">
                       <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100">
@@ -507,6 +522,7 @@ const ContactPage: React.FC = React.memo(() => {
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
+                          aria-hidden="true"
                         >
                           <path
                             strokeLinecap="round"
@@ -533,6 +549,7 @@ const ContactPage: React.FC = React.memo(() => {
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
+                          aria-hidden="true"
                         >
                           <path
                             strokeLinecap="round"
@@ -559,6 +576,7 @@ const ContactPage: React.FC = React.memo(() => {
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
+                          aria-hidden="true"
                         >
                           <path
                             strokeLinecap="round"
@@ -590,10 +608,14 @@ const ContactPage: React.FC = React.memo(() => {
           </div>
         )}
 
-        {/* Location Section */}
         {activeTab === 'location' && (
-          <div className="mx-auto w-full max-w-4xl overflow-x-hidden">
-            <div className="w-full max-w-full overflow-hidden rounded-2xl bg-white shadow-lg">
+          <div
+            id="location-panel"
+            role="tabpanel"
+            aria-label="Location details"
+            className="mx-auto w-full max-w-4xl overflow-x-hidden"
+          >
+            <div className="w-full overflow-hidden rounded-2xl bg-white shadow-lg">
               <div className="w-full md:flex">
                 <div className="order-2 min-w-0 p-6 sm:p-8 md:order-1 md:w-1/2 md:p-12">
                   <h2 className="jua-regular mb-6 text-xl font-bold text-amber-600 sm:text-2xl md:text-3xl">
@@ -607,7 +629,10 @@ const ContactPage: React.FC = React.memo(() => {
 
                   <div className="space-y-6">
                     <div className="flex items-start">
-                      <div className="mt-1 mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100">
+                      <div
+                        className="mt-1 mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100"
+                        aria-hidden="true"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="h-6 w-6 text-amber-600"
@@ -643,7 +668,10 @@ const ContactPage: React.FC = React.memo(() => {
                     </div>
 
                     <div className="flex items-start">
-                      <div className="mt-1 mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-purple-100">
+                      <div
+                        className="mt-1 mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-purple-100"
+                        aria-hidden="true"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="h-6 w-6 text-purple-600"
@@ -672,7 +700,10 @@ const ContactPage: React.FC = React.memo(() => {
                     </div>
 
                     <div className="flex items-start">
-                      <div className="mt-1 mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100">
+                      <div
+                        className="mt-1 mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100"
+                        aria-hidden="true"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="h-6 w-6 text-green-600"
@@ -705,12 +736,11 @@ const ContactPage: React.FC = React.memo(() => {
                     </div>
                   </div>
 
-                  {/* Get directions button */}
                   <a
                     href="https://maps.app.goo.gl/KWjLfCxkkYvf7qYh8"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-8 inline-flex items-center rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-3 font-bold text-white transition-all duration-300 hover:shadow-lg"
+                    className="mt-8 inline-flex items-center rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-3 font-bold text-white shadow-sm transition-all duration-300 hover:shadow-md focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -718,6 +748,7 @@ const ContactPage: React.FC = React.memo(() => {
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
+                      aria-hidden="true"
                     >
                       <path
                         strokeLinecap="round"
@@ -736,31 +767,23 @@ const ContactPage: React.FC = React.memo(() => {
                   </a>
                 </div>
                 <div className="relative order-1 h-72 bg-gradient-to-br from-amber-50 to-amber-100 md:order-2 md:h-auto md:w-1/2">
-                  <div className="absolute inset-0 overflow-hidden">
-                    {/* Decorative elements using Tailwind CSS */}
-                    <div className="absolute top-1/4 right-1/4 h-40 w-40 rounded-full bg-amber-200 opacity-40"></div>
-                    <div className="absolute bottom-1/4 left-1/4 h-32 w-32 rounded-full bg-amber-300 opacity-30"></div>
-                    <div className="absolute top-1/2 right-1/3 h-16 w-16 rounded-full bg-amber-400 opacity-20"></div>
-
-                    {/* Decorative pattern */}
+                  <div
+                    className="absolute inset-0 overflow-hidden"
+                    aria-hidden="true"
+                  >
+                    <div className="absolute top-1/4 right-1/4 h-40 w-40 rounded-full bg-amber-200 opacity-40" />
+                    <div className="absolute bottom-1/4 left-1/4 h-32 w-32 rounded-full bg-amber-300 opacity-30" />
+                    <div className="absolute top-1/2 right-1/3 h-16 w-16 rounded-full bg-amber-400 opacity-20" />
                     <div className="absolute inset-0 opacity-10">
                       <div className="grid h-full grid-cols-6">
                         {Array.from({ length: 36 }).map((_, i) => (
-                          <div
-                            key={i}
-                            className="border border-amber-300"
-                          ></div>
+                          <div key={i} className="border border-amber-300" />
                         ))}
                       </div>
                     </div>
-
-                    {/* Location pin and decorative elements */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="relative transform transition duration-700 hover:scale-105">
-                        <div
-                          className="absolute -inset-4 animate-pulse rounded-full bg-amber-200 opacity-30"
-                          style={{ animationDuration: '3s' }}
-                        ></div>
+                      <div className="relative transition duration-700 hover:scale-105">
+                        <div className="absolute -inset-4 rounded-full bg-amber-200 opacity-30 [animation-duration:3s] motion-safe:animate-pulse" />
                         <div className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -768,6 +791,7 @@ const ContactPage: React.FC = React.memo(() => {
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
+                            aria-hidden="true"
                           >
                             <path
                               strokeLinecap="round"
@@ -792,17 +816,20 @@ const ContactPage: React.FC = React.memo(() => {
           </div>
         )}
 
-        {/* Hours Section */}
         {activeTab === 'hours' && (
-          <div className="mx-auto max-w-4xl px-3 sm:px-4">
+          <div
+            id="hours-panel"
+            role="tabpanel"
+            aria-label="Opening hours"
+            className="mx-auto max-w-4xl px-3 sm:px-4"
+          >
             <div className="overflow-hidden rounded-2xl bg-white shadow-lg">
               <div className="relative">
-                {/* Header gradient */}
-                <div className="h-1 bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400"></div>
-
-                {/* Content */}
+                <div
+                  className="h-1 bg-gradient-to-r from-teal-400 via-cyan-400 to-blue-400"
+                  aria-hidden="true"
+                />
                 <div className="p-4 sm:p-6 lg:p-10">
-                  {/* Title Section */}
                   <div className="mb-6 text-center sm:mb-8">
                     <h2 className="jua-regular mb-2 text-xl font-bold text-gray-800 sm:mb-3 sm:text-2xl lg:text-4xl">
                       Opening Hours
@@ -812,11 +839,14 @@ const ContactPage: React.FC = React.memo(() => {
                     </p>
                   </div>
 
-                  {/* Hours Display */}
                   <div className="mx-auto mb-6 max-w-sm sm:mb-10 sm:max-w-md">
                     {hoursLoading ? (
-                      <div className="flex flex-col items-center justify-center space-y-3 py-8 sm:py-12">
-                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-teal-200 border-t-teal-500 sm:h-10 sm:w-10"></div>
+                      <div
+                        className="flex flex-col items-center justify-center space-y-3 py-8 sm:py-12"
+                        role="status"
+                        aria-live="polite"
+                      >
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-teal-200 border-t-teal-500 sm:h-10 sm:w-10" />
                         <span className="text-sm font-medium text-teal-600 sm:text-base">
                           Loading hours...
                         </span>
@@ -826,18 +856,21 @@ const ContactPage: React.FC = React.memo(() => {
                         {openingHours.map(dayInfo => (
                           <div
                             key={dayInfo.day}
-                            className={`flex items-center justify-between rounded-lg px-3 py-3 transition-all duration-200 hover:shadow-sm sm:rounded-xl sm:px-4 sm:py-4 ${
+                            className={`flex items-center justify-between rounded-xl px-3 py-3 transition-all duration-200 hover:shadow-sm sm:rounded-2xl sm:px-4 sm:py-4 ${
                               dayInfo.isToday
                                 ? 'border-2 border-teal-200 bg-gradient-to-r from-teal-50 to-cyan-50'
                                 : 'bg-gray-50 hover:bg-gray-100'
-                            } `}
+                            }`}
                           >
-                            <div className="flex min-w-0 flex-1 items-center space-x-2 sm:space-x-3">
+                            <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
                               {dayInfo.isToday && (
-                                <div className="h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-teal-500 sm:h-2 sm:w-2"></div>
+                                <div
+                                  className="h-1.5 w-1.5 flex-shrink-0 animate-pulse rounded-full bg-teal-500 sm:h-2 sm:w-2"
+                                  aria-hidden="true"
+                                />
                               )}
                               <span
-                                className={`jua-regular truncate text-sm font-semibold sm:text-base ${dayInfo.isToday ? 'text-teal-700' : 'text-gray-800'} `}
+                                className={`jua-regular truncate text-sm font-semibold sm:text-base ${dayInfo.isToday ? 'text-teal-700' : 'text-gray-800'}`}
                               >
                                 {dayInfo.day}
                               </span>
@@ -848,7 +881,7 @@ const ContactPage: React.FC = React.memo(() => {
                               )}
                             </div>
                             <span
-                              className={`nunito-sans ml-2 flex-shrink-0 text-sm font-medium sm:text-base ${dayInfo.isToday ? 'text-teal-700' : 'text-gray-600'} `}
+                              className={`nunito-sans ml-2 flex-shrink-0 text-sm font-medium sm:text-base ${dayInfo.isToday ? 'text-teal-700' : 'text-gray-600'}`}
                             >
                               {dayInfo.hours}
                             </span>
@@ -858,7 +891,6 @@ const ContactPage: React.FC = React.memo(() => {
                     )}
                   </div>
 
-                  {/* Contact Section */}
                   <div className="border-t border-gray-200 pt-6 sm:pt-8">
                     <div className="mb-4 text-center sm:mb-6">
                       <h3 className="jua-regular mb-1 text-lg font-bold text-gray-800 sm:mb-2 sm:text-xl lg:text-2xl">
@@ -869,9 +901,8 @@ const ContactPage: React.FC = React.memo(() => {
                         about our hours, menu, or services.
                       </p>
                     </div>
-
                     <div className="mx-auto max-w-xs sm:max-w-sm">
-                      <div className="rounded-xl border border-teal-100 bg-gradient-to-br from-teal-50 to-cyan-50 p-4 sm:rounded-2xl sm:p-6">
+                      <div className="rounded-2xl border border-teal-100 bg-gradient-to-br from-teal-50 to-cyan-50 p-4 sm:p-6">
                         <div className="mb-3 text-center sm:mb-4">
                           <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-teal-100 sm:mb-3 sm:h-12 sm:w-12">
                             <svg
@@ -880,6 +911,7 @@ const ContactPage: React.FC = React.memo(() => {
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
+                              aria-hidden="true"
                             >
                               <path
                                 strokeLinecap="round"
@@ -893,10 +925,10 @@ const ContactPage: React.FC = React.memo(() => {
                             Call us anytime
                           </span>
                         </div>
-
                         <a
                           href="tel:+1-201-402-9600"
-                          className="flex w-full items-center justify-center space-x-2 rounded-lg bg-gradient-to-r from-teal-500 to-teal-600 px-3 py-2.5 text-sm font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-lg focus:ring-4 focus:ring-teal-200 focus:outline-none sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
+                          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-teal-500 to-teal-600 px-4 py-3 text-sm font-bold text-white shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-md focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none sm:text-base"
+                          aria-label="Call (201) 402-9600"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -904,6 +936,7 @@ const ContactPage: React.FC = React.memo(() => {
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
+                            aria-hidden="true"
                           >
                             <path
                               strokeLinecap="round"
@@ -923,14 +956,15 @@ const ContactPage: React.FC = React.memo(() => {
           </div>
         )}
 
-        {/* Section 3: FAQ Section */}
         <div className="mt-16 w-full overflow-hidden rounded-t-3xl bg-[#78350F]">
-          <div className="pt-16"></div>
-
+          <div className="pt-16" />
           <div className="mb-12 text-center">
             <h2 className="jua-regular relative mb-4 inline-block text-2xl font-bold text-white sm:text-3xl">
               Frequently Asked Questions
-              <span className="absolute -bottom-2 left-0 h-2 w-full rounded-full bg-yellow-100 opacity-50"></span>
+              <span
+                className="absolute -bottom-2 left-0 h-2 w-full rounded-full bg-yellow-100 opacity-50"
+                aria-hidden="true"
+              />
             </h2>
             <p className="nunito-sans mx-auto max-w-2xl px-4 text-white">
               Find answers to our most commonly asked questions. If you don't
@@ -939,9 +973,12 @@ const ContactPage: React.FC = React.memo(() => {
           </div>
 
           <div className="mx-auto grid w-full max-w-6xl gap-6 bg-[#78350F] px-6 pb-16 md:grid-cols-2">
-            <div className="w-full max-w-full transform overflow-hidden rounded-xl bg-white/90 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div className="w-full transform overflow-hidden rounded-2xl bg-white/90 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div className="p-6">
-                <div className="mb-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100">
+                <div
+                  className="mb-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100"
+                  aria-hidden="true"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6 text-amber-600"
@@ -968,9 +1005,12 @@ const ContactPage: React.FC = React.memo(() => {
               </div>
             </div>
 
-            <div className="w-full max-w-full transform overflow-hidden rounded-xl bg-white/90 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div className="w-full transform overflow-hidden rounded-2xl bg-white/90 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div className="p-6">
-                <div className="mb-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100">
+                <div
+                  className="mb-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100"
+                  aria-hidden="true"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6 text-amber-600"
@@ -997,9 +1037,12 @@ const ContactPage: React.FC = React.memo(() => {
               </div>
             </div>
 
-            <div className="w-full max-w-full transform overflow-hidden rounded-xl bg-white/90 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div className="w-full transform overflow-hidden rounded-2xl bg-white/90 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div className="p-6">
-                <div className="mb-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100">
+                <div
+                  className="mb-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100"
+                  aria-hidden="true"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6 text-amber-600"
@@ -1026,9 +1069,12 @@ const ContactPage: React.FC = React.memo(() => {
               </div>
             </div>
 
-            <div className="w-full max-w-full transform overflow-hidden rounded-xl bg-white/90 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div className="w-full transform overflow-hidden rounded-2xl bg-white/90 shadow-md backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div className="p-6">
-                <div className="mb-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100">
+                <div
+                  className="mb-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100"
+                  aria-hidden="true"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6 text-amber-600"
@@ -1040,7 +1086,7 @@ const ContactPage: React.FC = React.memo(() => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 009.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                     />
                   </svg>
                 </div>

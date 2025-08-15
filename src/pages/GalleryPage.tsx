@@ -29,26 +29,33 @@ const CATEGORY_DISPLAY_NAMES: Record<string, string> = {
   Musubi: 'Musubi',
 } as const;
 
+const createCategoryButtonStyles = (category: FoodCategory): string => {
+  const styleMap: Record<FoodCategory, string> = {
+    Ramen:
+      'baloo-regular bg-yellow-400 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(202,138,4)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(202,138,4)] hover:ring-yellow-500 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(202,138,4)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 select-none touch-manipulation',
+    'Shave Ice':
+      'baloo-regular bg-blue-300 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(59,130,246)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(59,130,246)] hover:ring-blue-500 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(59,130,246)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 select-none touch-manipulation',
+    'Homemade Ice Cream':
+      'baloo-regular bg-blue-300 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(59,130,246)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(59,130,246)] hover:ring-blue-500 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(59,130,246)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 select-none touch-manipulation',
+    'Soft Serve':
+      'baloo-regular bg-blue-300 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(59,130,246)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(59,130,246)] hover:ring-blue-500 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(59,130,246)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 select-none touch-manipulation',
+    'Hot Dogs':
+      'baloo-regular bg-yellow-400 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(202,138,4)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(202,138,4)] hover:ring-yellow-500 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(202,138,4)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 select-none touch-manipulation',
+    Musubi:
+      'baloo-regular bg-yellow-400 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(202,138,4)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(202,138,4)] hover:ring-yellow-500 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(202,138,4)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-yellow-300 focus-visible:ring-offset-2 select-none touch-manipulation',
+  };
+  return (
+    styleMap[category] ??
+    'baloo-regular bg-blue-400 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(96,165,250)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(96,165,250)] hover:ring-blue-500 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(96,165,250)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 select-none touch-manipulation'
+  );
+};
+
 const CATEGORY_BUTTON_STYLES: Record<string, string> = {
-  all: 'bg-green-400 text-gray-900 border-green-600 hover:bg-green-500 focus:bg-green-500',
-  Ramen:
-    'bg-yellow-400 text-gray-900 border-yellow-600 hover:bg-yellow-500 focus:bg-yellow-500',
-  'Shave Ice':
-    'bg-blue-300 text-gray-900 border-indigo-500 hover:bg-blue-400 focus:bg-blue-400',
-  'Homemade Ice Cream':
-    'bg-blue-300 text-gray-900 border-indigo-500 hover:bg-blue-400 focus:bg-blue-400',
-  'Soft Serve':
-    'bg-blue-300 text-gray-900 border-indigo-500 hover:bg-blue-400 focus:bg-blue-400',
-  'Hot Dogs':
-    'bg-yellow-400 text-gray-900 border-yellow-600 hover:bg-yellow-500 focus:bg-yellow-500',
-  Musubi:
-    'bg-yellow-400 text-gray-900 border-yellow-600 hover:bg-yellow-500 focus:bg-yellow-500',
+  all: 'baloo-regular bg-green-400 text-gray-900 rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(22,163,74)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(22,163,74)] hover:ring-green-600 active:translate-y-0.5 active:shadow-[0_2px_0_rgb(22,163,74)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 select-none touch-manipulation',
 } as const;
 
 const DEFAULT_BUTTON_STYLE =
-  'bg-white text-gray-900 border-indigo-300 hover:bg-white/90 focus:bg-gray-50';
-const BUTTON_BASE_CLASSES =
-  'px-3 py-2 text-sm sm:text-base md:text-lg cursor-pointer font-bold rounded-full shadow-lg border-b-4 transition-all duration-200 hover:shadow-xl active:shadow-md active:border-b-2 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed';
+  'bg-white text-gray-900 baloo-regular cursor-pointer rounded-full px-4 py-2 text-base font-bold shadow-[0_5px_0_rgb(165,180,252)] ring-1 ring-transparent transition-all duration-150 ease-out hover:shadow-[0_3px_0_rgb(165,180,252)] hover:ring-[#798be0] active:translate-y-0.5 active:shadow-[0_2px_0_rgb(165,180,252)] active:scale-95  active:ease-in active:duration-100 focus-visible:outline-none  focus-visible:ring-2 focus-visible:ring-[#a5b4fc] focus-visible:ring-offset-2 select-none touch-manipulation';
 
 // ===== UTILITY FUNCTIONS =====
 const getCategoryOrder = (category: string): number => {
@@ -206,12 +213,18 @@ const GalleryPage: React.FC = () => {
 
   const getCategoryButtonStyle = useCallback(
     (category: string, isActive: boolean) => {
-      const baseClasses = BUTTON_BASE_CLASSES;
-      const colorClasses = isActive
-        ? CATEGORY_BUTTON_STYLES[category] || DEFAULT_BUTTON_STYLE
-        : DEFAULT_BUTTON_STYLE;
+      let colorClasses = '';
+      if (isActive) {
+        if (category === 'all') {
+          colorClasses = CATEGORY_BUTTON_STYLES[category];
+        } else {
+          colorClasses = createCategoryButtonStyles(category as FoodCategory);
+        }
+      } else {
+        colorClasses = DEFAULT_BUTTON_STYLE;
+      }
 
-      return `${baseClasses} ${colorClasses}`;
+      return colorClasses;
     },
     []
   );
@@ -270,8 +283,11 @@ const GalleryPage: React.FC = () => {
         </h1>
 
         {/* Category Filters */}
-        <nav aria-label="Food category filters" className="mb-8 sm:mb-10">
-          <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-2 sm:gap-3">
+        <nav
+          aria-label="Food category filters"
+          className="mb-10 flex justify-center"
+        >
+          <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-2 overflow-visible pb-2 sm:gap-3 sm:pb-3">
             {categories.map((category: string) => (
               <button
                 key={category}
@@ -301,14 +317,14 @@ const GalleryPage: React.FC = () => {
             </div>
           ) : (
             <div
-              className="mx-auto grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4"
+              className="mx-auto grid max-w-5xl grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4"
               role="grid"
               aria-label={`${displayItems.length} food items in ${getCategoryDisplayName(activeCategory)} category`}
             >
               {displayItems.map((item: FoodItem) => (
                 <article
                   key={item.id}
-                  className="overflow-hidden rounded-xl bg-white shadow-lg transition-all duration-300 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:scale-[1.02] hover:shadow-xl"
+                  className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:shadow-md"
                   role="gridcell"
                 >
                   <div className="relative aspect-square overflow-hidden bg-gray-100">
@@ -333,7 +349,7 @@ const GalleryPage: React.FC = () => {
                       <img
                         src={item.imageUrl}
                         alt={sanitizeAltText(item.name, item.category)}
-                        className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                         onError={() => handleImageError(item.id || '')}
                       />
@@ -347,7 +363,7 @@ const GalleryPage: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <div className="p-3 sm:p-4">
+                  <div className="p-4 sm:p-5">
                     <h3 className="mb-1 text-base leading-tight font-bold text-indigo-900 sm:text-lg">
                       {item.name}
                     </h3>

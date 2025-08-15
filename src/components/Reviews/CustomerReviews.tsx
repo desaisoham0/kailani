@@ -200,7 +200,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
               <div className="mt-8 flex items-center justify-between">
                 <button
                   onClick={goToPrevReview}
-                  className="baloo-regular cursor-pointer rounded-2xl bg-amber-100 px-4 py-2 text-base font-bold text-amber-900 shadow-[0_6px_0_rgb(217,180,114)] ring-1 ring-transparent transition hover:ring-amber-200 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-95"
+                  className="baloo-regular cursor-pointer touch-manipulation rounded-2xl bg-amber-100 px-4 py-2 text-base font-bold text-amber-900 shadow-[0_5px_0_rgb(217,180,114)] ring-1 ring-transparent transition-all duration-150 ease-out select-none hover:shadow-[0_3px_0_rgb(217,180,114)] hover:ring-amber-200 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:outline-none active:translate-y-0.5 active:scale-95 active:shadow-[0_2px_0_rgb(217,180,114)] active:duration-100 active:ease-in"
                   aria-label="Previous review"
                   aria-controls="review-panel"
                 >
@@ -208,7 +208,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
                 </button>
                 <button
                   onClick={goToNextReview}
-                  className="baloo-regular cursor-pointer rounded-2xl bg-amber-100 px-4 py-2 text-base font-bold text-amber-900 shadow-[0_6px_0_rgb(217,180,114)] ring-1 ring-transparent transition hover:ring-amber-200 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-95"
+                  className="baloo-regular cursor-pointer touch-manipulation rounded-2xl bg-amber-100 px-4 py-2 text-base font-bold text-amber-900 shadow-[0_5px_0_rgb(217,180,114)] ring-1 ring-transparent transition-all duration-150 ease-out select-none hover:shadow-[0_3px_0_rgb(217,180,114)] hover:ring-amber-200 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:outline-none active:translate-y-0.5 active:scale-95 active:shadow-[0_2px_0_rgb(217,180,114)] active:duration-100 active:ease-in"
                   aria-label="Next review"
                   aria-controls="review-panel"
                 >
@@ -252,7 +252,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({
                   '_blank'
                 )
               }
-              className="font-navigation baloo-regular mt-2 inline-flex cursor-pointer items-center justify-center rounded-2xl bg-green-500 px-8 py-4 text-base font-bold text-white shadow-[0_6px_0_rgb(5,150,105)] ring-1 ring-transparent transition hover:ring-green-400 focus-visible:ring-2 focus-visible:ring-green-300 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-95"
+              className="baloo-regular mt-2 inline-flex cursor-pointer touch-manipulation items-center justify-center rounded-2xl bg-green-500 px-8 py-4 text-base font-bold text-white shadow-[0_6px_0_rgb(5,150,105)] ring-1 ring-transparent transition-all duration-150 ease-out select-none hover:shadow-[0_5px_0_rgb(5,150,105)] hover:ring-green-400 focus-visible:ring-2 focus-visible:ring-green-300 focus-visible:ring-offset-2 focus-visible:outline-none active:translate-y-0.5 active:scale-95 active:shadow-[0_2px_0_rgb(5,150,105)] active:duration-100 active:ease-in"
               aria-label="Leave us a Google review"
             >
               <span className="flex items-center">
