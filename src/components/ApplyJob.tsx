@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { submitForm } from '../services/emailService';
+import TextField from '../components/TextField';
 
 interface JobFormData {
   fullName: string;
@@ -116,6 +117,15 @@ const Job: React.FC<JobProps> = ({ onSubmit }) => {
     setActiveField(null);
   };
 
+  const emailInvalid =
+    !!formData.email && !/^\S+@\S+\.\S+$/.test(formData.email);
+
+  const phoneInvalid =
+    !!formData.phone && !/^\+?[0-9\s()-]{7,15}$/.test(formData.phone);
+
+  const experienceInvalid =
+    formData.experience !== '' && Number(formData.experience) < 0;
+
   return (
     <div className="px-4 py-8">
       <div className="mx-auto max-w-2xl">
@@ -185,108 +195,57 @@ const Job: React.FC<JobProps> = ({ onSubmit }) => {
               <div className="space-y-6">
                 {/* Name and Email Row */}
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div className="group">
-                    <label
-                      htmlFor="fullName"
-                      className="mb-2 block text-sm font-semibold text-gray-700"
-                    >
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      id="fullName"
-                      name="fullName"
-                      required
-                      value={formData.fullName}
-                      onChange={handleInputChange}
-                      onFocus={() => handleFocus('fullName')}
-                      onBlur={handleBlur}
-                      className={`w-full rounded-2xl border-3 px-4 py-3 font-medium transition-all duration-200 ${
-                        activeField === 'fullName'
-                          ? 'border-pink-400 bg-pink-50 shadow-lg ring-4 ring-pink-100'
-                          : 'border-gray-200 bg-white hover:border-pink-300'
-                      } text-gray-800 placeholder-gray-400 focus:outline-none`}
-                      placeholder="John Doe"
-                    />
-                  </div>
+                  <TextField
+                    id="fullName"
+                    name="fullName"
+                    label="Full Name"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    placeholder="John Doe"
+                    required
+                    autoComplete="name"
+                  />
 
-                  <div className="group">
-                    <label
-                      htmlFor="email"
-                      className="mb-2 block text-sm font-semibold text-gray-700"
-                    >
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      onFocus={() => handleFocus('email')}
-                      onBlur={handleBlur}
-                      className={`w-full rounded-2xl border-3 px-4 py-3 font-medium transition-all duration-200 ${
-                        activeField === 'email'
-                          ? 'border-blue-400 bg-blue-50 shadow-lg ring-4 ring-blue-100'
-                          : 'border-gray-200 bg-white hover:border-blue-300'
-                      } text-gray-800 placeholder-gray-400 focus:outline-none`}
-                      placeholder="john@example.com"
-                    />
-                  </div>
+                  <TextField
+                    id="email"
+                    name="email"
+                    label="Email Address"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="john@example.com"
+                    required
+                    autoComplete="email"
+                    invalid={emailInvalid}
+                  />
                 </div>
 
                 {/* Phone Field */}
-                <div className="group">
-                  <label
-                    htmlFor="phone"
-                    className="mb-2 block text-sm font-semibold text-gray-700"
-                  >
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    required
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    onFocus={() => handleFocus('phone')}
-                    onBlur={handleBlur}
-                    className={`w-full rounded-2xl border-3 px-4 py-3 font-medium transition-all duration-200 ${
-                      activeField === 'phone'
-                        ? 'border-green-400 bg-green-50 shadow-lg ring-4 ring-green-100'
-                        : 'border-gray-200 bg-white hover:border-green-300'
-                    } text-gray-800 placeholder-gray-400 focus:outline-none`}
-                    placeholder="+1 (555) 123-4567"
-                  />
-                </div>
+                <TextField
+                  id="phone"
+                  name="phone"
+                  label="Phone Number"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="+1 (555) 123-4567"
+                  required
+                  autoComplete="tel"
+                  inputMode="tel"
+                  invalid={phoneInvalid}
+                />
 
                 {/* Experience Field */}
-                <div className="group">
-                  <label
-                    htmlFor="experience"
-                    className="mb-2 block text-sm font-semibold text-gray-700"
-                  >
-                    Years of Experience
-                  </label>
-                  <input
-                    type="text"
-                    id="experience"
-                    name="experience"
-                    required
-                    value={formData.experience}
-                    onChange={handleInputChange}
-                    onFocus={() => handleFocus('experience')}
-                    onBlur={handleBlur}
-                    className={`w-full rounded-2xl border-3 px-4 py-3 font-medium transition-all duration-200 ${
-                      activeField === 'experience'
-                        ? 'border-yellow-400 bg-yellow-50 shadow-lg ring-4 ring-yellow-100'
-                        : 'border-gray-200 bg-white hover:border-yellow-300'
-                    } text-gray-800 placeholder-gray-400 focus:outline-none`}
-                    placeholder="e.g., 2 years as a server at busy restaurant"
-                  />
-                </div>
+                <TextField
+                  id="experience"
+                  name="experience"
+                  label="Years of Experience"
+                  value={formData.experience}
+                  onChange={handleInputChange}
+                  placeholder="e.g., 2 years as a server at busy restaurant"
+                  invalid={experienceInvalid}
+                  required
+                />
 
                 {/* Resume Upload */}
                 <div className="group">
