@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
+import { Switch, Transition } from '@headlessui/react';
 import {
   getHoursOfOperation,
   updateHoursOfOperation,
@@ -21,9 +22,8 @@ export default function AdminHoursForm() {
       setLoading(true);
       const hoursData = await getHoursOfOperation();
       setHours(hoursData.days);
-    } catch (err) {
+    } catch {
       setError('Failed to load hours of operation.');
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -45,19 +45,13 @@ export default function AdminHoursForm() {
     e.preventDefault();
     setError(null);
     setSuccessMessage(null);
-
     try {
       setSaving(true);
       await updateHoursOfOperation(hours);
       setSuccessMessage('Hours of operation updated successfully!');
-
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 3000);
-    } catch (err) {
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch {
       setError('Failed to update hours of operation. Please try again.');
-      console.error(err);
     } finally {
       setSaving(false);
     }
@@ -66,61 +60,114 @@ export default function AdminHoursForm() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <div className="h-8 w-8 animate-spin rounded-full border-t-4 border-b-4 border-blue-500"></div>
-        <span className="ml-3 font-medium text-blue-600">Loading hours...</span>
+        <div
+          aria-hidden="true"
+          className="h-8 w-8 animate-spin rounded-full border-t-4 border-b-4 border-blue-500"
+        />
+        <span
+          className="ml-3 font-medium text-blue-600"
+          role="status"
+          aria-live="polite"
+        >
+          Loading hours...
+        </span>
       </div>
     );
   }
 
   return (
-    <div className="rounded-lg bg-white p-6 shadow-sm">
+    <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
       <h3 className="mb-6 border-b border-gray-100 pb-2 text-xl font-bold text-gray-800">
         Hours of Operation
       </h3>
 
-      {error && (
-        <div className="mb-6 rounded-md border-l-4 border-red-500 bg-red-50 p-4 text-sm text-red-700">
-          <p>{error}</p>
-        </div>
-      )}
+      <Transition
+        as={Fragment}
+        show={!!error}
+        enter="transition ease-out duration-150"
+        enterFrom="opacity-0 -translate-y-1"
+        enterTo="opacity-100 translate-y-0"
+        leave="transition ease-in duration-100"
+        leaveFrom="opacity-100 translate-y-0"
+        leaveTo="opacity-0 -translate-y-1"
+      >
+        {error ? (
+          <div
+            className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+            role="alert"
+          >
+            <p>{error}</p>
+          </div>
+        ) : null}
+      </Transition>
 
-      {successMessage && (
-        <div className="mb-6 rounded-md border-l-4 border-green-500 bg-green-50 p-4 text-sm text-green-700">
-          <p>{successMessage}</p>
-        </div>
-      )}
+      <Transition
+        as={Fragment}
+        show={!!successMessage}
+        enter="transition ease-out duration-150"
+        enterFrom="opacity-0 -translate-y-1"
+        enterTo="opacity-100 translate-y-0"
+        leave="transition ease-in duration-100"
+        leaveFrom="opacity-100 translate-y-0"
+        leaveTo="opacity-0 -translate-y-1"
+      >
+        {successMessage ? (
+          <div
+            className="mb-6 rounded-2xl border border-green-200 bg-green-50 p-4 text-sm text-green-700"
+            role="status"
+            aria-live="polite"
+          >
+            <p>{successMessage}</p>
+          </div>
+        ) : null}
+      </Transition>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead>
-              <tr className="bg-gray-50">
-                <th className="px-4 py-2 font-medium text-gray-700">Day</th>
-                <th className="px-4 py-2 font-medium text-gray-700">Status</th>
-                <th className="px-4 py-2 font-medium text-gray-700">Hours</th>
+            <thead className="sticky top-0 z-10 bg-gray-50">
+              <tr>
+                <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 uppercase">
+                  Day
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 uppercase">
+                  Status
+                </th>
+                <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-700 uppercase">
+                  Hours
+                </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-100 bg-white">
               {hours.map((day, index) => (
                 <tr key={day.day} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium">{day.day}</td>
-                  <td className="px-4 py-3">
-                    <label className="inline-flex cursor-pointer items-center">
-                      <input
-                        type="checkbox"
+                  <td className="px-4 py-4 text-sm font-medium text-gray-900">
+                    {day.day}
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="flex items-center gap-3">
+                      <Switch
                         checked={day.isOpen}
-                        onChange={e =>
-                          handleHoursChange(index, 'isOpen', e.target.checked)
+                        onChange={(val: boolean) =>
+                          handleHoursChange(index, 'isOpen', val)
                         }
-                        className="peer sr-only"
-                      />
-                      <div className="peer relative h-6 w-11 rounded-full bg-gray-200 peer-checked:bg-blue-600 peer-focus:ring-2 peer-focus:ring-blue-300 peer-focus:outline-none after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white rtl:peer-checked:after:-translate-x-full"></div>
-                      <span className="ms-3 text-sm font-medium text-gray-700">
+                        className={`${
+                          day.isOpen ? 'bg-blue-600' : 'bg-gray-200'
+                        } relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full transition focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-none`}
+                        aria-label={`${day.day} open status`}
+                      >
+                        <span
+                          className={`${
+                            day.isOpen ? 'translate-x-5' : 'translate-x-0'
+                          } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition`}
+                        />
+                      </Switch>
+                      <span className="text-sm font-medium text-gray-700">
                         {day.isOpen ? 'Open' : 'Closed'}
                       </span>
-                    </label>
+                    </div>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-4">
                     <input
                       type="text"
                       value={day.hours}
@@ -129,7 +176,8 @@ export default function AdminHoursForm() {
                       }
                       disabled={!day.isOpen}
                       placeholder="e.g., 9:00 AM - 5:00 PM"
-                      className={`w-full rounded-md border px-3 py-2 transition-colors outline-none focus:border-blue-500 focus:ring focus:ring-blue-300 ${
+                      aria-label={`${day.day} hours`}
+                      className={`w-full rounded-2xl border px-3 py-2 text-sm shadow-sm transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none ${
                         !day.isOpen ? 'bg-gray-100 text-gray-500' : 'bg-white'
                       }`}
                     />
@@ -144,7 +192,8 @@ export default function AdminHoursForm() {
           <button
             type="submit"
             disabled={saving}
-            className="focus:ring-opacity-50 flex items-center rounded-md bg-blue-600 px-5 py-2.5 text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:bg-blue-400"
+            className="inline-flex cursor-pointer items-center rounded-2xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-blue-400"
+            aria-busy={saving}
           >
             {saving ? (
               <>
@@ -153,6 +202,7 @@ export default function AdminHoursForm() {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <circle
                     className="opacity-25"
@@ -161,12 +211,12 @@ export default function AdminHoursForm() {
                     r="10"
                     stroke="currentColor"
                     strokeWidth="4"
-                  ></circle>
+                  />
                   <path
                     className="opacity-75"
                     fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
+                    d="M4 12a8 8 0 018-8V0A12 12 0 000 12h4z"
+                  />
                 </svg>
                 Saving...
               </>

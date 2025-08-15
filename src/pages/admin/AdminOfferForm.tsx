@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
+import { Switch, Transition } from '@headlessui/react';
 import { addOffer, updateOffer, type Offer } from '../../firebase/offerService';
 import { Timestamp, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
@@ -47,7 +48,6 @@ export default function AdminOfferForm({
       setFetchLoading(true);
       const offerRef = doc(db, 'offers', id);
       const offerDoc = await getDoc(offerRef);
-
       if (offerDoc.exists()) {
         const offerData = offerDoc.data() as Omit<Offer, 'id'>;
         setFormData({
@@ -58,8 +58,6 @@ export default function AdminOfferForm({
           availabilityDate: offerData.availabilityDate || null,
           imageUrl: offerData.imageUrl || '',
         });
-
-        // Format date for input if it exists
         if (offerData.availabilityDate) {
           const date = offerData.availabilityDate.toDate();
           const year = date.getFullYear();
@@ -67,16 +65,12 @@ export default function AdminOfferForm({
           const day = String(date.getDate()).padStart(2, '0');
           setDateString(`${year}-${month}-${day}`);
         }
-
-        if (offerData.imageUrl) {
-          setImagePreview(offerData.imageUrl);
-        }
+        if (offerData.imageUrl) setImagePreview(offerData.imageUrl);
       } else {
         setError('Offer not found');
       }
-    } catch (err) {
+    } catch {
       setError('Failed to load offer');
-      console.error(err);
     } finally {
       setFetchLoading(false);
     }
@@ -101,55 +95,30 @@ export default function AdminOfferForm({
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: checked,
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const dateValue = e.target.value;
     setDateString(dateValue);
-
     if (dateValue) {
       const timestamp = Timestamp.fromDate(new Date(dateValue));
-      setFormData(prev => ({
-        ...prev,
-        availabilityDate: timestamp,
-      }));
+      setFormData(prev => ({ ...prev, availabilityDate: timestamp }));
     } else {
-      setFormData(prev => ({
-        ...prev,
-        availabilityDate: null,
-      }));
+      setFormData(prev => ({ ...prev, availabilityDate: null }));
     }
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (file) {
-      // Check file size (limit to 5MB)
       if (file.size > 5 * 1024 * 1024) {
         setError('Image size should be less than 5MB');
         return;
       }
-
       setImageFile(file);
-
-      // Create a preview URL
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
+      reader.onloadend = () => setImagePreview(reader.result as string);
       reader.readAsDataURL(file);
     }
   };
@@ -157,38 +126,30 @@ export default function AdminOfferForm({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
-
     try {
       setLoading(true);
-
-      // If it's an upcoming item but no date is set, show error
       if (formData.isUpcoming && !formData.availabilityDate) {
         setError('Availability date is required for upcoming items');
         setLoading(false);
         return;
       }
-
-      // If it's not an upcoming item, clear the availability date
       const submitData = {
         ...formData,
         availabilityDate: formData.isUpcoming
           ? formData.availabilityDate
           : null,
       };
-
       if (isEditMode && offerId) {
         await updateOffer(offerId, submitData, imageFile);
       } else {
         await addOffer(submitData, imageFile);
       }
-
       resetForm();
       onComplete();
-    } catch (err) {
+    } catch {
       setError(
         `Failed to ${isEditMode ? 'update' : 'add'} offer. Please try again.`
       );
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -197,38 +158,63 @@ export default function AdminOfferForm({
   if (fetchLoading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <div className="h-8 w-8 animate-spin rounded-full border-t-4 border-b-4 border-blue-500"></div>
-        <span className="ml-3 font-medium text-blue-600">Loading offer...</span>
+        <div
+          aria-hidden="true"
+          className="h-8 w-8 animate-spin rounded-full border-t-4 border-b-4 border-blue-500"
+        />
+        <span
+          className="ml-3 font-medium text-blue-600"
+          role="status"
+          aria-live="polite"
+        >
+          Loading offer...
+        </span>
       </div>
     );
   }
 
   return (
-    <div className="rounded-lg bg-white p-6 shadow-sm">
+    <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
       <h3 className="mb-6 border-b border-gray-100 pb-2 text-xl font-bold text-gray-800">
         {isEditMode ? 'Edit Offer' : 'Add New Offer'}
       </h3>
 
-      {error && (
-        <div className="mb-6 animate-pulse rounded-md border-l-4 border-red-500 bg-red-50 p-4 text-sm text-red-700">
-          <div className="flex">
-            <svg
-              className="mr-2 h-5 w-5 text-red-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <span>{error}</span>
+      <Transition
+        as={Fragment}
+        show={!!error}
+        enter="transition ease-out duration-150"
+        enterFrom="opacity-0 -translate-y-1"
+        enterTo="opacity-100 translate-y-0"
+        leave="transition ease-in duration-100"
+        leaveFrom="opacity-100 translate-y-0"
+        leaveTo="opacity-0 -translate-y-1"
+      >
+        {error ? (
+          <div
+            className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+            role="alert"
+            aria-live="assertive"
+          >
+            <div className="flex items-start gap-2">
+              <svg
+                className="h-5 w-5 text-red-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>{error}</span>
+            </div>
           </div>
-        </div>
-      )}
+        ) : null}
+      </Transition>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -241,15 +227,18 @@ export default function AdminOfferForm({
                 Offer Title <span className="text-red-500">*</span>
               </label>
               <input
-                type="text"
                 id="title"
                 name="title"
                 required
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full rounded-md border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-2xl border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 placeholder="e.g., Summer Special"
+                aria-describedby="title-help"
               />
+              <p id="title-help" className="mt-1 text-xs text-gray-500">
+                Keep it short and descriptive.
+              </p>
             </div>
 
             <div>
@@ -266,76 +255,109 @@ export default function AdminOfferForm({
                 value={formData.description}
                 onChange={handleChange}
                 rows={4}
-                className="w-full rounded-md border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-2xl border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 placeholder="Describe the offer or upcoming item"
+                aria-describedby="desc-help"
               />
+              <p id="desc-help" className="mt-1 text-xs text-gray-500">
+                Mention dates, limitations, or eligibility.
+              </p>
             </div>
 
-            <div>
-              <label className="mb-3 flex cursor-pointer items-center space-x-3">
-                <input
-                  type="checkbox"
-                  name="isActive"
-                  checked={formData.isActive}
-                  onChange={handleCheckboxChange}
-                  className="form-checkbox h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="font-medium text-gray-700">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between rounded-2xl bg-gray-50 px-3 py-2">
+                <span className="text-sm font-medium text-gray-700">
                   Active (Show on website)
                 </span>
-              </label>
-            </div>
+                <Switch
+                  checked={formData.isActive}
+                  onChange={(val: boolean) =>
+                    setFormData(prev => ({ ...prev, isActive: val }))
+                  }
+                  className={`${
+                    formData.isActive ? 'bg-blue-600' : 'bg-gray-200'
+                  } relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full transition focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-none`}
+                  aria-label="Toggle active status"
+                >
+                  <span
+                    className={`${
+                      formData.isActive ? 'translate-x-5' : 'translate-x-0'
+                    } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition`}
+                  />
+                </Switch>
+              </div>
 
-            <div>
-              <label className="mb-3 flex cursor-pointer items-center space-x-3">
-                <input
-                  type="checkbox"
-                  name="isUpcoming"
+              <div className="flex items-center justify-between rounded-2xl bg-gray-50 px-3 py-2">
+                <span className="text-sm font-medium text-gray-700">
+                  Upcoming Item
+                </span>
+                <Switch
                   checked={formData.isUpcoming}
-                  onChange={handleCheckboxChange}
-                  className="form-checkbox h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="font-medium text-gray-700">Upcoming Item</span>
-              </label>
-            </div>
+                  onChange={(val: boolean) =>
+                    setFormData(prev => ({ ...prev, isUpcoming: val }))
+                  }
+                  className={`${
+                    formData.isUpcoming ? 'bg-blue-600' : 'bg-gray-200'
+                  } relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full transition focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-none`}
+                  aria-label="Toggle upcoming status"
+                >
+                  <span
+                    className={`${
+                      formData.isUpcoming ? 'translate-x-5' : 'translate-x-0'
+                    } pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition`}
+                  />
+                </Switch>
+              </div>
 
-            <div className={formData.isUpcoming ? 'block' : 'hidden'}>
-              <label
-                htmlFor="availabilityDate"
-                className="mb-1 block text-sm font-medium text-gray-700"
+              <Transition
+                as={Fragment}
+                show={formData.isUpcoming}
+                enter="transition ease-out duration-150"
+                enterFrom="opacity-0 -translate-y-1"
+                enterTo="opacity-100 translate-y-0"
+                leave="transition ease-in duration-100"
+                leaveFrom="opacity-100 translate-y-0"
+                leaveTo="opacity-0 -translate-y-1"
               >
-                Availability Date{' '}
-                {formData.isUpcoming && <span className="text-red-500">*</span>}
-              </label>
-              <input
-                type="date"
-                id="availabilityDate"
-                name="availabilityDate"
-                value={dateString}
-                onChange={handleDateChange}
-                required={formData.isUpcoming}
-                className="w-full rounded-md border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
-              />
-              <p className="mt-1 text-sm text-gray-500">
-                When will this item be available?
-              </p>
+                <div>
+                  <label
+                    htmlFor="availabilityDate"
+                    className="mb-1 block text-sm font-medium text-gray-700"
+                  >
+                    Availability Date <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="availabilityDate"
+                    name="availabilityDate"
+                    type="date"
+                    value={dateString}
+                    onChange={handleDateChange}
+                    required={formData.isUpcoming}
+                    className="w-full rounded-2xl border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    aria-describedby="date-help"
+                  />
+                  <p id="date-help" className="mt-1 text-xs text-gray-500">
+                    When will this item be available?
+                  </p>
+                </div>
+              </Transition>
             </div>
           </div>
 
           <div className="space-y-6">
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
+              <span className="mb-2 block text-sm font-medium text-gray-700">
                 Offer Image
-              </label>
+              </span>
 
-              <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
-                <div className="space-y-1 text-center">
+              <div className="mt-1 flex justify-center rounded-2xl border-2 border-dashed border-gray-300 px-6 pt-5 pb-6 transition hover:border-blue-400">
+                <div className="space-y-2 text-center">
                   {imagePreview ? (
-                    <div className="mb-3">
+                    <div>
                       <img
                         src={imagePreview}
                         alt="Preview"
-                        className="mx-auto h-40 rounded-md object-cover"
+                        className="mx-auto h-40 rounded-2xl object-cover shadow-sm"
                       />
                       <button
                         type="button"
@@ -344,7 +366,8 @@ export default function AdminOfferForm({
                           setImagePreview(null);
                           setFormData(prev => ({ ...prev, imageUrl: '' }));
                         }}
-                        className="mt-2 inline-flex items-center rounded border border-transparent bg-red-100 px-2.5 py-1.5 text-xs font-medium text-red-700 hover:bg-red-200 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none"
+                        className="mt-3 inline-flex cursor-pointer items-center rounded-2xl bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700 shadow-sm ring-1 ring-red-200 transition ring-inset hover:bg-red-100 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:outline-none"
+                        aria-label="Remove image"
                       >
                         Remove Image
                       </button>
@@ -366,10 +389,10 @@ export default function AdminOfferForm({
                     </svg>
                   )}
 
-                  <div className="flex text-sm text-gray-600">
+                  <div className="flex justify-center text-sm text-gray-600">
                     <label
                       htmlFor="image-upload"
-                      className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 focus-within:outline-none hover:text-blue-500"
+                      className="cursor-pointer rounded-2xl bg-white px-2 font-medium text-blue-600 transition focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 focus-within:outline-none hover:text-blue-500"
                     >
                       <span>Upload a file</span>
                       <input
@@ -392,7 +415,7 @@ export default function AdminOfferForm({
           </div>
         </div>
 
-        <div className="flex justify-end pt-4">
+        <div className="flex flex-col-reverse items-stretch gap-3 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end">
           <button
             type="button"
             onClick={() => {
@@ -400,22 +423,24 @@ export default function AdminOfferForm({
               onComplete();
             }}
             disabled={loading}
-            className="mr-4 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+            className="cursor-pointer rounded-2xl bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-gray-300 transition ring-inset hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="focus:ring-opacity-50 flex items-center rounded-md bg-blue-600 px-5 py-2.5 text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:bg-blue-400"
+            aria-busy={loading}
+            className="inline-flex cursor-pointer items-center justify-center rounded-2xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-blue-400"
           >
             {loading ? (
               <>
                 <svg
                   className="mr-2 -ml-1 h-4 w-4 animate-spin text-white"
                   xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
                   viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
                 >
                   <circle
                     className="opacity-25"
@@ -424,12 +449,12 @@ export default function AdminOfferForm({
                     r="10"
                     stroke="currentColor"
                     strokeWidth="4"
-                  ></circle>
+                  />
                   <path
                     className="opacity-75"
                     fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
+                    d="M4 12a8 8 0 018-8V0A12 12 0 000 12h4z"
+                  />
                 </svg>
                 Saving...
               </>

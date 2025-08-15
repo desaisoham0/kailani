@@ -52,7 +52,7 @@ export const addOffer = async (
       await new Promise<void>((resolve, reject) => {
         uploadTask.on(
           'state_changed',
-          () => {},
+          () => undefined,
           error => reject(error),
           async () => {
             try {
@@ -118,7 +118,7 @@ export const updateOffer = async (
       await new Promise<void>((resolve, reject) => {
         uploadTask.on(
           'state_changed',
-          () => {},
+          () => undefined,
           error => reject(error),
           async () => {
             try {

@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Timestamp, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { addReview, updateReview } from '../../firebase/reviewService';
+import { RadioGroup, Transition } from '@headlessui/react';
 
 interface AdminReviewFormProps {
   reviewId: string | null;
@@ -18,7 +19,7 @@ export default function AdminReviewForm({
     rating: number;
     text: string;
     date: Timestamp;
-    source: 'google'; // Only using Google reviews as per the original code
+    source: 'google';
   }>({
     author: '',
     rating: 5,
@@ -46,7 +47,6 @@ export default function AdminReviewForm({
       setFetchLoading(true);
       const reviewRef = doc(db, 'reviews', id);
       const reviewDoc = await getDoc(reviewRef);
-
       if (reviewDoc.exists()) {
         const reviewData = reviewDoc.data();
         setFormData({
@@ -59,9 +59,8 @@ export default function AdminReviewForm({
       } else {
         setError('Review not found');
       }
-    } catch (err) {
+    } catch {
       setError('Failed to load review');
-      console.error(err);
     } finally {
       setFetchLoading(false);
     }
@@ -101,23 +100,19 @@ export default function AdminReviewForm({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
-
     try {
       setLoading(true);
-
       if (isEditMode && reviewId) {
         await updateReview(reviewId, formData);
       } else {
         await addReview(formData);
       }
-
       resetForm();
       onComplete();
-    } catch (err) {
+    } catch {
       setError(
         `Failed to ${isEditMode ? 'update' : 'add'} review. Please try again.`
       );
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -126,8 +121,15 @@ export default function AdminReviewForm({
   if (fetchLoading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <div className="h-8 w-8 animate-spin rounded-full border-t-4 border-b-4 border-blue-500"></div>
-        <span className="ml-3 font-medium text-blue-600">
+        <div
+          aria-hidden="true"
+          className="h-8 w-8 animate-spin rounded-full border-t-4 border-b-4 border-blue-500"
+        />
+        <span
+          className="ml-3 font-medium text-blue-600"
+          role="status"
+          aria-live="polite"
+        >
           Loading review...
         </span>
       </div>
@@ -138,56 +140,47 @@ export default function AdminReviewForm({
     ? formData.date.toDate().toISOString().split('T')[0]
     : new Date().toISOString().split('T')[0];
 
-  // Star rating component
-  const renderStarRating = () => {
-    return (
-      <div className="mb-4 flex items-center space-x-1">
-        {[1, 2, 3, 4, 5].map(star => (
-          <button
-            key={star}
-            type="button"
-            onClick={() => setFormData(prev => ({ ...prev, rating: star }))}
-            className="cursor-pointer focus:outline-none"
-            aria-label={`Rate ${star} stars`}
-          >
-            <svg
-              className={`h-8 w-8 ${star <= formData.rating ? 'text-yellow-400' : 'text-gray-300'} transition-colors duration-150`}
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-          </button>
-        ))}
-      </div>
-    );
-  };
-
   return (
-    <div className="rounded-lg bg-white p-6">
+    <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
       <h3 className="mb-6 border-b border-gray-100 pb-2 text-xl font-bold text-gray-800">
         {isEditMode ? 'Edit Review' : 'Add New Review'}
       </h3>
 
-      {error && (
-        <div className="mb-6 animate-pulse rounded-md border-l-4 border-red-500 bg-red-50 p-4 text-sm text-red-700">
-          <div className="flex">
-            <svg
-              className="mr-2 h-5 w-5 text-red-500"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                clipRule="evenodd"
-              />
-            </svg>
-            {error}
+      <Transition
+        as={Fragment}
+        show={!!error}
+        enter="transition ease-out duration-150"
+        enterFrom="opacity-0 -translate-y-1"
+        enterTo="opacity-100 translate-y-0"
+        leave="transition ease-in duration-100"
+        leaveFrom="opacity-100 translate-y-0"
+        leaveTo="opacity-0 -translate-y-1"
+      >
+        {error ? (
+          <div
+            className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+            role="alert"
+            aria-live="assertive"
+          >
+            <div className="flex items-start gap-2">
+              <svg
+                className="h-5 w-5 text-red-500"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span>{error}</span>
+            </div>
           </div>
-        </div>
-      )}
+        ) : null}
+      </Transition>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -199,15 +192,18 @@ export default function AdminReviewForm({
               Author Name <span className="text-red-500">*</span>
             </label>
             <input
-              type="text"
-              name="author"
               id="author"
+              name="author"
               required
               value={formData.author}
               onChange={handleChange}
-              className="block w-full rounded-md border-gray-300 shadow-sm transition-colors duration-200 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              className="block w-full rounded-2xl border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
               placeholder="Customer name"
+              aria-describedby="author-help"
             />
+            <p id="author-help" className="text-xs text-gray-500">
+              Enter the public display name from the review.
+            </p>
           </div>
 
           <div className="space-y-2">
@@ -223,94 +219,130 @@ export default function AdminReviewForm({
               required
               value={formData.source}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm transition-colors duration-200 focus:border-blue-500 focus:ring-blue-500 focus:outline-none sm:text-sm"
+              className="mt-1 block w-full rounded-2xl border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              aria-describedby="source-help"
             >
               <option value="google">Google</option>
             </select>
+            <p id="source-help" className="text-xs text-gray-500">
+              Only Google reviews are supported.
+            </p>
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label
-            htmlFor="rating"
-            className="mb-1 block text-sm font-medium text-gray-700"
-          >
+        <fieldset className="space-y-2">
+          <legend className="mb-1 block text-sm font-medium text-gray-700">
             Rating <span className="text-red-500">*</span>
-          </label>
-          {renderStarRating()}
-          <select
-            id="rating"
-            name="rating"
+          </legend>
+
+          <RadioGroup
             value={formData.rating}
-            onChange={handleChange}
-            className="sr-only"
-            aria-hidden="true"
+            onChange={(val: number) =>
+              setFormData(prev => ({ ...prev, rating: val }))
+            }
           >
-            <option value={1}>1 Star</option>
-            <option value={2}>2 Stars</option>
-            <option value={3}>3 Stars</option>
-            <option value={4}>4 Stars</option>
-            <option value={5}>5 Stars</option>
-          </select>
+            <RadioGroup.Label className="sr-only">
+              Select star rating
+            </RadioGroup.Label>
+            <div className="flex items-center gap-1.5">
+              {[1, 2, 3, 4, 5].map(star => (
+                <RadioGroup.Option
+                  key={star}
+                  value={star}
+                  className={({ checked }) =>
+                    `cursor-pointer rounded-full p-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${checked ? 'ring-2 ring-blue-500' : 'ring-0'}`
+                  }
+                >
+                  {() => (
+                    <span
+                      aria-label={`${star} star${star > 1 ? 's' : ''}`}
+                      role="img"
+                    >
+                      <svg
+                        className={`h-7 w-7 transition-colors ${star <= formData.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    </span>
+                  )}
+                </RadioGroup.Option>
+              ))}
+            </div>
+          </RadioGroup>
+        </fieldset>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="space-y-2">
+            <label
+              htmlFor="date"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Review Date <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="date"
+              name="date"
+              type="date"
+              required
+              value={formattedDate}
+              onChange={handleDateChange}
+              className="block w-full rounded-2xl border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              aria-describedby="date-help"
+            />
+            <p id="date-help" className="text-xs text-gray-500">
+              Use the date the review was posted.
+            </p>
+          </div>
+
+          <div className="space-y-2 md:col-span-1">
+            <label
+              htmlFor="text"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Review Text <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              id="text"
+              name="text"
+              rows={4}
+              required
+              value={formData.text}
+              onChange={handleChange}
+              className="block w-full rounded-2xl border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="What did the customer say?"
+              aria-describedby="text-help"
+            />
+            <p id="text-help" className="text-xs text-gray-500">
+              Keep it concise and accurate.
+            </p>
+          </div>
         </div>
 
-        <div className="space-y-2">
-          <label
-            htmlFor="date"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Review Date <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="date"
-            name="date"
-            id="date"
-            required
-            value={formattedDate}
-            onChange={handleDateChange}
-            className="block w-full rounded-md border-gray-300 shadow-sm transition-colors duration-200 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label
-            htmlFor="text"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Review Text <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            id="text"
-            name="text"
-            rows={4}
-            required
-            value={formData.text}
-            onChange={handleChange}
-            className="block w-full rounded-md border-gray-300 shadow-sm transition-colors duration-200 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-            placeholder="What did the customer say?"
-          />
-        </div>
-
-        <div className="flex justify-end space-x-3 border-t border-gray-100 pt-4">
+        <div className="flex flex-col-reverse items-stretch gap-3 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end">
           <button
             type="button"
             onClick={onComplete}
-            className="cursor-pointer rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-[0_4px_0_rgb(203,213,225)] transition-all duration-200 hover:translate-y-1 hover:bg-gray-50 hover:shadow-[0_2px_0_rgb(203,213,225)] focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+            className="cursor-pointer rounded-2xl bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm ring-1 ring-gray-300 transition ring-inset hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex cursor-pointer justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-[0_6px_0_rgb(29,78,216)] transition-all duration-200 hover:translate-y-1 hover:bg-blue-700 hover:shadow-[0_3px_0_rgb(29,78,216)] focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:bg-blue-400"
+            aria-busy={loading}
+            className="inline-flex cursor-pointer items-center justify-center rounded-2xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-blue-400"
           >
             {loading ? (
               <>
                 <svg
                   className="mr-2 -ml-1 h-4 w-4 animate-spin text-white"
                   xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
                   viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
                 >
                   <circle
                     className="opacity-25"
@@ -319,12 +351,12 @@ export default function AdminReviewForm({
                     r="10"
                     stroke="currentColor"
                     strokeWidth="4"
-                  ></circle>
+                  />
                   <path
                     className="opacity-75"
                     fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
+                    d="M4 12a8 8 0 018-8V0A12 12 0 000 12h4z"
+                  />
                 </svg>
                 {isEditMode ? 'Updating...' : 'Saving...'}
               </>

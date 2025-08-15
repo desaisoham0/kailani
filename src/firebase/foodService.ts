@@ -54,7 +54,7 @@ export const addFoodItem = async (
       await new Promise<void>((resolve, reject) => {
         uploadTask.on(
           'state_changed',
-          () => {},
+          () => undefined,
           error => reject(error),
           async () => {
             imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
@@ -121,7 +121,7 @@ export const updateFoodItem = async (
       await new Promise<void>((resolve, reject) => {
         uploadTask.on(
           'state_changed',
-          () => {},
+          () => undefined,
           error => reject(error),
           async () => {
             const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);

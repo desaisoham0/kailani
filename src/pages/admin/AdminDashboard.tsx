@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Transition } from '@headlessui/react';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../firebase/authService';
 import { useAuth } from '../../hooks/useAuth';
@@ -11,6 +12,7 @@ import AdminOffers from './AdminOffers';
 import AdminOfferForm from './AdminOfferForm';
 
 export default function AdminDashboard() {
+  const noop = () => undefined;
   const [activeTab, setActiveTab] = useState<
     | 'food-list'
     | 'food-add'
@@ -38,7 +40,8 @@ export default function AdminDashboard() {
       await logout();
       navigate('/admin/login');
     } catch (error) {
-      console.error('Failed to log out', error);
+      // Log and keep user on the page if logout fails
+      console.error('Failed to logout:', error);
     }
   };
 
@@ -83,15 +86,14 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-t-4 border-b-4 border-blue-500"></div>
+        <div className="text-center" role="status" aria-live="polite">
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-t-4 border-b-4 border-blue-500" />
           <p className="mt-4 font-medium text-gray-600">Loading dashboard...</p>
         </div>
       </div>
     );
   }
 
-  // Define navigation items
   const navItems = [
     {
       id: 'food-list' as const,
@@ -102,11 +104,12 @@ export default function AdminDashboard() {
           className="h-5 w-5"
           viewBox="0 0 20 20"
           fill="currentColor"
+          aria-hidden="true"
         >
           <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
         </svg>
       ),
-      onClick: () => {},
+      onClick: noop,
     },
     {
       id: 'food-add' as const,
@@ -120,6 +123,7 @@ export default function AdminDashboard() {
           className="h-5 w-5"
           viewBox="0 0 20 20"
           fill="currentColor"
+          aria-hidden="true"
         >
           <path
             fillRule="evenodd"
@@ -139,6 +143,7 @@ export default function AdminDashboard() {
           className="h-5 w-5"
           viewBox="0 0 20 20"
           fill="currentColor"
+          aria-hidden="true"
         >
           <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
           <path
@@ -148,7 +153,7 @@ export default function AdminDashboard() {
           />
         </svg>
       ),
-      onClick: () => {},
+      onClick: noop,
     },
     {
       id: 'reviews-add' as const,
@@ -162,6 +167,7 @@ export default function AdminDashboard() {
           className="h-5 w-5"
           viewBox="0 0 20 20"
           fill="currentColor"
+          aria-hidden="true"
         >
           <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
         </svg>
@@ -177,6 +183,7 @@ export default function AdminDashboard() {
           className="h-5 w-5"
           viewBox="0 0 20 20"
           fill="currentColor"
+          aria-hidden="true"
         >
           <path
             fillRule="evenodd"
@@ -185,7 +192,7 @@ export default function AdminDashboard() {
           />
         </svg>
       ),
-      onClick: () => {},
+      onClick: noop,
     },
     {
       id: 'offers-list' as const,
@@ -196,6 +203,7 @@ export default function AdminDashboard() {
           className="h-5 w-5"
           viewBox="0 0 20 20"
           fill="currentColor"
+          aria-hidden="true"
         >
           <path
             fillRule="evenodd"
@@ -204,7 +212,7 @@ export default function AdminDashboard() {
           />
         </svg>
       ),
-      onClick: () => {},
+      onClick: noop,
     },
     {
       id: 'offers-add' as const,
@@ -218,6 +226,7 @@ export default function AdminDashboard() {
           className="h-5 w-5"
           viewBox="0 0 20 20"
           fill="currentColor"
+          aria-hidden="true"
         >
           <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z" />
         </svg>
@@ -226,7 +235,6 @@ export default function AdminDashboard() {
     },
   ];
 
-  // Render content based on active tab
   const renderContent = () => {
     switch (activeTab) {
       case 'food-list':
@@ -265,16 +273,17 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="sticky top-0 z-10 bg-white shadow-md">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-4">
-            <div className="flex items-center">
-              {/* Mobile menu button */}
+            <div className="flex items-center gap-3">
               <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="mr-2 cursor-pointer rounded-md p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 md:hidden"
+                type="button"
                 aria-label="Toggle menu"
+                aria-controls="mobile-nav"
+                aria-expanded={isMobileMenuOpen}
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="cursor-pointer rounded-2xl p-2 text-gray-600 ring-1 ring-transparent transition hover:bg-gray-100 hover:text-gray-900 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-none md:hidden"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -282,6 +291,7 @@ export default function AdminDashboard() {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
+                  aria-hidden="true"
                 >
                   {isMobileMenuOpen ? (
                     <path
@@ -300,15 +310,15 @@ export default function AdminDashboard() {
                   )}
                 </svg>
               </button>
-
               <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
                 Kailani Admin
               </h1>
             </div>
 
             <button
+              type="button"
               onClick={handleLogout}
-              className="inline-flex cursor-pointer items-center rounded-md border border-red-600 bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-[0_6px_0_rgb(185,28,28)] transition-all duration-200 hover:translate-y-1 hover:bg-red-700 hover:shadow-[0_3px_0_rgb(185,28,28)] focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none"
+              className="inline-flex cursor-pointer items-center rounded-2xl border border-red-600 bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-red-700 hover:shadow focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:outline-none"
               aria-label="Logout"
             >
               <svg
@@ -316,6 +326,7 @@ export default function AdminDashboard() {
                 className="mr-2 h-4 w-4"
                 viewBox="0 0 20 20"
                 fill="currentColor"
+                aria-hidden="true"
               >
                 <path
                   fillRule="evenodd"
@@ -327,78 +338,103 @@ export default function AdminDashboard() {
             </button>
           </div>
         </div>
+
+        <Transition
+          show={isMobileMenuOpen}
+          enter="transition duration-150 ease-out"
+          enterFrom="opacity-0 -translate-y-2"
+          enterTo="opacity-100 translate-y-0"
+          leave="transition duration-100 ease-in"
+          leaveFrom="opacity-100 translate-y-0"
+          leaveTo="opacity-0 -translate-y-2"
+        >
+          <div id="mobile-nav" className="md:hidden">
+            <nav className="z-20 bg-white shadow-lg">
+              <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
+                {navItems.map(item => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    aria-current={activeTab === item.id ? 'page' : undefined}
+                    className={`group flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium transition ${
+                      activeTab === item.id
+                        ? 'border-l-4 border-blue-500 bg-blue-50 text-blue-700'
+                        : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                    } cursor-pointer focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-none`}
+                    onClick={() => {
+                      handleTabChange(item.id);
+                      item.onClick();
+                    }}
+                  >
+                    <span
+                      className={`${activeTab === item.id ? 'text-blue-600' : 'text-gray-400'}`}
+                    >
+                      {item.icon}
+                    </span>
+                    <span className="truncate">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </nav>
+          </div>
+        </Transition>
       </header>
 
-      {/* Mobile navigation menu */}
-      {isMobileMenuOpen && (
-        <div className="z-20 bg-white shadow-lg md:hidden">
-          <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-            {navItems.map(item => (
-              <button
-                key={item.id}
-                className={`${
-                  activeTab === item.id
-                    ? 'border-l-4 border-blue-500 bg-blue-50 text-blue-700'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                } group flex w-full cursor-pointer items-center rounded-md px-3 py-3 text-left text-sm font-medium transition-all`}
-                onClick={() => {
-                  handleTabChange(item.id);
-                  item.onClick();
-                }}
-              >
-                <span className="mr-3">{item.icon}</span>
-                {item.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="flex flex-col md:flex-row">
-        {/* Desktop side navigation */}
-        <div className="sticky top-[65px] hidden h-[calc(100vh-65px)] bg-white shadow-md md:block md:w-64">
-          <div className="px-6 pt-6 pb-3">
-            <h2 className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
-              Dashboard
-            </h2>
-          </div>
-          <nav className="space-y-1 px-3 pb-4">
-            {navItems.map(item => (
-              <button
-                key={item.id}
-                className={`${
-                  activeTab === item.id
-                    ? 'border-l-4 border-blue-500 bg-blue-50 text-blue-700'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                } group flex w-full cursor-pointer items-center rounded-md px-3 py-3 text-left text-sm font-medium transition-all duration-200 hover:translate-x-1`}
-                onClick={() => {
-                  handleTabChange(item.id);
-                  item.onClick();
-                }}
-              >
-                <span
-                  className={`mr-3 ${activeTab === item.id ? 'text-blue-500' : 'text-gray-400'}`}
+      <div className="mx-auto max-w-7xl">
+        <div className="flex flex-col md:flex-row">
+          <aside className="sticky top-[65px] hidden h-[calc(100vh-65px)] bg-white shadow-md md:block md:w-64">
+            <div className="px-6 pt-6 pb-3">
+              <h2 className="text-xs font-semibold tracking-wide text-gray-400 uppercase">
+                Dashboard
+              </h2>
+            </div>
+            <nav className="space-y-1 px-3 pb-4" aria-label="Admin sections">
+              {navItems.map(item => (
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-current={activeTab === item.id ? 'page' : undefined}
+                  className={`group flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium transition ${
+                    activeTab === item.id
+                      ? 'border-l-4 border-blue-500 bg-blue-50 text-blue-700'
+                      : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                  } cursor-pointer hover:translate-x-0.5 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-none`}
+                  onClick={() => {
+                    handleTabChange(item.id);
+                    item.onClick();
+                  }}
                 >
-                  {item.icon}
-                </span>
-                {item.label}
-              </button>
-            ))}
-          </nav>
+                  <span
+                    className={`${activeTab === item.id ? 'text-blue-600' : 'text-gray-400'}`}
+                  >
+                    {item.icon}
+                  </span>
+                  <span className="truncate">{item.label}</span>
+                </button>
+              ))}
+            </nav>
+          </aside>
+
+          <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+            <div className="mb-4 border-b border-gray-200 pb-2 md:hidden">
+              <h2 className="text-xl font-medium text-gray-800">
+                {navItems.find(item => item.id === activeTab)?.label}
+              </h2>
+            </div>
+
+            <section
+              aria-labelledby="content-title"
+              className="rounded-2xl bg-white shadow-sm"
+            >
+              <h3 id="content-title" className="sr-only">
+                {navItems.find(item => item.id === activeTab)?.label}
+              </h3>
+              <div className="overflow-hidden rounded-2xl">
+                {renderContent()}
+              </div>
+            </section>
+          </main>
         </div>
-
-        {/* Main content */}
-        <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-          <div className="mb-4 border-b border-gray-200 pb-1 md:hidden">
-            <h2 className="text-xl font-medium text-gray-800">
-              {navItems.find(item => item.id === activeTab)?.label}
-            </h2>
-          </div>
-
-          <div className="overflow-hidden rounded-lg bg-white shadow-md">
-            {renderContent()}
-          </div>
-        </main>
       </div>
     </div>
   );
