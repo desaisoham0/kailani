@@ -93,10 +93,6 @@ const useFoodItems = () => {
         setError(null);
         const items = await getAllFoodItems();
         setFoodItems(items);
-
-        console.log(
-          `📸 GalleryPage: Loaded ${items.length} food items from direct service`
-        );
       } catch (err) {
         console.error('Error fetching food items:', err);
         setError(
@@ -179,17 +175,6 @@ const GalleryPage: React.FC = () => {
       const orderB = getCategoryOrder(b);
 
       return orderA - orderB;
-    });
-
-    // Debug logging to verify sorting
-    console.log('Category sorting order:');
-    sortedCategories.forEach((category: string, index: number) => {
-      if (category !== 'all') {
-        const order = getCategoryOrder(category);
-        console.log(`${index}. ${category} (order: ${order})`);
-      } else {
-        console.log(`${index}. ${category} (always first)`);
-      }
     });
 
     return sortedCategories;
