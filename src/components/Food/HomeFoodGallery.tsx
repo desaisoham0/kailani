@@ -64,7 +64,6 @@ const useRandomFoodItems = (maxCount: number) => {
       const randomized = shuffleArray(validItems).slice(0, maxCount);
       setRandomItems(randomized);
       initializedRef.current = true;
-
     }
   }, [favoriteItems, maxCount]);
 

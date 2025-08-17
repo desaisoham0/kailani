@@ -251,7 +251,6 @@ const useFavoriteFoodItems = () => {
 
   useEffect(() => {
     setProducts(transformedProducts);
-
   }, [transformedProducts]);
 
   return { products, isLoading, error };
