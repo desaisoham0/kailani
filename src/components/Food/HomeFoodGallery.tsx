@@ -65,9 +65,6 @@ const useRandomFoodItems = (maxCount: number) => {
       setRandomItems(randomized);
       initializedRef.current = true;
 
-      console.log(
-        `🏠 HomeFoodGallery: Initialized with ${randomized.length} random items from direct service`
-      );
     }
   }, [favoriteItems, maxCount]);
 

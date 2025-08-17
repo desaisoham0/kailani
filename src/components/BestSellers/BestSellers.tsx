@@ -252,11 +252,6 @@ const useFavoriteFoodItems = () => {
   useEffect(() => {
     setProducts(transformedProducts);
 
-    if (transformedProducts.length > 0) {
-      console.log(
-        `🍕 BestSellers: Updated with ${transformedProducts.length} favorite items (sorted by centralized order system)`
-      );
-    }
   }, [transformedProducts]);
 
   return { products, isLoading, error };
