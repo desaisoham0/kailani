@@ -7,14 +7,18 @@ import {
 } from 'react-router-dom';
 import { RestaurantHeader } from './components/Restaurant/RestaurantHeader';
 import BestSellers from './components/BestSellers/BestSellers';
-import HomeFoodGallery from './components/Food/HomeFoodGallery';
-import CustomerReviews from './components/Reviews/CustomerReviews';
-import KailaniFooter from './components/Footer/KailaniFooter';
-import BackToTopButton from './components/UI/BackToTopButton';
-import FloatingOrderButton from './components/UI/FloatingOrderButton';
+const HomeFoodGallery = lazy(() => import('./components/Food/HomeFoodGallery'));
+const CustomerReviews = lazy(
+  () => import('./components/Reviews/CustomerReviews')
+);
+const KailaniFooter = lazy(() => import('./components/Footer/KailaniFooter'));
+const BackToTopButton = lazy(() => import('./components/UI/BackToTopButton'));
+const FloatingOrderButton = lazy(
+  () => import('./components/UI/FloatingOrderButton')
+);
 import { AuthProvider } from './contexts/AuthContext';
-import OffersDisplay from './components/Offers/OffersDisplay';
-import ErrorBoundary from './components/ErrorBoundary';
+const OffersDisplay = lazy(() => import('./components/Offers/OffersDisplay'));
+const ErrorBoundary = lazy(() => import('./components/ErrorBoundary'));
 
 const JobsPage = lazy(() => import('./pages/JobsPage'));
 const GalleryPage = lazy(() => import('./pages/GalleryPage'));
