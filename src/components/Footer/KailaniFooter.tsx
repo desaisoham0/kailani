@@ -94,10 +94,10 @@ const KailaniFooter: React.FC<KailaniFooterProps> = React.memo(
                 </p>
                 <p>
                   <a
-                    href="mailto:kailanishaveicenj@gmail.com"
+                    href="mailto:thekailanigroup@gmail.com"
                     className="inline-flex items-center rounded-md underline-offset-4 transition hover:underline focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none"
                   >
-                    kailanishaveicenj@gmail.com
+                    thekailanigroup@gmail.com
                   </a>
                 </p>
               </address>
@@ -122,20 +122,20 @@ const KailaniFooter: React.FC<KailaniFooterProps> = React.memo(
                 &copy; {currentYear} {displayName}. All Rights Reserved
               </p>
               <div className="flex gap-3">
-                <button
-                  type="button"
-                  className="rounded-2xl px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-white/25 transition ring-inset focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none active:translate-y-px disabled:opacity-50"
+                <Link
+                  to="/privacy"
+                  className="rounded-2xl px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-white/25 transition ring-inset hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none active:translate-y-px"
                   aria-label="Privacy policy"
                 >
                   Privacy
-                </button>
-                <button
-                  type="button"
-                  className="rounded-2xl px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-white/25 transition ring-inset focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none active:translate-y-px disabled:opacity-50"
-                  aria-label="Terms and conditions"
+                </Link>
+                <Link
+                  to="/terms"
+                  className="rounded-2xl px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-white/25 transition ring-inset hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#19b4bd] focus-visible:outline-none active:translate-y-px"
+                  aria-label="Terms of service"
                 >
                   Terms
-                </button>
+                </Link>
               </div>
             </div>
           </div>

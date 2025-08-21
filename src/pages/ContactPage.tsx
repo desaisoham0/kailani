@@ -537,7 +537,7 @@ const ContactPage: React.FC = React.memo(() => {
                           Phone
                         </h3>
                         <p className="nunito-sans text-gray-600">
-                          (201) 402-9600
+                          <a href="tel:+12014029600">(201) 402-9600</a>
                         </p>
                       </div>
                     </div>
@@ -564,7 +564,9 @@ const ContactPage: React.FC = React.memo(() => {
                           Email
                         </h3>
                         <p className="nunito-sans text-gray-600">
-                          kailanishaveicenj@gmail.com
+                          <a href="mailto:thekailanigroup@gmail.com">
+                            thekailanigroup@gmail.com
+                          </a>
                         </p>
                       </div>
                     </div>

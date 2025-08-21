@@ -24,6 +24,8 @@ const JobsPage = lazy(() => import('./pages/JobsPage'));
 const GalleryPage = lazy(() => import('./pages/GalleryPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
+const TermsPage = lazy(() => import('./pages/TermsPage'));
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
 const AdminProtectedRoute = lazy(
   () => import('./pages/admin/AdminProtectedRoute')
@@ -98,6 +100,22 @@ function App() {
                 element={
                   <Suspense fallback={<div>Loading...</div>}>
                     <ContactPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/privacy"
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <PrivacyPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/terms"
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <TermsPage />
                   </Suspense>
                 }
               />
