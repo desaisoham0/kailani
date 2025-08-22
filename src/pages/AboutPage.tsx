@@ -251,7 +251,6 @@ const AboutPage: React.FC = React.memo(() => {
                   </p>
                   <a
                     href="https://maps.app.goo.gl/KWjLfCxkkYvf7qYh8"
-                    target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Open directions to Kailani in a new tab"
                     className="baloo-regular cursor-pointer rounded-2xl bg-white px-6 py-3 text-lg font-bold text-[#000000] shadow-[0_6px_0_rgb(186,183,201)] transition hover:translate-y-1 hover:scale-105 hover:shadow-[0_4px_0px_rgb(186,183,201)] focus-visible:ring-2 focus-visible:ring-pink-300 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-95"
@@ -703,7 +702,6 @@ const AboutPage: React.FC = React.memo(() => {
                   </p>
                   <a
                     href="https://maps.app.goo.gl/KWjLfCxkkYvf7qYh8"
-                    target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Find our location on maps in a new tab"
                     className="baloo-regular cursor-pointer rounded-2xl bg-white px-6 py-2 text-lg font-bold text-[#000000] shadow-[0_6px_0_rgb(186,183,201)] transition hover:translate-y-1 hover:scale-105 hover:shadow-[0_4px_0px_rgb(186,183,201)] focus-visible:ring-2 focus-visible:ring-pink-300 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-95"

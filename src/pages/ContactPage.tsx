@@ -740,7 +740,6 @@ const ContactPage: React.FC = React.memo(() => {
 
                   <a
                     href="https://maps.app.goo.gl/KWjLfCxkkYvf7qYh8"
-                    target="_blank"
                     rel="noopener noreferrer"
                     className="mt-8 inline-flex items-center rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-3 font-bold text-white shadow-sm transition-all duration-300 hover:shadow-md focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none"
                   >

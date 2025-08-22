@@ -65,7 +65,6 @@ export const SocialMediaLinks: React.FC<SocialMediaLinksProps> = ({
           <a
             key={link.name}
             href={link.url}
-            target="_blank"
             rel="noopener noreferrer"
             aria-label={link.ariaLabel}
             className="transition-all duration-300"

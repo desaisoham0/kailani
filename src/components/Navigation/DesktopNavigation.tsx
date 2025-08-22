@@ -162,12 +162,7 @@ export const DesktopNavigation = React.memo(() => {
 
       if (item.isExternalLink) {
         return (
-          <a
-            href={item.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            {...commonProps}
-          >
+          <a href={item.href} rel="noopener noreferrer" {...commonProps}>
             <span className="relative">
               {item.label}
               <span

@@ -252,12 +252,7 @@ export const MobileNavigation = React.memo(
         };
         if (item.isExternalLink) {
           return (
-            <a
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              {...commonProps}
-            >
+            <a href={item.href} rel="noopener noreferrer" {...commonProps}>
               {item.label}
             </a>
           );

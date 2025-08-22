@@ -68,7 +68,6 @@ const OnlineOrderingLinks: React.FC<OnlineOrderingLinksProps> = ({
             <li key={index} className="flex">
               <a
                 href={option.url}
-                target="_blank"
                 rel="noopener noreferrer"
                 onClick={onLinkClick}
                 aria-label={`${option.name} ${option.description}`}
